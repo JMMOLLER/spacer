@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="./css/style.css" />
+  <title>Spacer | Home</title>
+</head>
+
+<body>
+  <header class="head">
+    <!-- Cabecera vista escritorio -->
+    <div class="container_top">
+      <div class="cabecera-left">
+        <img src="./assets/imagen/logo.gif" class="logo" alt="logo" />
+      </div>
+      <div class="cabecera-center">
+        <form class="search-box">
+          <input type="text" placeholder="Busca lo que quieras" />
+          <button title="buscar" type="submit">
+            <img class="lupa" src="./assets/imagen/buscador_0.png" alt="imagen buscador" />
+          </button>
+          <div class="slider">
+            <div>
+              <img src="./assets/imagen/buscador_1.png" alt="imagenes productos" />
+            </div>
+            <div>
+              <img src="./assets/imagen/buscador_2.png" alt="imagenes productos" />
+            </div>
+            <div>
+              <img src="./assets/imagen/buscador_3.png" alt="imagenes productos" />
+            </div>
+            <div>
+              <img src="./assets/imagen/buscador_5.png" alt="imagenes productos" />
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="header-right">
+        <div class="container_wsp">
+          <div id="animation_wsp"></div>
+          <div class="content_wsp">
+            <p class="title">Escríbenos</p>
+            <p class="content">930-517-160</p>
+          </div>
+        </div>
+        <div class="container_user">
+          <i class="user_icon"></i>
+          <p>Mi cuenta</p>
+        </div>
+        <div class="container_carrito">
+          <div id="animation_cart">
+            <span class="notification" id="cart_cant">0</span>
+          </div>
+          <p class="content">Mi bolsa</p>
+          <div class="carrito_popup" id="popup_cart">
+            <div class="popup_header">
+              <p class="title">0 Articulo(s)</p>
+              <a href="" class="content">Ir al carrito</a>
+            </div>
+            <hr>
+            <div class="carrito_popup_content">
+              <p class="text">No tiene productos en su carrito.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <nav>
+      <!-- Menú de Categorías principales -->
+      <ul id="menuCategorias">
+        <li data-categoria="categoria1">Teclados</li>
+        <!-- Subcategorías de Teclados -->
+        <li data-categoria="categoria2">Monitores
+          <!-- Subcategorías de Monitores -->
+          <ul class="subcategorias">
+            <li class="subcategoria-item" data-categoria="subcategoria2-1"><a href="" class="categoria-link">LG</a></li>
+            <li class="subcategoria-item" data-categoria="subcategoria2-2"><a href="" class="categoria-link">Samsung</a>
+            </li>
+            <li class="subcategoria-item" data-categoria="subcategoria2-3"><a href="" class="categoria-link">Asus</a>
+            </li>
+            <li class="subcategoria-item" data-categoria="subcategoria2-4"><a href="" class="categoria-link">MSI</a>
+            </li>
+            <li class="subcategoria-item" data-categoria="subcategoria2-5"><a href="" class="categoria-link">Teros</a>
+            </li>
+            <li class="subcategoria-item" data-categoria="subcategoria2-6"><a href="" class="categoria-link">Razer</a>
+            </li>
+          </ul>
+        </li>
+        <li data-categoria="categoria3">Mouse
+          <!-- Subcategorías de Mouse -->
+          <ul class="subcategorias">
+            <li class="subcategoria-item" data-categoria="subcategoria4-1">
+              <a href="" class="categoria-link">Redragon</a>
+            </li>
+            <li class="subcategoria-item" data-categoria="subcategoria4-2">
+              <a href="" class="categoria-link">Antryx</a>
+            </li>
+            <li class="subcategoria-item" data-categoria="subcategoria4-3">
+              <a href="" class="categoria-link">Logitech</a>
+            </li>
+            <li class="subcategoria-item" data-categoria="subcategoria4-4">
+              <a href="" class="categoria-link">Razer</a>
+            </li>
+            <li class="subcategoria-item" data-categoria="subcategoria4-5">
+              <a href="" class="categoria-link">Apple</a>
+            </li>
+            <li class="subcategoria-item" data-categoria="subcategoria4-6">
+              <a href="" class="categoria-link">Sony</a>
+            </li>
+          </ul>
+        </li>
+        <li data-categoria="categoria4">Camaras Web
+          <!-- Subcategorías de Camaras Web -->
+          <ul class="subcategorias">
+            <li class="subcategoria-item" data-categoria="subcategoria5-1"><a href=""
+                class="categoria-link">Logitech</a></li>
+            <li class="subcategoria-item" data-categoria="subcategoria5-2"><a href=""
+                class="categoria-link">Angetube</a></li>
+            <li class="subcategoria-item" data-categoria="subcategoria5-3"><a href="" class="categoria-link">TedGem</a>
+            </li>
+          </ul>
+        </li>
+        <li data-categoria="categoria5">Microfonos
+          <!-- Subcategorías de Microfonos -->
+          <ul class="subcategorias">
+            <li class="subcategoria-item" data-categoria="subcategoria6-1"><a href="" class="categoria-link">Razer</a>
+            </li>
+            <li class="subcategoria-item" data-categoria="subcategoria6-2"><a href="" class="categoria-link">Blue
+                Yeti</a></li>
+            <li class="subcategoria-item" data-categoria="subcategoria6-3"><a href="" class="categoria-link">Shure</a>
+            </li>
+            <li class="subcategoria-item" data-categoria="subcategoria6-4"><a href="" class="categoria-link">HyperX</a>
+            </li>
+          </ul>
+        </li>
+        <li data-categoria="categoria6">Sillas Gamer
+          <!-- Subcategorías de Sillas Gamer -->
+          <ul class="subcategorias">
+            <li class="subcategoria-item" data-categoria="subcategoria7-1"><a href=""
+                class="categoria-link">VertaGear</a></li>
+            <li class="subcategoria-item" data-categoria="subcategoria7-2"><a href="" class="categoria-link">Corsair</a>
+            </li>
+            <li class="subcategoria-item" data-categoria="subcategoria7-3"><a href="" class="categoria-link">DxRacer</a>
+            </li>
+            <li class="subcategoria-item" data-categoria="subcategoria7-4"><a href=""
+                class="categoria-link">Technisport</a></li>
+          </ul>
+        </li>
+        <li data-categoria="categoria7">Accesorios
+          <!-- Subcategorías de Accesorios -->
+          <ul class="subcategorias">
+            <li class="subcategoria-item" data-categoria="subcategoria7-1">Redragon</li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+    <!-- Cabecera vista movil -->
+  </header>
+  <main>
+    <div class="slider-frame">
+      <ul>
+        <li><img src="./assets/imagen/carrusel_3.webp" alt=""></li>
+        <li><img src="./assets/imagen/carrusel_0.webp" alt=""></li>
+        <li><img src="./assets/imagen/carrusel_1.webp" alt=""></li>
+        <li><img src="./assets/imagen/carrusel_2.webp" alt=""></li>
+      </ul>
+    </div>
+  </main>
+  <footer class="footer-distributed">
+
+    <div class="footer-left">
+
+      <h3><img src="./assets/imagen/logo.gif" alt="logo"></h3>
+
+      <p class="footer-links">
+        <a href="/" class="link-1">Home</a>
+
+        <a href="#">Blog</a>
+
+        <a href="#">Pricing</a>
+
+        <a href="#">About</a>
+
+        <a href="#">Faq</a>
+
+        <a href="#">Contact</a>
+      </p>
+
+    </div>
+
+    <address class="footer-center">
+      <div>
+        <i class="fa fa-map-marker"></i>
+        <p><span>Jr. Hermán Velarde 260</span> Lima, Lima</p>
+      </div>
+      <div>
+        <i class="fa fa-phone"></i>
+        <p>930 517 160</p>
+      </div>
+      <div>
+        <i class="fa fa-envelope"></i>
+        <p><a href="mailto:support@company.com">spacer@company.com</a></p>
+      </div>
+    </address>
+
+    <div class="footer-right">
+
+      <p class="footer-company-about">
+        <span>Acerca de nosotros</span>
+        Somos una empresa de venta de periféricos para tu PC, nosotros estamos dispuestos a ofrecerte el servicio de calidad que mereces.
+      </p>
+
+      <div class="footer-icons">
+
+        <a href="#" class="icon twitter"></a>
+        <a href="#" class="icon facebook"></a>
+        <a href="#" class="icon whatsapp"></a>
+
+      </div>
+
+    </div>
+
+    <p class="footer-company-name">Spacer © 2023</p>
+
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+  <script src="./js/index.js"></script>
+</body>
+
+</html>

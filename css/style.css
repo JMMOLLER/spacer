@@ -1,0 +1,27 @@
+@import url("./header/menu.css");
+@import url("./footer/footer.css");
+
+@font-face {
+  font-family: 'Kanit';
+  font-weight: normal;
+  font-style: normal;
+  src: url("../../assets/fonts/Kanit/Kanit-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: 'JosefinSans';
+  font-weight: normal;
+  font-style: normal;
+  src: url("../../assets/fonts/JosefinSans/JosefinSans-Regular.ttf") format("truetype");
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Kanit', sans-serif;
+  max-width: 100vw;
+}
