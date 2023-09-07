@@ -1,8 +1,8 @@
-{
-  "redirects": [
-    {
-      "source": "/",
-      "destination": "/menu.html"
-    }
-  ]
-}
+// {
+//   "redirects": [
+//     {
+//       "source": "/",
+//       "destination": "/index.html"
+//     }
+//   ]
+// }
