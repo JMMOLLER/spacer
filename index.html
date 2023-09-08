@@ -8,13 +8,15 @@
   <link rel="shortcut icon" href="./assets/icons/favicon.ico" type="image/x-icon">
   <!-- HTML Meta Tags -->
   <title>Spacer</title>
-  <meta name="description" content="¡Si quieres comprar productos para concentir a tu bestia del PC Gaming escogenos a nosotros! Tenemos los productos de más alta calidad al mejor precio.">
+  <meta name="description"
+    content="¡Si quieres comprar productos para concentir a tu bestia del PC Gaming escogenos a nosotros! Tenemos los productos de más alta calidad al mejor precio.">
 
   <!-- Facebook Meta Tags -->
   <meta property="og:url" content="https://spacer-ecommerce.vercel.app/">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Spacer">
-  <meta property="og:description" content="¡Si quieres comprar productos para concentir a tu bestia del PC Gaming escogenos a nosotros! Tenemos los productos de más alta calidad al mejor precio.">
+  <meta property="og:description"
+    content="¡Si quieres comprar productos para concentir a tu bestia del PC Gaming escogenos a nosotros! Tenemos los productos de más alta calidad al mejor precio.">
   <meta property="og:image" content="https://i.imgur.com/lpDRs8j.png">
 
   <!-- Twitter Meta Tags -->
@@ -22,8 +24,10 @@
   <meta property="twitter:domain" content="spacer-ecommerce.vercel.app">
   <meta property="twitter:url" content="https://spacer-ecommerce.vercel.app/">
   <meta name="twitter:title" content="Spacer">
-  <meta name="twitter:description" content="¡Si quieres comprar productos para concentir a tu bestia del PC Gaming escogenos a nosotros! Tenemos los productos de más alta calidad al mejor precio.">
+  <meta name="twitter:description"
+    content="¡Si quieres comprar productos para concentir a tu bestia del PC Gaming escogenos a nosotros! Tenemos los productos de más alta calidad al mejor precio.">
   <meta name="twitter:image" content="https://i.imgur.com/lpDRs8j.png">
+
 </head>
 
 <body>
@@ -195,20 +199,46 @@
     <!-- Cabecera vista movil -->
   </header>
   <main>
-    <div class="slider-frame">
-      <ul>
-        <li><img src="./assets/imagen/carrusel_3.webp" alt=""></li>
-        <li><img src="./assets/imagen/carrusel_0.webp" alt=""></li>
-        <li><img src="./assets/imagen/carrusel_1.webp" alt=""></li>
-        <li><img src="./assets/imagen/carrusel_2.webp" alt=""></li>
-      </ul>
+    <div class="carrusel">
+      <div class="carru">
+        <input type="radio" title="cambiar imagen" name="radio-btn" id="radio1">
+        <input type="radio" title="cambiar imagen" name="radio-btn" id="radio2">
+        <input type="radio" title="cambiar imagen" name="radio-btn" id="radio3">
+        <input type="radio" title="cambiar imagen" name="radio-btn" id="radio4">
+
+        <div class="carr first">
+          <img src="assets/imagen/carrusel_0.webp" alt="imagen promocion">
+        </div>
+
+        <div class="carr">
+          <img src="assets/imagen/carrusel_1.webp" alt="imagen promocion">
+        </div>
+
+        <div class="carr">
+          <img src="assets/imagen/carrusel_2.webp" alt="imagen promocion">
+        </div>
+
+        <div class="carr">
+          <img src="assets/imagen/carrusel_3.webp" alt="imagen promocion">
+        </div>
+
+      </div>
+
+      <div class="navigation-manual">
+        <label for="radio1" class="manual-btn"></label>
+        <label for="radio2" class="manual-btn"></label>
+        <label for="radio3" class="manual-btn"></label>
+        <label for="radio4" class="manual-btn"></label>
+      </div>
+
     </div>
+
   </main>
   <footer class="footer-distributed">
 
     <div class="footer-left">
 
-      <h3><img src="./assets/imagen/logo.gif" alt="logo"></h3>
+      <h3><img src="./assets/imagen/logo-footer.png" alt="logo"></h3>
 
       <p class="footer-links">
         <a href="/" class="link-1">Home</a>
@@ -245,7 +275,8 @@
 
       <p class="footer-company-about">
         <span>Acerca de nosotros</span>
-        Somos una empresa de venta de periféricos para tu PC, nosotros estamos dispuestos a ofrecerte el servicio de calidad que mereces.
+        Somos una empresa de venta de periféricos para tu PC, nosotros estamos dispuestos a ofrecerte el servicio de
+        calidad que mereces.
       </p>
 
       <div class="footer-icons">
@@ -264,6 +295,16 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
   <script src="./js/index.js"></script>
+  <script type="text/javascript">
+    let counter = 1;
+    setInterval(function () {
+      document.getElementById('radio' + counter).checked = true;
+      counter++;
+      if (counter > 4) {
+        counter = 1;
+      }
+    }, 5000);
+  </script>
 </body>
 
 </html>
