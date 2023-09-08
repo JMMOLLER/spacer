@@ -270,6 +270,7 @@ header {
   margin-top: 1rem;
   position: relative;
   border-radius: 15px;
+  z-index: -1;
 }
 
 .carru {
