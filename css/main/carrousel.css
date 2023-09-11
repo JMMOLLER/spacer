@@ -1,0 +1,61 @@
+.marcas {
+    width: 75vw;
+    height: auto;
+    margin: 1rem auto;
+    overflow: hidden;
+    border: none;
+    border-radius: 20px;
+    background-color: rgb(106, 107, 107);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+    padding: 20px;
+}
+
+
+.marcas .marca-track {
+    display: flex;
+    animation: scroll 30s linear infinite;
+    width: calc(200px * 14);
+    overflow: hidden;
+}
+
+.marcas .marca {
+    width: 200px;
+    margin-right: 10px;
+    border: none;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    background-color: #f1f0f0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    transition: transform 0.2s ease-in-out;
+}
+
+.marcas .marca img {
+    width: 70%;
+    height: auto;
+    margin: 0 auto;
+    border-radius: 20px;
+}
+
+@keyframes scroll {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(calc(-200px * 7));
+    }
+}
+
+.marcas .marca:hover {
+    transform: scale(1.1);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6);
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.marcas .marca:hover img {
+    filter: grayscale(0%);
+    transition: filter 0.2s ease-in-out;
+}
