@@ -1,7 +1,6 @@
-@import url("./header/menu.css");
-@import url("./footer/footer.css");
-@import url("./main/carrousel.css");
-@import url("./main/productos.css");
+@import url("./header/index.css");
+@import url("./main/index.css");
+@import url("./footer/index.css");
 
 @font-face {
   font-family: 'Kanit';

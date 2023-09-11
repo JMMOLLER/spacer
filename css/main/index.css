@@ -1,0 +1,8 @@
+@import url("./hero.css");
+@import url("./marcas.css");
+@import url("./productos.css");
+
+main {
+  position: relative;
+  z-index: 0;
+}
