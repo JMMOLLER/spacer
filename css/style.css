@@ -27,3 +27,8 @@ body {
   font-family: 'Kanit', sans-serif;
   max-width: 100vw;
 }
+
+img {
+  user-select: none;
+  pointer-events: none;
+}
