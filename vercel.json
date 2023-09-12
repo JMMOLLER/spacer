@@ -1,7 +1,7 @@
 {
   "rewrites": [
-    { "source": "/login", "destination": "https://spacer-ecommerce.vercel.app/pages/login.html" },
-    { "source": "/login/**", "destination": "https://spacer-ecommerce.vercel.app/pages/login.html" }
+    { "source": "/login", "destination": "/pages/login.html" },
+    { "source": "/login/**", "destination": "/pages/login.html" }
   ],
   "cleanUrls": true
 }
