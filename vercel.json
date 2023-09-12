@@ -4,5 +4,6 @@
       "source": "/pages/login.html",
       "destination": "/login"
     }
-  ]
+  ],
+  "cleanUrls": true
 }
