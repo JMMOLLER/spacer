@@ -2,5 +2,14 @@
   "rewrites": [
     { "source": "/pages/login.html", "destination": "/login" }
   ],
+  "routes": [
+    { "handle": "filesystem" },
+    {
+      "src": "/(.*)",
+      "status": 301,
+      "headers": { "Location": "/pages/404.html" },
+      "continue": true
+    }
+  ],
   "cleanUrls": true
 }
