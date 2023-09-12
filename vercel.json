@@ -1,7 +1,7 @@
 {
-  "redirects": [
+  "rewrites": [
     {
-      "source": "/pages/login",
+      "source": "/pages/login.html",
       "destination": "/login"
     }
   ]
