@@ -1,17 +1,7 @@
 {
-  "redirects": [
-    {
-      "source": "https://spacer-ecommerce.vercel.app/",
-      "destination": "https://spacer-ecommerce.vercel.app/"
-    },
-    {
-      "source": "https://spacer-ecommerce.vercel.app/login",
-      "destination": "https://spacer-ecommerce.vercel.app/pages/login"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "https://spacer-ecommerce.vercel.app/pages/404"
-    }
+  "routes": [
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "status": 404, "dest": "/pages/404.html" }
   ],
   "cleanUrls": true
 }
