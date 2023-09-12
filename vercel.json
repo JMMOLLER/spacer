@@ -1,10 +1,16 @@
 {
-  "routes": [
-    { "handle": "filesystem" },
+  "redirects": [
     {
-      "src": "/(.*)",
-      "status": 301,
-      "dest": "/pages/404.html"
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "header",
+          "key": "status",
+          "value": "404"
+        }
+      ],
+      "permanent": true,
+      "destination": "/pages/404.html"
     }
   ],
   "cleanUrls": true
