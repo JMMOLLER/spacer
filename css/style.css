@@ -31,3 +31,8 @@ img {
   user-select: none;
   pointer-events: none;
 }
+
+a {
+  text-decoration: none;
+  color: inherit;
+}

@@ -123,10 +123,11 @@ header {
   color: #00e5ff;
 }
 
-.container_user {
+.container_user, .container_carrito {
+  height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-evenly;
   align-items: center;
   cursor: pointer;
   gap: 5px;
@@ -144,16 +145,6 @@ header {
   font-family: 'JosefinSans', sans-serif;
 }
 
-.container_carrito {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  gap: 7px;
-}
-
 .container_carrito>p {
   font-size: .87rem;
   font-family: 'JosefinSans', sans-serif;
@@ -161,8 +152,8 @@ header {
 
 #animation_cart {
   position: relative;
-  width: 45px;
-  height: 45px;
+  width: 50px;
+  height: 50px;
   filter: invert(1);
 }
 
@@ -181,40 +172,6 @@ header {
   align-items: center;
   z-index: 1;
   filter: invert(1);
-}
-
-.carrito_popup {
-  display: none;
-  position: absolute;
-  width: 300px;
-  height: 125px;
-  bottom: -60%;
-  background-color: #fff;
-  transform: translateY(60%);
-  box-shadow: 4px 4px 10px rgba(0, 0, 0, .5);
-  color: #000;
-  cursor: default;
-  padding: 1rem;
-  right: 0;
-}
-
-.carrito_popup.active {
-  display: block;
-}
-
-.popup_header {
-  display: flex;
-  flex-direction: row;
-  font-family: 'Arial', sans-serif;
-  justify-content: space-between;
-  font-weight: bold;
-  padding: 0 .5rem;
-  margin-bottom: .5rem;
-}
-
-.popup_header .content {
-  text-decoration: none;
-  color: inherit;
 }
 
 .carrito_popup_content {
