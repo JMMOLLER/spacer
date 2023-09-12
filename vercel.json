@@ -4,8 +4,7 @@
     {
       "src": "/(.*)",
       "status": 301,
-      "headers": { "Location": "/pages/404.html" },
-      "continue": true
+      "dest": "/pages/404.html"
     }
   ],
   "cleanUrls": true
