@@ -1,16 +1,16 @@
 {
   "redirects": [
     {
-      "source": "/",
+      "source": "https://spacer-ecommerce.vercel.app/",
       "destination": "https://spacer-ecommerce.vercel.app/"
     },
     {
-      "source": "/login",
+      "source": "https://spacer-ecommerce.vercel.app/login",
       "destination": "https://spacer-ecommerce.vercel.app/pages/login"
     },
     {
       "source": "/(.*)",
-      "destination": "https://vercel.com/docs"
+      "destination": "https://spacer-ecommerce.vercel.app/pages/404"
     }
   ],
   "cleanUrls": true
