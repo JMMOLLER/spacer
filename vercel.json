@@ -1,7 +1,4 @@
 {
-  "rewrites": [
-    { "source": "/pages/login.html", "destination": "/login" }
-  ],
   "routes": [
     { "handle": "filesystem" },
     {
