@@ -1,16 +1,16 @@
 {
   "redirects": [
     {
+      "source": "/",
+      "destination": "/"
+    },
+    {
+      "source": "/login",
+      "destination": "/pages/login"
+    },
+    {
       "source": "/(.*)",
-      "has": [
-        {
-          "type": "header",
-          "key": "X-Vercel-Error",
-          "value": "NOT_FOUND"
-        }
-      ],
-      "permanent": true,
-      "destination": "/pages/404.html"
+      "destination": "https://vercel.com/docs"
     }
   ],
   "cleanUrls": true
