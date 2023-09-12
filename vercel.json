@@ -2,11 +2,11 @@
   "redirects": [
     {
       "source": "/",
-      "destination": "/"
+      "destination": "https://spacer-ecommerce.vercel.app/"
     },
     {
       "source": "/login",
-      "destination": "/pages/login"
+      "destination": "https://spacer-ecommerce.vercel.app/pages/login"
     },
     {
       "source": "/(.*)",
