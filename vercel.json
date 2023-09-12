@@ -1,9 +1,7 @@
 {
   "rewrites": [
-    {
-      "source": "/pages/login.html",
-      "destination": "/login"
-    }
+    { "source": "/login", "destination": "/pages/login.html" },
+    { "source": "/login/**", "destination": "/pages/login.html" }
   ],
   "cleanUrls": true
 }
