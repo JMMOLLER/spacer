@@ -1,9 +1,6 @@
 .contenedor {
   max-width: 1200px;
   margin: auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   /* Centra verticalmente el contenido */
   padding: 20px;
   /* Aumenta el espaciado interior para un aspecto más aireado */
@@ -15,18 +12,35 @@
   /* Agrega bordes redondeados */
   overflow: hidden;
   /* Oculta el contenido que desborde del contenedor */
+  text-align: center;
 }
 
 /* Estilo del contenedor de ítems */
 .contenedor .contenedor-items {
+  position: relative;
   margin-top: 30px;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  grid-gap: 30px;
-  grid-row-gap: 30px;
   width: 100%;
   transition: transform 0.3s ease;
   /* Añade transición para efecto de zoom */
+}
+
+.titulo-contenedor-productos {
+  font-size: 2.5rem;
+}
+
+.categoria-titulo {
+  position: absolute;
+  top: -.1rem;
+  font-size: 1.7rem;
+}
+
+.categoria-item {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  position: relative;
+  padding-top: 3rem;
+  margin-top: .5rem;
 }
 
 /* Estilo de los ítems */

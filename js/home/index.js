@@ -1,6 +1,10 @@
 const preventRedirect = () => {
   // agrega el evento click a todos los elementos del menu y evita que se redirija a otra pagina
   document.querySelectorAll("#menuCategorias > li").forEach((el) => el.addEventListener("click", (e) => e.preventDefault()))
+  document.querySelectorAll(".marcas > div > a").forEach((el) => el.addEventListener("click", (e) => {
+    e.preventDefault()
+    document.querySelector(`${e.target.getAttribute("href")}`).scrollIntoView({ behavior: "smooth" })
+  }))
 }
 
 const loadLottieAnimation = () => {
