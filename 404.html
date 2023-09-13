@@ -280,7 +280,7 @@
         <a
           href="/"
           class="btn-go-home"
-          >VOLVER A INICIO</a
+          >Regresar</a
         >
       </div>
       <div class="objects">
@@ -317,5 +317,12 @@
         <div class="star"></div>
       </div>
     </div>
+    <script>
+      const btnGoBack = document.querySelector(".btn-go-home");
+      btnGoBack.addEventListener("click", function (e) {
+        e.preventDefault();
+        window.history.back();
+      });
+    </script>
   </body>
 </html>
