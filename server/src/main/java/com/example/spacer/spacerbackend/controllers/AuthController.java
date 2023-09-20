@@ -1,6 +1,7 @@
 package com.example.spacer.spacerbackend.controllers;
 
 import com.example.spacer.spacerbackend.auth.TokensUtils;
+import com.example.spacer.spacerbackend.services.Response;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +21,11 @@ public class AuthController {
     public ResponseEntity<?> getClientInfo(HttpServletRequest request) {
         String authorizationHeader = request.getHeader("Authorization");
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            Map<String, Object> payload = TokensUtils.getPayloadFromToken(authorizationHeader.replace("Bearer ", ""));
-            return new ResponseEntity<>(payload, HttpStatus.OK);
+            Map<String, Object> payload = TokensUtils.getPayloadFromToken(
+                authorizationHeader.replace("Bearer ", "")
+            );
+            Response response = new Response(HttpStatus.OK, HttpStatus.OK.name(), payload);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
         return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
