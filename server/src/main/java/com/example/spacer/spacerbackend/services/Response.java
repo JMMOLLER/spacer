@@ -1,10 +1,15 @@
 package com.example.spacer.spacerbackend.services;
 
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
+@Getter
 public class Response {
+  @lombok.Setter
   private Integer statusCode;
+  @lombok.Setter
   private String description;
+  @lombok.Setter
   private Object response;
 
   public Response(HttpStatus statusCode, String message, Object response) {
@@ -13,27 +18,4 @@ public class Response {
     this.response = response;
   }
 
-  public String getDescription() {
-    return description;
-  }
-
-  public void setDescription(String message) {
-    this.description = message;
-  }
-
-  public Object getResponse() {
-    return response;
-  }
-
-  public void setResponse(Object response) {
-    this.response = response;
-  }
-
-  public Integer getStatusCode() {
-    return statusCode;
-  }
-
-  public void setStatusCode(Integer statusCode) {
-    this.statusCode = statusCode;
-  }
 }

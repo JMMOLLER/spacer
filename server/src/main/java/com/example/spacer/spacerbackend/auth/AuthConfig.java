@@ -1,20 +1,22 @@
 package com.example.spacer.spacerbackend.auth;
 
-import java.security.SecureRandom;
-import java.util.Base64;
 
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import lombok.AllArgsConstructor;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @AllArgsConstructor
@@ -31,25 +33,32 @@ public class AuthConfig {
     jwtAuthFilter.setFilterProcessesUrl("/api/auth");
 
     return http
-      .csrf().disable()
-      .authorizeRequests(authorizeRequests ->
-        authorizeRequests
-        .anyRequest().authenticated()
-      )
-      .sessionManagement(sessionManagement ->
-        sessionManagement
-        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-      )
-      .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+      .cors(Customizer.withDefaults()).csrf(AbstractHttpConfigurer::disable)
+      .authorizeHttpRequests(authorizeRequests ->
+        authorizeRequests.anyRequest().authenticated()
+      ).sessionManagement(sessionManagement ->
+        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+      ).addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
       .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
       .build();
+  }
 
+  @Bean
+  CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration conf = new CorsConfiguration();
+    conf.setAllowedOrigins(java.util.List.of("*"));
+    conf.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+    conf.setAllowedHeaders(java.util.List.of("Authorization", "Cache-Control", "Content-Type"));
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", conf);
+    return source;
   }
 
   @Bean
   AuthenticationManager authenticationManager(HttpSecurity http, PasswordEncoder passwordEncoder) throws Exception {
-    return http.getSharedObject(AuthenticationManagerBuilder.class).userDetailsService(clientDetailsService)
-      .passwordEncoder(passwordEncoder).and().build();
+    AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
+    authenticationManagerBuilder.userDetailsService(clientDetailsService).passwordEncoder(passwordEncoder);
+    return authenticationManagerBuilder.build();
   }
 
   @Bean

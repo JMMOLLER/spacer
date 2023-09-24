@@ -1,41 +1,35 @@
 package com.example.spacer.spacerbackend.controllers;
 
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.example.spacer.spacerbackend.models.ClientModel;
 import com.example.spacer.spacerbackend.services.ClientService;
 import com.example.spacer.spacerbackend.services.Response;
-
-import java.util.ArrayList;
-
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/cliente")
 public class ClientController {
+  ClientService clientService;
+
   @Autowired
-  ClientService clienteService;
+  public ClientController(ClientService clientService) {
+    this.clientService = clientService;
+  }
 
   @GetMapping()
-  public ArrayList<ClientModel> obtenerClientes() {
-    return clienteService.getAllClients();
+  public ResponseEntity<Response> getClients() {
+    Response response = new Response(HttpStatus.OK, HttpStatus.OK.name(), this.clientService.getAllClients());
+    return new ResponseEntity<>(response, HttpStatus.OK);
   }
 
   @PostMapping()
   @ResponseBody
-  public ResponseEntity<?> crearCliente(@RequestBody ClientModel cliente) {
+  public ResponseEntity<Response> createClient(@RequestBody ClientModel cliente) {
     try {
-      ClientModel cs = this.clienteService.newClient(cliente);
+      ClientModel cs = this.clientService.newClient(cliente);
       Response response = new Response(HttpStatus.CREATED, "Petición exitosa", cs);
       return new ResponseEntity<>(response, HttpStatus.CREATED);
     } catch (Exception e) {
@@ -46,9 +40,9 @@ public class ClientController {
 
   @PutMapping()
   @ResponseBody
-  public ResponseEntity<?> actualizarCliente(@RequestBody ClientModel cliente) {
+  public ResponseEntity<Response> updateClient(@RequestBody ClientModel cliente) {
     try {
-      ClientModel cs = this.clienteService.updateClient(cliente);
+      ClientModel cs = this.clientService.updateClient(cliente);
       Response response = new Response(HttpStatus.OK, "Actualización exitosa", cs);
       return new ResponseEntity<>(response, HttpStatus.OK);
     } catch (Exception e) {
@@ -59,9 +53,9 @@ public class ClientController {
 
   @DeleteMapping()
   @ResponseBody
-  public ResponseEntity<?> eliminarCliente(@RequestBody ClientModel cliente) {
+  public ResponseEntity<Response> deleteClient(@RequestBody ClientModel cliente) {
     try {
-      ClientModel cs = this.clienteService.deleteClient(cliente);
+      ClientModel cs = this.clientService.deleteClient(cliente);
       Response response = new Response(HttpStatus.OK, "Eliminación exitosa", cs);
       return new ResponseEntity<>(response, HttpStatus.OK);
     } catch (Exception e) {

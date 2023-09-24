@@ -1,97 +1,36 @@
 package com.example.spacer.spacerbackend.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.Getter;
 
+@Getter
 @Entity
 @Table(name = "cliente")
 public class ClientModel {
-  
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @lombok.Setter
   private String nomcli;
+  @lombok.Setter
   private String apecli;
-  private String email;
+  @lombok.Setter
   private String password;
+  @lombok.Setter
   private Integer rolcli;
+  @lombok.Setter
   private String dircli;
+  @lombok.Setter
   private Integer crdcli;
+  @lombok.Setter
+  private String email;
+  @lombok.Setter
   private String username;
-
-  public Long getId() {
-    return id;
-  }
 
   public void setId(Long id) {
     this.id = id;
   }
 
-  public String getNomcli() {
-    return nomcli;
-  }
-
-  public void setNomcli(String nomcli) {
-    this.nomcli = nomcli;
-  }
-
-  public String getApecli() {
-    return apecli;
-  }
-
-  public void setApecli(String apecli) {
-    this.apecli = apecli;
-  }
-
-  public String getEmail() {
-    return email;
-  }
-
-  public void setEmail(String email) {
-    this.email = email;
-  }
-
-  public String getPassword() {
-    return password;
-  }
-
-  public void setPassword(String password) {
-    this.password = password;
-  }
-
-  public Integer getRolcli() {
-    return rolcli;
-  }
-
-  public void setRolcli(Integer rolcli) {
-    this.rolcli = rolcli;
-  }
-
-  public String getDircli() {
-    return dircli;
-  }
-
-  public void setDircli(String dircli) {
-    this.dircli = dircli;
-  }
-
-  public Integer getCrdcli() {
-    return crdcli;
-  }
-
-  public void setCrdcli(Integer crdcli) {
-    this.crdcli = crdcli;
-  }
-
-  public String getUsername() {
-    return username;
-  }
-
-  public void setUsername(String username) {
-    this.username = username;
-  }
 }

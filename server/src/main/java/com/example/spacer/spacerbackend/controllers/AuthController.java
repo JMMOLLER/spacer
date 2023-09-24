@@ -16,17 +16,17 @@ import java.util.Map;
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    @GetMapping("/info")
-    @ResponseBody
-    public ResponseEntity<?> getClientInfo(HttpServletRequest request) {
-        String authorizationHeader = request.getHeader("Authorization");
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            Map<String, Object> payload = TokensUtils.getPayloadFromToken(
-                authorizationHeader.replace("Bearer ", "")
-            );
-            Response response = new Response(HttpStatus.OK, HttpStatus.OK.name(), payload);
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+  @GetMapping("/info")
+  @ResponseBody
+  public ResponseEntity<Response> getClientInfo(HttpServletRequest request) {
+    String authorizationHeader = request.getHeader("Authorization");
+    if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+      Map<String, Object> payload = TokensUtils.getPayloadFromToken(
+        authorizationHeader.replace("Bearer ", "")
+      );
+      Response response = new Response(HttpStatus.OK, HttpStatus.OK.name(), payload);
+      return new ResponseEntity<>(response, HttpStatus.OK);
     }
+    return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+  }
 }

@@ -1,14 +1,12 @@
 package com.example.spacer.spacerbackend.auth;
 
-import java.util.Collection;
-import java.util.Collections;
-
+import com.example.spacer.spacerbackend.models.ClientModel;
+import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.example.spacer.spacerbackend.models.ClientModel;
-
-import lombok.AllArgsConstructor;
+import java.util.Collection;
+import java.util.Collections;
 
 @AllArgsConstructor
 public class ClientDetailsImp implements UserDetails {
@@ -51,8 +49,8 @@ public class ClientDetailsImp implements UserDetails {
     return true;
   }
 
-  public String getEmail(){
+  public String getEmail() {
     return ClientModel.getEmail();
   }
-  
+
 }
