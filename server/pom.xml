@@ -11,7 +11,7 @@
 	<groupId>com.example.spacer</groupId>
 	<artifactId>spacer-backend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<name>spacer-backend</name>
 	<description>spacer api rest project with Spring Boot</description>
 	<properties>
