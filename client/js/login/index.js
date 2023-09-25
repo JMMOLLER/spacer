@@ -10,10 +10,6 @@ const toggleSubmit = () => {
 
 const loadLottieAnimation = () => {
   const returnElement = document.querySelector(".animation_arrow_container");
-  document.querySelector(".spacer_form").addEventListener("submit", (e) => {
-    e.preventDefault();
-    toggleSubmit();
-  });
 
   const animation = lottie.loadAnimation({
     container: document.getElementById("animation_arrow"), // the dom element that will contain the animation
@@ -31,6 +27,61 @@ const loadLottieAnimation = () => {
   });
 };
 
+const handleSubmit = (e) => {
+  e.preventDefault();
+  toggleSubmit();
+  const credentials = new FormData(e.target);
+  handleLogin(Object.fromEntries(credentials));
+}
+
+const checkAuth = () => {
+  const token = localStorage.getItem("token");
+  if (!token && token?.startsWith("ey")) {
+    window.location.href = "/home";
+  }
+};
+
+const handleLogin = async(credentials) => {
+  const url = "http://localhost:8080/api/auth";
+
+  const response = await doFetch(url, credentials, "POST" );
+  if(response?.token) {
+    localStorage.setItem("token", response.token);
+    window.location.href = "/home";
+  } else {
+    toggleSubmit();
+  }
+  return response ? true : false;
+}
+
+const doFetch = async (url, credentials, method) => {
+  try {
+    const consult = await fetch(url, {
+      method: !method ? "GET" : method ,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(credentials),
+    });
+
+    if(!consult.ok) {
+      throw new Error("Error en la petición");
+    }
+
+    const response = await consult.json();
+    return response.response;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+window.onload = () => {
+  const form = document.querySelector("form");
+  form.addEventListener("submit", handleSubmit);
+};
+
 export default function init() {
   loadLottieAnimation();
+  checkAuth();
+  console.info("login");
 }
