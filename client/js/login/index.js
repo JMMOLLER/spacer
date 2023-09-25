@@ -32,48 +32,18 @@ const handleSubmit = (e) => {
   toggleSubmit();
   const credentials = new FormData(e.target);
   handleLogin(Object.fromEntries(credentials));
-}
-
-const checkAuth = () => {
-  const token = localStorage.getItem("token");
-  if (!token && token?.startsWith("ey")) {
-    window.location.href = "/home";
-  }
 };
 
-const handleLogin = async(credentials) => {
-  const url = "http://localhost:8080/api/auth";
-
-  const response = await doFetch(url, credentials, "POST" );
-  if(response?.token) {
-    localStorage.setItem("token", response.token);
-    window.location.href = "/home";
+const handleLogin = async (credentials) => {
+  const res = await doFetch(`${API_URL}/auth`, credentials, "POST"); // no puede user esta funcion porque no esta definida
+  if (res?.statusCode === 200) {
+    localStorage.setItem("token", res?.response?.token);
+    window.location.href = "/";
   } else {
     toggleSubmit();
   }
-  return response ? true : false;
-}
-
-const doFetch = async (url, credentials, method) => {
-  try {
-    const consult = await fetch(url, {
-      method: !method ? "GET" : method ,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(credentials),
-    });
-
-    if(!consult.ok) {
-      throw new Error("Error en la petición");
-    }
-
-    const response = await consult.json();
-    return response.response;
-  } catch (error) {
-    console.error(error);
-  }
-}
+  return res ? true : false;
+};
 
 window.onload = () => {
   const form = document.querySelector("form");
@@ -82,6 +52,13 @@ window.onload = () => {
 
 export default function init() {
   loadLottieAnimation();
-  checkAuth();
+  import("../globals/index.js")
+    .then((module) => module.userIsAuth().then((res) =>
+    res
+      ? (window.location.href = "/")
+      : document
+          .querySelector("input[type='submit']")
+          .removeAttribute("disabled")
+  ))
   console.info("login");
 }

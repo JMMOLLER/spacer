@@ -48,6 +48,12 @@
   position: relative;
 }
 
+.inputSubmit-group > input[disabled] {
+  background-color: #34d5d5 !important;
+  color: #333333 !important;
+  cursor: not-allowed !important;
+}
+
 .inputSubmit-group > input[type="submit"] {
   height: initial;
   width: 100%;

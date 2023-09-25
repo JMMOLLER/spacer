@@ -1,3 +1,5 @@
+import { userIsAuth } from "../globals/index.js";
+
 const preventRedirect = () => {
   // agrega el evento click a todos los elementos del menu y evita que se redirija a otra pagina
   document.querySelectorAll("#menuCategorias > li").forEach((el) => el.addEventListener("click", (e) => e.preventDefault()))
@@ -68,6 +70,7 @@ function checkInput() {
 }
 
 export default function init() {
+  userIsAuth().then((res) => res ? document.querySelector("body > header > div > div.header-right > div.container_link > a").href = "/pages/profile.html": null);
   preventRedirect();
   loadLottieAnimation();
   startCarrouselAnimation();
