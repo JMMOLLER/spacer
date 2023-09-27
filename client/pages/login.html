@@ -1,62 +1,58 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="../css/style.css" />
-    <link rel="shortcut icon" href="../assets/icons/favicon.ico" type="image/x-icon"/>
-    <!-- HTML Meta Tags -->
-    <title>Login</title>
-    <meta
-      name="description"
-      content="¡Inicia sesión en nuestra tienda del PC Gaming y no te pierdas de nuestras ofertas!"
-    />
-    <!-- Facebook Meta Tags -->
-    <meta property="og:url" content="https://spacer-ecommerce.vercel.app/login" />
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="Login tienda Spacer" />
-    <meta
-      property="og:description"
-      content="¡Inicia sesión en nuestra tienda del PC Gaming y no te pierdas de nuestras ofertas!"
-    />
-    <meta property="og:image" content="https://i.imgur.com/lpDRs8j.png" />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="shortcut icon" href="../assets/icons/favicon.ico" type="image/x-icon" />
+  <!-- HTML Meta Tags -->
+  <title>Login</title>
+  <meta name="description"
+    content="¡Inicia sesión en nuestra tienda del PC Gaming y no te pierdas de nuestras ofertas!" />
+  <!-- Facebook Meta Tags -->
+  <meta property="og:url" content="https://spacer-ecommerce.vercel.app/login" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Login tienda Spacer" />
+  <meta property="og:description"
+    content="¡Inicia sesión en nuestra tienda del PC Gaming y no te pierdas de nuestras ofertas!" />
+  <meta property="og:image" content="https://i.imgur.com/lpDRs8j.png" />
 
-    <!-- Twitter Meta Tags -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta property="twitter:domain" content="spacer-ecommerce.vercel.app" />
-    <meta
-      property="twitter:url"
-      content="https://spacer-ecommerce.vercel.app/login"
-    />
-    <meta name="twitter:title" content="Login tienda Spacer" />
-    <meta
-      name="twitter:description"
-      content="¡Inicia sesión en nuestra tienda del PC Gaming y no te pierdas de nuestras ofertas!"
-    />
-    <meta name="twitter:image" content="https://i.imgur.com/lpDRs8j.png" />
-  </head>
-  <body class="spacer_login">
-    <form class="spacer_form" action="" method="post">
-      <a href="/" title="Ir a inicio" class="animation_arrow_container">
-        <div id="animation_arrow"></div>
-      </a>
+  <!-- Twitter Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta property="twitter:domain" content="spacer-ecommerce.vercel.app" />
+  <meta property="twitter:url" content="https://spacer-ecommerce.vercel.app/login" />
+  <meta name="twitter:title" content="Login tienda Spacer" />
+  <meta name="twitter:description"
+    content="¡Inicia sesión en nuestra tienda del PC Gaming y no te pierdas de nuestras ofertas!" />
+  <meta name="twitter:image" content="https://i.imgur.com/lpDRs8j.png" />
+</head>
+
+<body class="spacer_login">
+  <form class="spacer_form" action="" method="post">
+    <a href="/" title="Ir a inicio" class="animation_arrow_container">
+      <div id="animation_arrow"></div>
+    </a>
+    <div>
       <h1>Login</h1>
-      <div class="input-group">
-        <input type="text" name="username" id="username" required />
-        <label for="username">Username</label>
-      </div>
-      <div class="input-group">
-        <input type="password" name="password" id="password" required />
-        <label for="password">Password</label>
-      </div>
-      <div class="inputSubmit-group">
-        <input type="submit" value="Iniciar Sesión" />
-        <span class="loader"></span>
-      </div>
-      <a href="/pages/register.html">Register</a>
-    </form>
+      <span id="error" class="hidden">No se encontró una cuenta que coincida con sus credenciales.</span>
+    </div>
+    <div class="input-group">
+      <input type="text" name="username" id="username" required />
+      <label for="username">Username</label>
+    </div>
+    <div class="input-group">
+      <input type="password" name="password" id="password" required />
+      <label for="password">Password</label>
+    </div>
+    <div class="inputSubmit-group">
+      <input type="submit" value="Iniciar Sesión" disabled />
+      <span class="loader"></span>
+    </div>
+    <a href="/pages/register.html">Register</a>
+  </form>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
-    <script src="../js/index.js"></script>
-  </body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+  <script src="../js/login/index.js"></script>
+</body>
+
 </html>

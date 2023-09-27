@@ -47,7 +47,7 @@ public class AuthConfig {
   @Bean
   CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration conf = new CorsConfiguration();
-    conf.setAllowedOrigins(java.util.List.of("*", "http://127.0.0.1:5500"));
+    conf.setAllowedOrigins(java.util.List.of("*"));
     conf.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
     conf.setAllowedHeaders(java.util.List.of("Authorization", "Cache-Control", "Content-Type"));
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

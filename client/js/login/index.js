@@ -8,12 +8,15 @@ const toggleSubmit = () => {
   input.setAttribute("value", input.disabled ? "" : "Iniciar Sesión");
 };
 
+const showError = (show) => {
+  const span = document.querySelector("#error")
+  show
+    ? span.classList.remove("hidden")
+    : span.classList.add("hidden");
+}
+
 const loadLottieAnimation = () => {
   const returnElement = document.querySelector(".animation_arrow_container");
-  document.querySelector(".spacer_form").addEventListener("submit", (e) => {
-    e.preventDefault();
-    toggleSubmit();
-  });
 
   const animation = lottie.loadAnimation({
     container: document.getElementById("animation_arrow"), // the dom element that will contain the animation
@@ -31,6 +34,41 @@ const loadLottieAnimation = () => {
   });
 };
 
-export default function init() {
+const handleSubmit = (e) => {
+  e.preventDefault();
+  toggleSubmit();
+  const credentials = new FormData(e.target);
+  handleLogin(Object.fromEntries(credentials));
+};
+
+const handleLogin = async (credentials) => {
+  showError(false);
+  const doAPIFetch = await import("../globals/index.js").then((module) => module.doAPIFetch);
+  const res = await doAPIFetch('/auth', credentials, "POST"); // no puede user esta funcion porque no esta definida
+  if (res?.statusCode === 200) {
+    localStorage.setItem("token", res?.response?.token);
+    window.location.href = "/";
+  } else {
+    toggleSubmit();
+    showError(true);
+  }
+  return res ? true : false;
+};
+
+window.onload = () => {
+  const form = document.querySelector("form");
+  form.addEventListener("submit", handleSubmit);
+};
+
+(function init() {
   loadLottieAnimation();
-}
+  import ("../globals/index.js").then((module) => {
+    module.userIsAuth().then((res) =>
+    res
+      ? (window.location.href = "/")
+      : document
+        .querySelector("input[type='submit']")
+        .removeAttribute("disabled"));
+  })
+  console.info("login");
+})();

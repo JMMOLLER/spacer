@@ -1,6 +1,6 @@
 const path = window.location.pathname;
 
-// console.log(path);
+console.log(path);
 
 if(path === "/" || path.includes("index")){
   // console.log("home");
@@ -9,5 +9,5 @@ if(path === "/" || path.includes("index")){
   // console.log("login");
   import ("./login/index.js").then((module) => module.default());
 } else {
-  // console.log("404");
+  console.log("404");
 }
