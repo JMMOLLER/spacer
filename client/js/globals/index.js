@@ -10,7 +10,7 @@ export function userIsAuth() {
   return new Promise((resolve) => {
     const token = localStorage.getItem("token");
     if (token) {
-      doAPIFetch(`${API_URL}/auth/info`, null, "GET")
+      doAPIFetch('/auth/info', null, "GET")
         .then((res) => {
           if (res.statusCode === 200) {
             resolve(true);
