@@ -104,6 +104,14 @@
 
 /* ================= LABELS ================ */
 
+span#error {
+  color: red;
+  font-size: .8rem;
+}
+span#error.hidden {
+  display: none;
+}
+
 .input-group {
   position: relative;
 }

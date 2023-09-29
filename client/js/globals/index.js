@@ -8,19 +8,19 @@ const API_URL = "https://spacer-api.up.railway.app/api";
  */
 export function userIsAuth() {
   return new Promise((resolve) => {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
     if (token) {
-      doFetch(`${API_URL}/auth/info`, null, "GET")
+      doAPIFetch('/auth/info', null, "GET")
         .then((res) => {
           if (res.statusCode === 200) {
             resolve(true);
           } else {
-            localStorage.removeItem("token");
+            sessionStorage.removeItem("token");
             resolve(false);
           }
         })
         .catch((err) => {
-          localStorage.removeItem("token");
+          sessionStorage.removeItem("token");
           resolve(false);
         });
     } else {
@@ -32,18 +32,18 @@ export function userIsAuth() {
 /**
  * Este método se encarga de realizar las peticiones a la API
  * 
- * @param {string} url 
+ * @param {string} path 
  * @param {object | null} credentials 
  * @param {string} method 
  * @returns {Promise<object>}
  */
-export async function doFetch(url, credentials, method) {
+export async function doAPIFetch(path, credentials, method) {
   try {
-    const res = await fetch(url, {
+    const res = await fetch(`${API_URL}${path}`, {
       method: !method ? "GET" : method,
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")} `,
+        Authorization: `Bearer ${sessionStorage.getItem("token")} `,
       },
       body: method === "POST" ? JSON.stringify(credentials) : null,
     });
