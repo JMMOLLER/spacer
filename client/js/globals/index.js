@@ -8,19 +8,19 @@ const API_URL = "https://spacer-api.up.railway.app/api";
  */
 export function userIsAuth() {
   return new Promise((resolve) => {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
     if (token) {
       doAPIFetch('/auth/info', null, "GET")
         .then((res) => {
           if (res.statusCode === 200) {
             resolve(true);
           } else {
-            localStorage.removeItem("token");
+            sessionStorage.removeItem("token");
             resolve(false);
           }
         })
         .catch((err) => {
-          localStorage.removeItem("token");
+          sessionStorage.removeItem("token");
           resolve(false);
         });
     } else {
@@ -43,7 +43,7 @@ export async function doAPIFetch(path, credentials, method) {
       method: !method ? "GET" : method,
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")} `,
+        Authorization: `Bearer ${sessionStorage.getItem("token")} `,
       },
       body: method === "POST" ? JSON.stringify(credentials) : null,
     });

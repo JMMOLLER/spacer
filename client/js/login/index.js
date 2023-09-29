@@ -46,7 +46,7 @@ const handleLogin = async (credentials) => {
   const doAPIFetch = await import("../globals/index.js").then((module) => module.doAPIFetch);
   const res = await doAPIFetch('/auth', credentials, "POST"); // no puede user esta funcion porque no esta definida
   if (res?.statusCode === 200) {
-    localStorage.setItem("token", res?.response?.token);
+    sessionStorage.setItem("token", res?.response?.token);
     window.location.href = "/";
   } else {
     toggleSubmit();
