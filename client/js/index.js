@@ -1,13 +1,13 @@
 const path = window.location.pathname;
 
-console.log(path);
+console.info(path);
 
-if(path === "/" || path.includes("index")){
-  // console.log("home");
+if((path === "/" || path.includes("index"))){
   import ("./home/index.js").then((module) => module.default());
 } else if (path.includes("login")){
-  // console.log("login");
   import ("./login/index.js").then((module) => module.default());
+} else if(path.includes("/pages/perfil.html")) {
+  import("./perfil/index.js").then((module) => module.default());
 } else {
-  console.log("404");
+  console.warn("404");
 }

@@ -36,6 +36,10 @@ header {
   pointer-events: none;
 }
 
+.cabecera-left > a {
+  display: block;
+}
+
 .cabecera-center {
   max-width: 650px;
   min-width: 290px;
