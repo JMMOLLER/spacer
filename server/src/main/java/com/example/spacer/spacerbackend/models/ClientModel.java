@@ -28,6 +28,10 @@ public class ClientModel {
   private String email;
   @lombok.Setter
   private String username;
+  @lombok.Setter
+  private byte[] img;
+  @lombok.Setter
+  private String img_cli;
 
   public void setId(Long id) {
     this.id = id;

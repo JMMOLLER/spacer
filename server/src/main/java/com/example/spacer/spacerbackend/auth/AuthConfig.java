@@ -1,9 +1,13 @@
 package com.example.spacer.spacerbackend.auth;
 
 
+import com.example.spacer.spacerbackend.services.Response;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -34,9 +38,20 @@ public class AuthConfig {
 
     return http
       .cors(Customizer.withDefaults()).csrf(AbstractHttpConfigurer::disable)
+      .exceptionHandling(exceptionHandling ->
+        exceptionHandling.authenticationEntryPoint((request, response, authException) -> {
+          response.setContentType("application/json;charset=UTF-8");
+          response.setStatus(HttpStatus.FORBIDDEN.value());
+          Response res = new Response(HttpStatus.FORBIDDEN, HttpStatus.FORBIDDEN.name(), null);
+          response.getWriter().write(new ObjectMapper().writeValueAsString(res));
+        })
+      )
       .authorizeHttpRequests(authorizeRequests ->
-        authorizeRequests.requestMatchers("/api").permitAll().requestMatchers("/").permitAll()
-          .anyRequest().authenticated()
+        authorizeRequests
+          .requestMatchers(HttpMethod.POST, "/api/cliente").permitAll()
+          .requestMatchers("/api/auth").permitAll()
+          .requestMatchers("/api/**").authenticated()
+          .anyRequest().permitAll()
       ).sessionManagement(sessionManagement ->
         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
       ).addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
