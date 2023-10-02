@@ -1,4 +1,10 @@
 const API_URL = "https://spacer-api.up.railway.app/api";
+const apiResponseModel = {
+  statusCode: 0,
+  message: "",
+  response: {} || null,
+};
+
 
 /**
  * Este método se encarga de verificar si el usuario tiene
@@ -29,13 +35,23 @@ export function userIsAuth() {
   });
 };
 
+
+/**
+ * Este método se encarga de obtener la información del usuario
+ * 
+ * @returns {Promise<apiResponseModel>}
+ */
+export async function getUserInfo() {
+  return await doAPIFetch("/cliente", null, "GET");
+}
+
 /**
  * Este método se encarga de realizar las peticiones a la API
  * 
  * @param {string} path 
  * @param {object | null} credentials 
  * @param {string} method 
- * @returns {Promise<object>}
+ * @returns {Promise<apiResponseModel>}
  */
 export async function doAPIFetch(path, credentials, method) {
   try {
