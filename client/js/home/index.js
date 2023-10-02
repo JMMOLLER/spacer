@@ -77,8 +77,8 @@ function checkInput() {
 
 const handleCheckAuth = () => {
   import("../globals/index.js")
-    .then((module) => {
-      const userIsAuth = module.userIsAuth();
+    .then(async(module) => {
+      const userIsAuth = await module.userIsAuth();
       if (userIsAuth) {
         document.querySelector("#perfil").href = "/pages/perfil.html";
       }
@@ -89,7 +89,7 @@ const handleCheckAuth = () => {
 };
 
 export default function init() {
-  userIsAuth().then((res) => res ? document.querySelector("body > header > div > div.header-right > div.container_link > a").href = "/pages/profile.html": null);
+  userIsAuth().then((res) => res ? document.querySelector("#perfil").href = "/pages/perfil.html": null);
   preventRedirect();
   handleCheckAuth();
   loadHeaderLottieAnimation();

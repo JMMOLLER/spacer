@@ -49,8 +49,8 @@
 }
 
 .inputSubmit-group > input[disabled] {
-  background-color: #34d5d5 !important;
-  color: #333333 !important;
+  background-color: #34d5d559 !important;
+  color: #76767696 !important;
   cursor: not-allowed !important;
 }
 

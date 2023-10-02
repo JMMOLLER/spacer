@@ -43,8 +43,8 @@ const handleSubmit = (e) => {
 
 const handleLogin = async (credentials) => {
   showError(false);
-  const doAPIFetch = await import("../globals/index.js").then((module) => module.doAPIFetch);
-  const res = await doAPIFetch('/auth', credentials, "POST"); // no puede user esta funcion porque no esta definida
+  const fetchAPI = (await import("../globals/index.js")).fetchAPI;
+  const res = await fetchAPI('/auth', credentials, "POST"); // no puede user esta funcion porque no esta definida
   if (res?.statusCode === 200) {
     sessionStorage.setItem("token", res?.response?.token);
     window.location.href = "/";
