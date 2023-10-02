@@ -6,7 +6,7 @@ if((path === "/" || path.includes("index"))){
   import ("./home/index.js").then((module) => module.default());
 } else if (path.includes("login")){
   import ("./login/index.js").then((module) => module.default());
-} else if(path.includes("/pages/perfil.html")) {
+} else if(path.includes("/pages/perfil")) {
   import("./perfil/index.js").then((module) => module.default());
 } else {
   console.warn("404");
