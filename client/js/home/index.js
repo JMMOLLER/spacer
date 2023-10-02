@@ -1,3 +1,5 @@
+import { userIsAuth } from "../globals/index.js";
+
 const preventRedirect = () => {
   // agrega el evento click a todos los elementos del menu y evita que se redirija a otra pagina
   document
@@ -13,7 +15,7 @@ const preventRedirect = () => {
   );
 };
 
-const loadLottieAnimation = () => {
+const loadHeaderLottieAnimation = () => {
   const cart = document.querySelector(".container_carrito");
 
   lottie.loadAnimation({
@@ -21,7 +23,7 @@ const loadLottieAnimation = () => {
     renderer: "svg",
     loop: true,
     autoplay: true,
-    path: "./assets/lotties/whatsapp.json", // the path to the animation json
+    path: "/assets/lotties/whatsapp.json", // the path to the animation json
   });
 
   const lottie_cart = lottie.loadAnimation({
@@ -29,7 +31,7 @@ const loadLottieAnimation = () => {
     renderer: "svg",
     loop: false,
     autoplay: false,
-    path: "./assets/lotties/bag.json", // the path to the animation json
+    path: "/assets/lotties/bag.json", // the path to the animation json
   });
 
   cart.addEventListener("mouseover", () => {
@@ -87,8 +89,11 @@ const handleCheckAuth = () => {
 };
 
 export default function init() {
+  userIsAuth().then((res) => res ? document.querySelector("body > header > div > div.header-right > div.container_link > a").href = "/pages/profile.html": null);
   preventRedirect();
   handleCheckAuth();
-  loadLottieAnimation();
+  loadHeaderLottieAnimation();
   startCarrouselAnimation();
 }
+
+export { preventRedirect, loadHeaderLottieAnimation };

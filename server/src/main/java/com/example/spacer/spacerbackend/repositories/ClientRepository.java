@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ClientRepository extends CrudRepository<ClientModel, Long> {
-  Optional<ClientModel> findOneClientModelByUsername(String username);
+  Optional<ClientModel> findOneByUsername(String username);
 }

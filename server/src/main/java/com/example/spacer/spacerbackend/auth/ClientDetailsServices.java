@@ -20,9 +20,9 @@ public class ClientDetailsServices implements UserDetailsService {
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    ClientModel client = clientRepository.findOneClientModelByUsername(username)
-      .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
+    ClientModel client = clientRepository.findOneByUsername(username).orElseThrow(() ->
+      new UsernameNotFoundException("User not found")
+    );
     return new ClientDetailsImp(client);
   }
 }

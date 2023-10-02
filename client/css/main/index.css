@@ -2,6 +2,7 @@
 @import url("./marcas.css");
 @import url("./productos.css");
 @import url("./login.css");
+@import url("./perfil.css");
 
 main {
   position: relative;
