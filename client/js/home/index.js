@@ -77,8 +77,8 @@ function checkInput() {
 
 const handleCheckAuth = () => {
   import("../globals/index.js")
-    .then((module) => {
-      const userIsAuth = module.userIsAuth();
+    .then(async(module) => {
+      const userIsAuth = await module.userIsAuth();
       if (userIsAuth) {
         document.querySelector("#perfil").href = "/pages/perfil.html";
       }
