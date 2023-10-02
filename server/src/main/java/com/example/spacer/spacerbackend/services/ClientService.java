@@ -25,19 +25,28 @@ public class ClientService {
     this.clientRepository = clientRepository;
   }
 
-  public ArrayList<ClientModel> getAllClients() {
-    return (ArrayList<ClientModel>) clientRepository.findAll();
+  public ArrayList<Object> getAllClients() {
+    ArrayList<ClientModel> clients = (ArrayList<ClientModel>) clientRepository.findAll();
+    ArrayList<Object> clientsSummary = new ArrayList<>();
+    for (ClientModel client : clients) {
+      try {
+        clientsSummary.add(new ClientService().getClientInfoSummary(client));
+      } catch (IllegalAccessException e) {
+        throw new RuntimeException(e);
+      }
+    }
+    return clientsSummary;
   }
 
   public ClientModel newClient(ClientModel client) {
     if (client.getId() != null) {
       client.setId(null);
     }
-    if(client.getImg_cli() == null){
-      client.setImg_cli("https://spacer-ecommerce.vercel.app/assets/imgs/user.webp");
+    if(client.getUrl_img() == null){
+      client.setUrl_img("https://spacer-ecommerce.vercel.app/assets/imgs/user.webp");
     }
     client.setPassword(new BCryptPasswordEncoder().encode(client.getPassword()));
-    client.setRolcli(0);
+    client.setRol(0);
     return clientRepository.save(client);
   }
 
@@ -51,7 +60,7 @@ public class ClientService {
 
           if(client.getImg() != null){
             String baseUrl = request.getRequestURL().toString().replace(request.getRequestURI(), request.getContextPath());
-            newClientData.setImg_cli(baseUrl + "/cliente/" + newClientData.getUsername() + ".jpg");
+            newClientData.setUrl_img(baseUrl + "/cliente/" + newClientData.getUsername() + ".jpg");
           }
 
           return clientRepository.save(newClientData);
@@ -67,20 +76,20 @@ public class ClientService {
 
   private ClientModel ClientDataSetter(@NonNull ClientModel newClientData, ClientModel currentClientData){
 
-    if (newClientData.getNomcli() != null) {
-      currentClientData.setNomcli(newClientData.getNomcli());
+    if (newClientData.getFirstName() != null) {
+      currentClientData.setFirstName(newClientData.getFirstName());
     }
-    if (newClientData.getApecli() != null) {
-      currentClientData.setApecli(newClientData.getApecli());
+    if (newClientData.getLastName() != null) {
+      currentClientData.setLastName(newClientData.getLastName());
     }
     if (newClientData.getPassword() != null) {
       currentClientData.setPassword(newClientData.getPassword());
     }
-    if (newClientData.getDircli() != null) {
-      currentClientData.setDircli(newClientData.getDircli());
+    if (newClientData.getAddress() != null) {
+      currentClientData.setAddress(newClientData.getAddress());
     }
-    if (newClientData.getCrdcli() != null) {
-      currentClientData.setCrdcli(newClientData.getCrdcli());
+    if (newClientData.getCardNumber() != null) {
+      currentClientData.setCardNumber(newClientData.getCardNumber());
     }
     if (newClientData.getEmail() != null) {
       currentClientData.setEmail(newClientData.getEmail());
