@@ -83,18 +83,18 @@
   gap: 30px;
 }
 
-.input-group > input {
+.perfil__main .input-group > input {
   border: 1px solid #ccc;
 }
 
-.input-group > input:valid + label {
+.perfil__main .input-group > input:valid + label {
   transform: translateY(-50%);
   font-size: 0.8rem;
   color: gray;
 }
 
-.input-group > input:focus + label,
-.input-group > input.filled + label {
+.perfil__main .input-group > input:focus + label,
+.perfil__main .input-group > input.filled + label {
   transform: translateY(-170%);
   font-size: 0.8rem;
   color: aqua;

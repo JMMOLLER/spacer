@@ -55,10 +55,10 @@ export async function fetchAPI(path, body, method) {
   const res = await fetch(`${API_URL}${path}`, {
     method: !method ? "GET" : method,
     headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${sessionStorage.getItem("token")} `,
+      "Content-Type": contentTypeHandler(method),
+      "Authorization": `Bearer ${sessionStorage.getItem("token")}`,
     },
-    body: method === "POST" ? JSON.stringify(body) : null,
+    body: method === "GET" ? null : JSON.stringify(body)
   });
 
   if (!res.ok) {
@@ -68,4 +68,37 @@ export async function fetchAPI(path, body, method) {
 
   const response = await res.json();
   return response;
+}
+
+/**
+ * Este método se encarga de ecoger el tipo de contenido que se
+ * va a enviar al servidor.
+ * 
+ * @param {string} method 
+ * @returns 
+ */
+const contentTypeHandler = (method) => {
+  switch (method) {
+    case "POST":
+      return "application/json";
+    case "PUT":
+      return "multipart/form-data; boundary=----" + Math.random().toString(16).substring(2);
+    default:
+      return null;
+  }
+}
+
+/**
+ * 
+ * @param {string} path 
+ * @param {object} requestOptions 
+ * @returns 
+ */
+export async function customFetch(path, requestOptions){
+  const res = await fetch(`${API_URL}${path}`, requestOptions);
+  if(!res.ok){
+    const error = await res.json();
+    return error;
+  }
+  return await res.json();
 }

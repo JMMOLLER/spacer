@@ -1,11 +1,11 @@
-const toggleSubmit = () => {
+const toggleSubmit = (inputValue) => {
   const submitGp = document.querySelector(".inputSubmit-group");
   const input = document.querySelector(
     ".inputSubmit-group>input[type='submit']"
   );
   submitGp.classList.toggle("submitted");
   input.disabled = !input.disabled;
-  input.setAttribute("value", input.disabled ? "" : "Iniciar Sesión");
+  input.setAttribute("value", input.disabled ? "" : inputValue);
 };
 
 const showError = (show) => {
@@ -36,7 +36,7 @@ const loadLottieAnimation = () => {
 
 const handleSubmit = (e) => {
   e.preventDefault();
-  toggleSubmit();
+  toggleSubmit("Iniciar Sesión");
   const credentials = new FormData(e.target);
   handleLogin(Object.fromEntries(credentials));
 };
@@ -49,7 +49,7 @@ const handleLogin = async (credentials) => {
     sessionStorage.setItem("token", res?.response?.token);
     window.location.href = "/";
   } else {
-    toggleSubmit();
+    toggleSubmit("Iniciar Sesión");
     showError(true);
   }
   return res ? true : false;
@@ -60,7 +60,7 @@ window.onload = () => {
   form.addEventListener("submit", handleSubmit);
 };
 
-(function init() {
+export default function init() {
   loadLottieAnimation();
   import ("../globals/index.js").then((module) => {
     module.userIsAuth().then((res) =>
@@ -71,4 +71,6 @@ window.onload = () => {
         .removeAttribute("disabled"));
   })
   console.info("login");
-})();
+}
+
+export { toggleSubmit }

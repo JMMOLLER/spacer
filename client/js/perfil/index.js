@@ -1,14 +1,25 @@
 const inputController = () => {
   const form = document.querySelector("form.spacer_form");
   const inputs = form.querySelectorAll("input:not([type='submit'])");
+  const submitButton = form.querySelector("input[type='submit']");
 
   inputs.forEach((input) => {
-    input.addEventListener("change", (e) => {
-      if (e.target.value.length > 0) {
-        e.target.classList.add("filled");
-        form.querySelector("input[type='submit']").disabled = false; // esto es temporal
+    input.addEventListener("input", () => {
+      let allInputsEmpty = true;
+
+      inputs.forEach((input) => {
+        if (input.value.trim() !== "") {
+          allInputsEmpty = false;
+          input.classList.add("filled");
+        }else{
+          input.classList.remove("filled");
+        }
+      });
+
+      if (allInputsEmpty) {
+        submitButton.disabled = true;
       } else {
-        e.target.classList.remove("filled");
+        submitButton.disabled = false;
       }
     });
   });
@@ -51,43 +62,75 @@ const getUserInfo = async () => {
   return userInfo.response;
 };
 
+const filterFormData = (formData) => {
+  const filteredEntries = [...formData.entries()].filter(
+    ([key, value]) => value !== ""
+  );
+
+  const filteredFormData = new FormData();
+
+  filteredEntries.forEach(([key, value]) => {
+    filteredFormData.append(key, value);
+  });
+
+  return filteredFormData;
+};
+
 const updateUserInfo = async (e) => {
   e.preventDefault();
 
+  const toggleSubmit = await import("../login/index.js").then(module => module.toggleSubmit)
+
+  const inputSubmitValue = "Actualizar Datos"
+
+  toggleSubmit(inputSubmitValue);
+
   const module = await import("../globals/index.js");
-  const fetchUpdate = module.fetchAPI;
+  const fetchUpdate = module.customFetch;
 
-  const formData = new FormData(e.target);
+  const formData = filterFormData(new FormData(e.target));
 
-  const userInfoUpdated = Object.fromEntries(formData.entries());
+  // formData.forEach((value, key) => {
+  //   console.log(key, value);
+  // });
 
-  Object.keys(userInfoUpdated).forEach((key) => {
-    userInfoUpdated[key] = userInfoUpdated[key] || null;
-  });
+  const myHeaders = new Headers();
+  myHeaders.append(
+    "Authorization",
+    `Bearer ${sessionStorage.getItem("token")}`
+  );
 
-  console.log(userInfoUpdated);
+  const requestOptions = {
+    method: "PUT",
+    headers: myHeaders,
+    body: formData,
+    redirect: "follow",
+  };
 
-  const updateResponse = await fetchUpdate("/cliente", userInfoUpdated, "PUT"); // verificar porque no actualiza los datos enviados
+  const updateResponse = await fetchUpdate("/cliente", requestOptions);
+
+  toggleSubmit(inputSubmitValue);
 
   if (updateResponse.statusCode > 400 && updateResponse.statusCode < 500) {
     alert("Tu sesión a expirado, por favor inicia sesión nuevamente.");
     window.location.href = "/pages/login.html";
   }
   console.log(updateResponse);
-
-  return fetchUpdate.response;
+  const res = confirm("Tu información se ha actualizado correctamente.\n¿Deseas ver los datos actualizados?");
+  if (res) {
+    window.location.reload();
+  }
 };
 
 const handleFormSubmit = () => {
   const form = document.querySelector("form.spacer_form");
 
   form.addEventListener("submit", updateUserInfo);
-}
+};
 
 export default async function init() {
   const module = await import("../home/index.js");
   module.preventRedirect();
-  23;
   module.loadHeaderLottieAnimation();
   inputController();
   fillUserInfo();
