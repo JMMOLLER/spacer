@@ -9,7 +9,7 @@
 
 .spacer_login .spacer_form {
   position: relative;
-  height: 350px;
+  min-height: 350px;
   width: 300px;
   display: flex;
   flex-direction: column;
