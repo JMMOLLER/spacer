@@ -41,3 +41,23 @@ input[type=file], /* FF, IE7+, chrome (except button) */
 input[type=file]::-webkit-file-upload-button { /* chromes and blink button */
   cursor: pointer; 
 }
+
+.fa {
+  display: inline-block;
+  width: 25px;
+  height: 25px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  margin: 10px;
+}
+
+.fa.fa-map {
+  background-image: url("/assets/icons/location.png");
+}
+.fa.fa-phone {
+  background-image: url("/assets/icons/phone.png");
+}
+.fa.fa-mail {
+  background-image: url("/assets/icons/mail.png");
+}

@@ -1,609 +1,549 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./css/style.css" />
-    <link
-      rel="shortcut icon"
-      href="./assets/icons/favicon.ico"
-      type="image/x-icon"
-    />
-    <!-- HTML Meta Tags -->
-    <title>Spacer</title>
-    <meta
-      name="description"
-      content="¡Si quieres comprar productos para concentir a tu bestia del PC Gaming escogenos a nosotros! Tenemos los productos de más alta calidad al mejor precio."
-    />
 
-    <!-- Facebook Meta Tags -->
-    <meta property="og:url" content="https://spacer-ecommerce.vercel.app/" />
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="Spacer" />
-    <meta
-      property="og:description"
-      content="¡Si quieres comprar productos para concentir a tu bestia del PC Gaming escogenos a nosotros! Tenemos los productos de más alta calidad al mejor precio."
-    />
-    <meta property="og:image" content="https://i.imgur.com/lpDRs8j.png" />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="./css/style.css" />
+  <link rel="shortcut icon" href="./assets/icons/favicon.ico" type="image/x-icon" />
+  <!-- HTML Meta Tags -->
+  <title>Spacer</title>
+  <meta name="description"
+    content="¡Si quieres comprar productos para concentir a tu bestia del PC Gaming escogenos a nosotros! Tenemos los productos de más alta calidad al mejor precio." />
 
-    <!-- Twitter Meta Tags -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta property="twitter:domain" content="spacer-ecommerce.vercel.app" />
-    <meta
-      property="twitter:url"
-      content="https://spacer-ecommerce.vercel.app/"
-    />
-    <meta name="twitter:title" content="Spacer" />
-    <meta
-      name="twitter:description"
-      content="¡Si quieres comprar productos para concentir a tu bestia del PC Gaming escogenos a nosotros! Tenemos los productos de más alta calidad al mejor precio."
-    />
-    <meta name="twitter:image" content="https://i.imgur.com/lpDRs8j.png" />
-  </head>
+  <!-- Facebook Meta Tags -->
+  <meta property="og:url" content="https://spacer-ecommerce.vercel.app/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Spacer" />
+  <meta property="og:description"
+    content="¡Si quieres comprar productos para concentir a tu bestia del PC Gaming escogenos a nosotros! Tenemos los productos de más alta calidad al mejor precio." />
+  <meta property="og:image" content="https://i.imgur.com/lpDRs8j.png" />
 
-  <body>
-    <header class="head">
-      <!-- Cabecera vista escritorio -->
-      <div class="container_top">
-        <div class="cabecera-left">
-          <a href="/">
-            <img src="/assets/imgs/logo.gif" class="logo" alt="logo" />
+  <!-- Twitter Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta property="twitter:domain" content="spacer-ecommerce.vercel.app" />
+  <meta property="twitter:url" content="https://spacer-ecommerce.vercel.app/" />
+  <meta name="twitter:title" content="Spacer" />
+  <meta name="twitter:description"
+    content="¡Si quieres comprar productos para concentir a tu bestia del PC Gaming escogenos a nosotros! Tenemos los productos de más alta calidad al mejor precio." />
+  <meta name="twitter:image" content="https://i.imgur.com/lpDRs8j.png" />
+</head>
+
+<body>
+  <header class="head">
+    <!-- Cabecera vista escritorio -->
+    <div class="container_top">
+      <div class="cabecera-left">
+        <a href="/">
+          <img src="/assets/imgs/logo.gif" class="logo" alt="logo" />
+        </a>
+      </div>
+      <div class="cabecera-center">
+        <form class="search-box">
+          <input type="text" placeholder="Busca lo que quieras" />
+          <button title="buscar" type="submit">
+            <img class="lupa" src="/assets/imgs/buscador_0.png" alt="imgs buscador" />
+          </button>
+          <div class="slider">
+            <div>
+              <img src="/assets/imgs/buscador_1.png" alt="imagenes productos" />
+            </div>
+            <div>
+              <img src="/assets/imgs/buscador_2.png" alt="imagenes productos" />
+            </div>
+            <div>
+              <img src="/assets/imgs/buscador_3.png" alt="imagenes productos" />
+            </div>
+            <div>
+              <img src="/assets/imgs/buscador_5.png" alt="imagenes productos" />
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="header-right">
+        <div class="container_wsp">
+          <a href="https://wa.me/+51930517169?text=Hola%20me%20gustar%C3%ADa%20consultar%20el%20precio%20del%20producto"
+            target="_blank" id="animation_wsp" title="Ir a Whatsapp"></a>
+          <div class="content_wsp">
+            <p class="title">Escríbenos</p>
+            <p class="content">930-517-169</p>
+          </div>
+        </div>
+        <div class="container_link">
+          <a href="/pages/login.html" id="perfil" class="container_user link" title="Ir al login">
+            <i class="user_icon"></i>
+            <p>Mi cuenta</p>
           </a>
         </div>
-        <div class="cabecera-center">
-          <form class="search-box">
-            <input type="text" placeholder="Busca lo que quieras" />
-            <button title="buscar" type="submit">
+        <div class="container_carrito">
+          <a href="" class="container_carrito" title="Ir al carrito">
+            <div id="animation_cart">
+              <span class="notification" id="cart_cant">0</span>
+            </div>
+            <p class="content">Mi bolsa</p>
+          </a>
+        </div>
+      </div>
+    </div>
+    <nav>
+      <!-- Menú de Categorías principales -->
+      <ul id="menuCategorias">
+        <li data-categoria="categoria3">
+          Teclados
+          <!-- Subcategorías de Mouse -->
+          <ul class="subcategorias">
+            <li class="subcategoria-item" data-categoria="subcategoria4-1">
+              <a title="Ver productos" href="" class="categoria-link">HyperX</a>
+            </li>
+            <li class="subcategoria-item" data-categoria="subcategoria4-2">
+              <a title="Ver productos" href="" class="categoria-link">Logitech</a>
+            </li>
+            <li class="subcategoria-item" data-categoria="subcategoria4-3">
+              <a title="Ver productos" href="" class="categoria-link">Razer</a>
+            </li>
+            <li class="subcategoria-item" data-categoria="subcategoria4-4">
+              <a title="Ver productos" href="" class="categoria-link">Redragon</a>
+            </li>
+            <li class="subcategoria-item" data-categoria="subcategoria4-5">
+              <a title="Ver productos" href="" class="categoria-link">Astro</a>
+            </li>
+            <li class="subcategoria-item" data-categoria="subcategoria4-6">
+              <a title="Ver productos" href="" class="categoria-link">SteelSeries</a>
+            </li>
+          </ul>
+        </li>
+        <!-- Subcategorías de Teclados -->
+        <li data-categoria="categoria2">
+          Monitores
+          <!-- Subcategorías de Monitores -->
+          <ul class="subcategorias">
+            <li class="subcategoria-item" data-categoria="subcategoria2-1">
+              <a title="Ver productos" href="" class="categoria-link">LG</a>
+            </li>
+            <li class="subcategoria-item" data-categoria="subcategoria2-2">
+              <a title="Ver productos" href="" class="categoria-link">Samsung</a>
+            </li>
+            <li class="subcategoria-item" data-categoria="subcategoria2-3">
+              <a title="Ver productos" href="" class="categoria-link">Asus</a>
+            </li>
+            <li class="subcategoria-item" data-categoria="subcategoria2-4">
+              <a title="Ver productos" href="" class="categoria-link">MSI</a>
+            </li>
+            <li class="subcategoria-item" data-categoria="subcategoria2-5">
+              <a title="Ver productos" href="" class="categoria-link">Teros</a>
+            </li>
+            <li class="subcategoria-item" data-categoria="subcategoria2-6">
+              <a title="Ver productos" href="" class="categoria-link">Razer</a>
+            </li>
+          </ul>
+        </li>
+        <li data-categoria="categoria3">
+          Mouse
+          <!-- Subcategorías de Mouse -->
+          <ul class="subcategorias">
+            <li class="subcategoria-item" data-categoria="subcategoria4-1">
+              <a title="Ver productos" href="" class="categoria-link">Redragon</a>
+            </li>
+            <li class="subcategoria-item" data-categoria="subcategoria4-2">
+              <a title="Ver productos" href="" class="categoria-link">Antryx</a>
+            </li>
+            <li class="subcategoria-item" data-categoria="subcategoria4-3">
+              <a title="Ver productos" href="" class="categoria-link">Logitech</a>
+            </li>
+            <li class="subcategoria-item" data-categoria="subcategoria4-4">
+              <a title="Ver productos" href="" class="categoria-link">Razer</a>
+            </li>
+            <li class="subcategoria-item" data-categoria="subcategoria4-5">
+              <a title="Ver productos" href="" class="categoria-link">Apple</a>
+            </li>
+            <li class="subcategoria-item" data-categoria="subcategoria4-6">
+              <a title="Ver productos" href="" class="categoria-link">Sony</a>
+            </li>
+          </ul>
+        </li>
+        <li data-categoria="categoria4">
+          Camaras Web
+          <!-- Subcategorías de Camaras Web -->
+          <ul class="subcategorias">
+            <li class="subcategoria-item" data-categoria="subcategoria5-1">
+              <a title="Ver productos" href="" class="categoria-link">Logitech</a>
+            </li>
+            <li class="subcategoria-item" data-categoria="subcategoria5-2">
+              <a title="Ver productos" href="" class="categoria-link">Angetube</a>
+            </li>
+            <li class="subcategoria-item" data-categoria="subcategoria5-3">
+              <a title="Ver productos" href="" class="categoria-link">TedGem</a>
+            </li>
+          </ul>
+        </li>
+        <li data-categoria="categoria5">
+          Microfonos
+          <!-- Subcategorías de Microfonos -->
+          <ul class="subcategorias">
+            <li class="subcategoria-item" data-categoria="subcategoria6-1">
+              <a title="Ver productos" href="" class="categoria-link">Razer</a>
+            </li>
+            <li class="subcategoria-item" data-categoria="subcategoria6-2">
+              <a title="Ver productos" href="" class="categoria-link">Blue Yeti</a>
+            </li>
+            <li class="subcategoria-item" data-categoria="subcategoria6-3">
+              <a title="Ver productos" href="" class="categoria-link">Shure</a>
+            </li>
+            <li class="subcategoria-item" data-categoria="subcategoria6-4">
+              <a title="Ver productos" href="" class="categoria-link">HyperX</a>
+            </li>
+          </ul>
+        </li>
+        <li data-categoria="categoria6">
+          Sillas Gamer
+          <!-- Subcategorías de Sillas Gamer -->
+          <ul class="subcategorias">
+            <li class="subcategoria-item" data-categoria="subcategoria7-1">
+              <a title="Ver productos" href="" class="categoria-link">VertaGear</a>
+            </li>
+            <li class="subcategoria-item" data-categoria="subcategoria7-2">
+              <a title="Ver productos" href="" class="categoria-link">Corsair</a>
+            </li>
+            <li class="subcategoria-item" data-categoria="subcategoria7-3">
+              <a title="Ver productos" href="" class="categoria-link">DxRacer</a>
+            </li>
+            <li class="subcategoria-item" data-categoria="subcategoria7-4">
+              <a title="Ver productos" href="" class="categoria-link">Technisport</a>
+            </li>
+          </ul>
+        </li>
+        <li data-categoria="categoria7">
+          Accesorios
+          <!-- Subcategorías de Accesorios -->
+          <ul class="subcategorias">
+            <li class="subcategoria-item" data-categoria="subcategoria7-1">
+              Mousepad
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+    <!-- Cabecera vista movil -->
+  </header>
+  <main>
+    <div class="carrusel-hero">
+      <div class="carru">
+        <div class="carr first">
+          <img src="assets/imgs/carrusel_0.webp" alt="imgs promocion" />
+        </div>
+
+        <div class="carr">
+          <img src="assets/imgs/carrusel_1.webp" alt="imgs promocion" />
+        </div>
+
+        <div class="carr">
+          <img src="assets/imgs/carrusel_2.webp" alt="imgs promocion" />
+        </div>
+
+        <div class="carr">
+          <img src="assets/imgs/carrusel_3.webp" alt="imgs promocion" />
+        </div>
+      </div>
+
+      <div class="navigation-manual">
+        <label for="radio1" class="manual-btn">
+          <input type="radio" title="cambiar imgs" name="radio-btn" id="radio1" checked />
+        </label>
+        <label for="radio2" class="manual-btn">
+          <input type="radio" title="cambiar imgs" name="radio-btn" id="radio2" />
+        </label>
+        <label for="radio3" class="manual-btn">
+          <input type="radio" title="cambiar imgs" name="radio-btn" id="radio3" />
+        </label>
+        <label for="radio4" class="manual-btn">
+          <input type="radio" title="cambiar imgs" name="radio-btn" id="radio4" />
+        </label>
+      </div>
+    </div>
+
+    <div class="marcas">
+      <div class="marca-track">
+        <!-- PRIMERA PARTE CARROUSEL -->
+        <a title="Ver sección" class="marca" href="#productos_redragon">
+          <img src="assets/imgs/marcas_0.png" alt="logo marca" />
+        </a>
+        <div class="marca">
+          <img src="assets/imgs/marcas_1.png" alt="logo marca" />
+        </div>
+        <a title="Ver sección" class="marca" href="#productos_logitech">
+          <img src="assets/imgs/marcas_2.png" alt="logo marca" />
+        </a>
+        <div class="marca">
+          <img src="assets/imgs/marcas_3.png" alt="logo marca" />
+        </div>
+        <div class="marca">
+          <img src="assets/imgs/marcas_4.png" alt="logo marca" />
+        </div>
+        <div class="marca">
+          <img src="assets/imgs/marcas_5.png" alt="logo marca" />
+        </div>
+        <div class="marca">
+          <img src="assets/imgs/marcas_6.png" alt="logo marca" />
+        </div>
+        <a title="Ver sección" class="marca" href="#productos_vertagear">
+          <img src="assets/imgs/marcas_7.png" alt="logo marca" />
+        </a>
+        <div class="marca">
+          <img src="assets/imgs/marcas_8.png" alt="logo marca" />
+        </div>
+        <!-- FIN PRIMERA PARTE CARROUSEL -->
+
+        <!-- SEGUNDA PARTE CARROUSEL -->
+        <a title="Ver sección" class="marca" href="#productos_redragon">
+          <img src="assets/imgs/marcas_0.png" alt="logo marca" />
+        </a>
+        <div class="marca">
+          <img src="assets/imgs/marcas_1.png" alt="logo marca" />
+        </div>
+        <a title="Ver sección" class="marca" href="#productos_logitech">
+          <img src="assets/imgs/marcas_2.png" alt="logo marca" />
+        </a>
+        <div class="marca">
+          <img src="assets/imgs/marcas_3.png" alt="logo marca" />
+        </div>
+        <div class="marca">
+          <img src="assets/imgs/marcas_4.png" alt="logo marca" />
+        </div>
+        <div class="marca">
+          <img src="assets/imgs/marcas_5.png" alt="logo marca" />
+        </div>
+        <div class="marca">
+          <img src="assets/imgs/marcas_6.png" alt="logo marca" />
+        </div>
+        <a title="Ver sección" class="marca" href="#productos_vertagear">
+          <img src="assets/imgs/marcas_7.png" alt="logo marca" />
+        </a>
+        <div class="marca">
+          <img src="assets/imgs/marcas_8.png" alt="logo marca" />
+        </div>
+        <!-- FIN SEGUNDA PARTE CARROUSEL -->
+      </div>
+    </div>
+
+    <!-- CONTENIDO PRODUCTOS -->
+    <section class="contenedor">
+      <h2 class="titulo-contenedor-productos">
+        Los productos más vendidos por marca
+      </h2>
+      <div class="contenedor-items">
+        <div class="categoria-item" id="productos_vertagear">
+          <img class="producto-hero" src="/assets/imgs/VERTAGEAR_hero.webp" alt="hero marca">
+          <h3 class="categoria-titulo">VertaGear</h3>
+          <div class="item">
+            <div class="cabecera-card">
+              <span class="titulo-item">VertaGear</span>
+              <img src="assets/imgs/Vertagear_0.webp" alt="" class="img-item" />
+            </div>
+            <div class="medio-card">
+              <span class="info-item">Silla Gamer Vertagear PL4800 Midnight Blue</span>
+              <span class="precio-item">S/1299.00</span>
+            </div>
+            <button class="boton-item">Agregar al Carrito</button>
+          </div>
+          <div class="item">
+            <div class="cabecera-card">
+              <span class="titulo-item">Vertagear</span>
+              <img src="assets/imgs/Vertagear_1.webp" alt="" class="img-item" />
+            </div>
+            <div class="medio-card">
+              <span class="info-item">Silla Gamer Vertagear SL5800 Universitario Edición
+                Limitada</span>
+              <span class="precio-item">S/1749.00</span>
+            </div>
+            <button class="boton-item">Agregar al Carrito</button>
+          </div>
+          <div class="item">
+            <div class="cabecera-card">
+              <span class="titulo-item">Vertagear</span>
+              <img src="assets/imgs/Vertagear_2.webp" alt="" class="img-item" />
+            </div>
+            <div class="medio-card">
+              <span class="info-item">Silla Gamer Vertagear SL5800 Midnight Green</span>
+              <span class="precio-item">S/1549.00</span>
+            </div>
+            <button class="boton-item">Agregar al Carrito</button>
+          </div>
+          <div class="item">
+            <div class="cabecera-card">
+              <span class="titulo-item">Vertagear</span>
+              <img src="assets/imgs/Vertagear_3.webp" alt="" class="img-item" />
+            </div>
+            <div class="medio-card">
+              <span class="info-item">Silla de escritorio Vertagear SL2000 VG-SL2000 gamer
+                ergonómica negra y azul</span>
+              <span class="precio-item">S/599.00</span>
+            </div>
+            <button class="boton-item">Agregar al Carrito</button>
+          </div>
+        </div>
+        <div class="categoria-item" id="productos_redragon">
+          <img class="producto-hero" src="/assets/imgs/REDRAGON_hero.webp" alt="hero marca">
+          <h3 class="categoria-titulo">Redragon</h3>
+          <div class="item">
+            <div class="cabecera-card">
+              <span class="titulo-item">Redragon</span>
+              <img src="assets/imgs/Redragon_0.webp" alt="" class="img-item" />
+            </div>
+            <div class="medio-card">
+              <span class="info-item">Audífono con Micro Redragon Zeus X RGB</span>
+              <span class="precio-item">S/299.00</span>
+            </div>
+            <button class="boton-item">Agregar al Carrito</button>
+          </div>
+          <div class="item">
+            <div class="cabecera-card">
+              <span class="titulo-item">Redragon</span>
+              <img src="assets/imgs/Redragon_1.webp" alt="" class="img-item" />
+            </div>
+            <div class="medio-card">
+              <span class="info-item">Mouse Gamer Redragon Cobra Negro M711</span>
+              <span class="precio-item">S/109.00</span>
+            </div>
+            <button class="boton-item">Agregar al Carrito</button>
+          </div>
+          <div class="item">
+            <div class="cabecera-card">
+              <span class="titulo-item">Redragon</span>
+              <img src="assets/imgs/Redragon_2.webp" alt="" class="img-item" />
+            </div>
+            <div class="medio-card">
+              <span class="info-item">Teclado Gamer Inalámbrico Redragon Fizz PRO Ingles</span>
+              <br>
+              <span class="precio-item">S/200.00</span>
+            </div>
+            <button class="boton-item">Agregar al Carrito</button>
+          </div>
+          <div class="item">
+            <div class="cabecera-card">
+              <span class="titulo-item">Redragon</span>
+              <img src="assets/imgs/Redragon_3.webp" alt="" class="img-item" />
+            </div>
+            <div class="medio-card">
+              <span class="info-item">Mouse Pad Redragon Flick Medium P030</span>
+              <span class="precio-item">S/20.00</span>
+            </div>
+            <button class="boton-item">Agregar al Carrito</button>
+          </div>
+        </div>
+        <div class="categoria-item" id="productos_logitech">
+          <img class="producto-hero"
+            src="/assets/imgs/LOGITECH_hero.webp"
+            alt="hero marca">
+          <h3 class="categoria-titulo">Logitech</h3>
+          <div class="item">
+            <div class="cabecera-card">
+              <span class="titulo-item">Logitech</span>
+              <img src="https://coolboxpe.vtexassets.com/arquivos/ids/207627/920-007562_1.jpg?v=637831189853770000"
+                alt="" class="img-item" />
+            </div>
+            <div class="medio-card">
+              <span class="info-item">Cámara web Logitech C925E Black FHD</span>
+              <span class="precio-item">S/369.00</span>
+            </div>
+            <button class="boton-item">Agregar al Carrito</button>
+          </div>
+          <div class="item">
+            <div class="cabecera-card">
+              <span class="titulo-item">Logitech</span>
+              <img src="https://coolboxpe.vtexassets.com/arquivos/ids/207627/920-007562_1.jpg?v=637831189853770000"
+                alt="" class="img-item" />
+            </div>
+            <div class="medio-card">
+              <span class="info-item">Teclado inalámbrico Logitech K380, bluetooth, multidispositivo negro</span>
+              <span class="precio-item">S/20.00</span>
+            </div>
+
+            <button class="boton-item">Agregar al Carrito</button>
+          </div>
+          <div class="item">
+            <div class="cabecera-card">
+              <span class="titulo-item">Logitech</span>
               <img
-                class="lupa"
-                src="/assets/imgs/buscador_0.png"
-                alt="imgs buscador"
-              />
-            </button>
-            <div class="slider">
-              <div>
-                <img
-                  src="/assets/imgs/buscador_1.png"
-                  alt="imagenes productos"
-                />
-              </div>
-              <div>
-                <img
-                  src="/assets/imgs/buscador_2.png"
-                  alt="imagenes productos"
-                />
-              </div>
-              <div>
-                <img
-                  src="/assets/imgs/buscador_3.png"
-                  alt="imagenes productos"
-                />
-              </div>
-              <div>
-                <img
-                  src="/assets/imgs/buscador_5.png"
-                  alt="imagenes productos"
-                />
-              </div>
+                src="https://phantom.pe/media/catalog/product/cache/2d2e350e73065c0f42c90f0a12869353/l/o/logitech_1.jpg"
+                alt="" class="img-item" />
             </div>
-          </form>
-        </div>
-        <div class="header-right">
-          <div class="container_wsp">
-            <a
-              href="https://wa.me/+51930517169?text=Hola%20me%20gustar%C3%ADa%20consultar%20el%20precio%20del%20producto"
-              target="_blank"
-              id="animation_wsp"
-              title="Ir a Whatsapp"
-            ></a>
-            <div class="content_wsp">
-              <p class="title">Escríbenos</p>
-              <p class="content">930-517-169</p>
+            <div class="medio-card">
+              <span class="info-item">Mouse Pad Redragon Flick Medium P030</span>
+              <span class="precio-item">S/20.00</span>
             </div>
+            <button class="boton-item">Agregar al Carrito</button>
           </div>
-          <div class="container_link">
-            <a href="/pages/login.html" id="perfil" class="container_user link" title="Ir al login">
-              <i class="user_icon"></i>
-              <p>Mi cuenta</p>
-            </a>
-          </div>
-          <div class="container_carrito">
-            <a href="" class="container_carrito" title="Ir al carrito">
-              <div id="animation_cart">
-                <span class="notification" id="cart_cant">0</span>
-              </div>
-              <p class="content">Mi bolsa</p>
-            </a>
+          <div class="item">
+            <div class="cabecera-card">
+              <span class="titulo-item">Logitech</span>
+              <img
+                src="https://oechsle.vteximg.com.br/arquivos/ids/4439880-1000-1000/image-5e4c36d0ce454e39820efdebe44a73b2.jpg?v=637638333720900000"
+                alt="" class="img-item" />
+            </div>
+            <div class="medio-card">
+              <span class="info-item">Mouse Pad Redragon Flick Medium P030</span>
+              <span class="precio-item">S/20.00</span>
+            </div>
+            <button class="boton-item">Agregar al Carrito</button>
           </div>
         </div>
       </div>
-      <nav>
-        <!-- Menú de Categorías principales -->
-        <ul id="menuCategorias">
-          <li data-categoria="categoria3">
-            Teclados
-            <!-- Subcategorías de Mouse -->
-            <ul class="subcategorias">
-              <li class="subcategoria-item" data-categoria="subcategoria4-1">
-                <a title="Ver productos" href="" class="categoria-link">HyperX</a>
-              </li>
-              <li class="subcategoria-item" data-categoria="subcategoria4-2">
-                <a title="Ver productos" href="" class="categoria-link">Logitech</a>
-              </li>
-              <li class="subcategoria-item" data-categoria="subcategoria4-3">
-                <a title="Ver productos" href="" class="categoria-link">Razer</a>
-              </li>
-              <li class="subcategoria-item" data-categoria="subcategoria4-4">
-                <a title="Ver productos" href="" class="categoria-link">Redragon</a>
-              </li>
-              <li class="subcategoria-item" data-categoria="subcategoria4-5">
-                <a title="Ver productos" href="" class="categoria-link">Astro</a>
-              </li>
-              <li class="subcategoria-item" data-categoria="subcategoria4-6">
-                <a title="Ver productos" href="" class="categoria-link">SteelSeries</a>
-              </li>
-            </ul>
-          </li>
-          <!-- Subcategorías de Teclados -->
-          <li data-categoria="categoria2">
-            Monitores
-            <!-- Subcategorías de Monitores -->
-            <ul class="subcategorias">
-              <li class="subcategoria-item" data-categoria="subcategoria2-1">
-                <a title="Ver productos" href="" class="categoria-link">LG</a>
-              </li>
-              <li class="subcategoria-item" data-categoria="subcategoria2-2">
-                <a title="Ver productos" href="" class="categoria-link">Samsung</a>
-              </li>
-              <li class="subcategoria-item" data-categoria="subcategoria2-3">
-                <a title="Ver productos" href="" class="categoria-link">Asus</a>
-              </li>
-              <li class="subcategoria-item" data-categoria="subcategoria2-4">
-                <a title="Ver productos" href="" class="categoria-link">MSI</a>
-              </li>
-              <li class="subcategoria-item" data-categoria="subcategoria2-5">
-                <a title="Ver productos" href="" class="categoria-link">Teros</a>
-              </li>
-              <li class="subcategoria-item" data-categoria="subcategoria2-6">
-                <a title="Ver productos" href="" class="categoria-link">Razer</a>
-              </li>
-            </ul>
-          </li>
-          <li data-categoria="categoria3">
-            Mouse
-            <!-- Subcategorías de Mouse -->
-            <ul class="subcategorias">
-              <li class="subcategoria-item" data-categoria="subcategoria4-1">
-                <a title="Ver productos" href="" class="categoria-link">Redragon</a>
-              </li>
-              <li class="subcategoria-item" data-categoria="subcategoria4-2">
-                <a title="Ver productos" href="" class="categoria-link">Antryx</a>
-              </li>
-              <li class="subcategoria-item" data-categoria="subcategoria4-3">
-                <a title="Ver productos" href="" class="categoria-link">Logitech</a>
-              </li>
-              <li class="subcategoria-item" data-categoria="subcategoria4-4">
-                <a title="Ver productos" href="" class="categoria-link">Razer</a>
-              </li>
-              <li class="subcategoria-item" data-categoria="subcategoria4-5">
-                <a title="Ver productos" href="" class="categoria-link">Apple</a>
-              </li>
-              <li class="subcategoria-item" data-categoria="subcategoria4-6">
-                <a title="Ver productos" href="" class="categoria-link">Sony</a>
-              </li>
-            </ul>
-          </li>
-          <li data-categoria="categoria4">
-            Camaras Web
-            <!-- Subcategorías de Camaras Web -->
-            <ul class="subcategorias">
-              <li class="subcategoria-item" data-categoria="subcategoria5-1">
-                <a title="Ver productos" href="" class="categoria-link">Logitech</a>
-              </li>
-              <li class="subcategoria-item" data-categoria="subcategoria5-2">
-                <a title="Ver productos" href="" class="categoria-link">Angetube</a>
-              </li>
-              <li class="subcategoria-item" data-categoria="subcategoria5-3">
-                <a title="Ver productos" href="" class="categoria-link">TedGem</a>
-              </li>
-            </ul>
-          </li>
-          <li data-categoria="categoria5">
-            Microfonos
-            <!-- Subcategorías de Microfonos -->
-            <ul class="subcategorias">
-              <li class="subcategoria-item" data-categoria="subcategoria6-1">
-                <a title="Ver productos" href="" class="categoria-link">Razer</a>
-              </li>
-              <li class="subcategoria-item" data-categoria="subcategoria6-2">
-                <a title="Ver productos" href="" class="categoria-link">Blue Yeti</a>
-              </li>
-              <li class="subcategoria-item" data-categoria="subcategoria6-3">
-                <a title="Ver productos" href="" class="categoria-link">Shure</a>
-              </li>
-              <li class="subcategoria-item" data-categoria="subcategoria6-4">
-                <a title="Ver productos" href="" class="categoria-link">HyperX</a>
-              </li>
-            </ul>
-          </li>
-          <li data-categoria="categoria6">
-            Sillas Gamer
-            <!-- Subcategorías de Sillas Gamer -->
-            <ul class="subcategorias">
-              <li class="subcategoria-item" data-categoria="subcategoria7-1">
-                <a title="Ver productos" href="" class="categoria-link">VertaGear</a>
-              </li>
-              <li class="subcategoria-item" data-categoria="subcategoria7-2">
-                <a title="Ver productos" href="" class="categoria-link">Corsair</a>
-              </li>
-              <li class="subcategoria-item" data-categoria="subcategoria7-3">
-                <a title="Ver productos" href="" class="categoria-link">DxRacer</a>
-              </li>
-              <li class="subcategoria-item" data-categoria="subcategoria7-4">
-                <a title="Ver productos" href="" class="categoria-link">Technisport</a>
-              </li>
-            </ul>
-          </li>
-          <li data-categoria="categoria7">
-            Accesorios
-            <!-- Subcategorías de Accesorios -->
-            <ul class="subcategorias">
-              <li class="subcategoria-item" data-categoria="subcategoria7-1">
-                Mousepad
-              </li>
-            </ul>
-          </li>
-        </ul>
-      </nav>
-      <!-- Cabecera vista movil -->
-    </header>
-    <main>
-      <div class="carrusel-hero">
-        <div class="carru">
-          <div class="carr first">
-            <img src="assets/imgs/carrusel_0.webp" alt="imgs promocion" />
-          </div>
+    </section>
+    <!-- FIN CONTENIDO PRODUCTOS -->
+  </main>
+  <footer class="footer-distributed">
+    <div class="footer-left">
+      <h3><img src="./assets/imgs/logo-footer.png" alt="logo" /></h3>
 
-          <div class="carr">
-            <img src="assets/imgs/carrusel_1.webp" alt="imgs promocion" />
-          </div>
+      <p class="footer-links">
+        <a title="Ir a inicio" href="/" class="link-1">Home</a>
 
-          <div class="carr">
-            <img src="assets/imgs/carrusel_2.webp" alt="imgs promocion" />
-          </div>
+        <a title="Ir a blog" href="#">Blog</a>
 
-          <div class="carr">
-            <img src="assets/imgs/carrusel_3.webp" alt="imgs promocion" />
-          </div>
-        </div>
+        <a title="" href="#">Pricing</a>
 
-        <div class="navigation-manual">
-          <label for="radio1" class="manual-btn">
-            <input
-              type="radio"
-              title="cambiar imgs"
-              name="radio-btn"
-              id="radio1"
-              checked
-            />
-          </label>
-          <label for="radio2" class="manual-btn">
-            <input
-              type="radio"
-              title="cambiar imgs"
-              name="radio-btn"
-              id="radio2"
-            />
-          </label>
-          <label for="radio3" class="manual-btn">
-            <input
-              type="radio"
-              title="cambiar imgs"
-              name="radio-btn"
-              id="radio3"
-            />
-          </label>
-          <label for="radio4" class="manual-btn">
-            <input
-              type="radio"
-              title="cambiar imgs"
-              name="radio-btn"
-              id="radio4"
-            />
-          </label>
-        </div>
+        <a title="Ver sobre nosotros" href="#">About</a>
+
+        <a title="Ver preguntas" href="#">Faq</a>
+
+        <a title="Ir a contáctanos" href="#">Contact</a>
+      </p>
+    </div>
+
+    <address class="footer-center">
+      <div>
+        <i class="fa fa-map"></i>
+        <p><span>Jr. Hermán Velarde 260</span> Lima, Lima</p>
       </div>
-
-      <div class="marcas">
-        <div class="marca-track">
-          <!-- PRIMERA PARTE CARROUSEL -->
-          <a title="Ver sección" class="marca" href="#productos_redragon">
-            <img src="assets/imgs/marcas_0.png" alt="logo marca" />
-          </a>
-          <div class="marca">
-            <img src="assets/imgs/marcas_1.png" alt="logo marca" />
-          </div>
-          <a title="Ver sección" class="marca" href="#productos_logitech">
-            <img src="assets/imgs/marcas_2.png" alt="logo marca" />
-          </a>
-          <div class="marca">
-            <img src="assets/imgs/marcas_3.png" alt="logo marca" />
-          </div>
-          <div class="marca">
-            <img src="assets/imgs/marcas_4.png" alt="logo marca" />
-          </div>
-          <div class="marca">
-            <img src="assets/imgs/marcas_5.png" alt="logo marca" />
-          </div>
-          <div class="marca">
-            <img src="assets/imgs/marcas_6.png" alt="logo marca" />
-          </div>
-          <a title="Ver sección" class="marca" href="#productos_vertagear">
-            <img src="assets/imgs/marcas_7.png" alt="logo marca" />
-          </a>
-          <div class="marca">
-            <img src="assets/imgs/marcas_8.png" alt="logo marca" />
-          </div>
-          <!-- FIN PRIMERA PARTE CARROUSEL -->
-
-          <!-- SEGUNDA PARTE CARROUSEL -->
-          <a title="Ver sección" class="marca" href="#productos_redragon">
-            <img src="assets/imgs/marcas_0.png" alt="logo marca" />
-          </a>
-          <div class="marca">
-            <img src="assets/imgs/marcas_1.png" alt="logo marca" />
-          </div>
-          <a title="Ver sección" class="marca" href="#productos_logitech">
-            <img src="assets/imgs/marcas_2.png" alt="logo marca" />
-          </a>
-          <div class="marca">
-            <img src="assets/imgs/marcas_3.png" alt="logo marca" />
-          </div>
-          <div class="marca">
-            <img src="assets/imgs/marcas_4.png" alt="logo marca" />
-          </div>
-          <div class="marca">
-            <img src="assets/imgs/marcas_5.png" alt="logo marca" />
-          </div>
-          <div class="marca">
-            <img src="assets/imgs/marcas_6.png" alt="logo marca" />
-          </div>
-          <a title="Ver sección" class="marca" href="#productos_vertagear">
-            <img src="assets/imgs/marcas_7.png" alt="logo marca" />
-          </a>
-          <div class="marca">
-            <img src="assets/imgs/marcas_8.png" alt="logo marca" />
-          </div>
-          <!-- FIN SEGUNDA PARTE CARROUSEL -->
-        </div>
+      <div>
+        <i class="fa fa-phone"></i>
+        <p>930 517 169</p>
       </div>
-
-      <!-- CONTENIDO PRODUCTOS -->
-      <section class="contenedor">
-        <h2 class="titulo-contenedor-productos">
-          Los productos más vendidos por marca
-        </h2>
-        <div class="contenedor-items">
-          <div class="categoria-item" id="productos_vertagear">
-            <h3 class="categoria-titulo">VertaGear</h3>
-            <div class="item">
-              <div class="cabecera-card">
-                <span class="titulo-item">VertaGear</span>
-                <img
-                  src="assets/imgs/Vertagear_0.webp"
-                  alt=""
-                  class="img-item"
-                />
-              </div>
-              <div class="medio-card">
-                <span class="info-item"
-                  >Silla Gamer Vertagear PL4800 Midnight Blue</span
-                >
-                <span class="precio-item">S/1299.00</span>
-              </div>
-              <button class="boton-item">Agregar al Carrito</button>
-            </div>
-            <div class="item">
-              <div class="cabecera-card">
-                <span class="titulo-item">Vertagear</span>
-                <img
-                  src="assets/imgs/Vertagear_1.webp"
-                  alt=""
-                  class="img-item"
-                />
-              </div>
-              <div class="medio-card">
-                <span class="info-item"
-                  >Silla Gamer Vertagear SL5800 Universitario Edición
-                  Limitada</span
-                >
-                <span class="precio-item">S/1749.00</span>
-              </div>
-              <button class="boton-item">Agregar al Carrito</button>
-            </div>
-            <div class="item">
-              <div class="cabecera-card">
-                <span class="titulo-item">Vertagear</span>
-                <img
-                  src="assets/imgs/Vertagear_2.webp"
-                  alt=""
-                  class="img-item"
-                />
-              </div>
-              <div class="medio-card">
-                <span class="info-item"
-                  >Silla Gamer Vertagear SL5800 Midnight Green</span
-                >
-                <span class="precio-item">S/1549.00</span>
-              </div>
-              <button class="boton-item">Agregar al Carrito</button>
-            </div>
-            <div class="item">
-              <div class="cabecera-card">
-                <span class="titulo-item">Vertagear</span>
-                <img
-                  src="assets/imgs/Vertagear_3.webp"
-                  alt=""
-                  class="img-item"
-                />
-              </div>
-              <div class="medio-card">
-                <span class="info-item"
-                  >Silla de escritorio Vertagear SL2000 VG-SL2000 gamer
-                  ergonómica negra y azul</span
-                >
-                <span class="precio-item">S/599.00</span>
-              </div>
-              <button class="boton-item">Agregar al Carrito</button>
-            </div>
-          </div>
-          <div class="categoria-item" id="productos_redragon">
-            <h3 class="categoria-titulo">Redragon</h3>
-            <div class="item">
-              <div class="cabecera-card">
-                <span class="titulo-item">Redragon</span>
-                <img
-                  src="assets/imgs/Redragon_0.webp"
-                  alt=""
-                  class="img-item"
-                />
-              </div>
-              <div class="medio-card">
-                <span class="info-item"
-                  >Audífono con Micro Redragon Zeus X RGB</span
-                >
-                <span class="precio-item">S/299.00</span>
-              </div>
-              <button class="boton-item">Agregar al Carrito</button>
-            </div>
-            <div class="item">
-              <div class="cabecera-card">
-                <span class="titulo-item">Redragon</span>
-                <img
-                  src="assets/imgs/Redragon_1.webp"
-                  alt=""
-                  class="img-item"
-                />
-              </div>
-              <div class="medio-card">
-                <span class="info-item"
-                  >Mouse Gamer Redragon Cobra Negro M711</span
-                >
-                <span class="precio-item">S/109.00</span>
-              </div>
-              <button class="boton-item">Agregar al Carrito</button>
-            </div>
-            <div class="item">
-              <div class="cabecera-card">
-                <span class="titulo-item">Redragon</span>
-                <img
-                  src="assets/imgs/Redragon_2.webp"
-                  alt=""
-                  class="img-item"
-                />
-              </div>
-              <div class="medio-card">
-                <span class="info-item"
-                  >Teclado Gamer Inalámbrico Redragon Fizz PRO Ingles</span
-                >
-                <span class="precio-item">S/200.00</span>
-              </div>
-              <button class="boton-item">Agregar al Carrito</button>
-            </div>
-            <div class="item">
-              <div class="cabecera-card">
-                <span class="titulo-item">Redragon</span>
-                <img
-                  src="assets/imgs/Redragon_3.webp"
-                  alt=""
-                  class="img-item"
-                />
-              </div>
-              <div class="medio-card">
-                <span class="info-item"
-                  >Mouse Pad Redragon Flick Medium P030</span
-                >
-                <span class="precio-item">S/20.00</span>
-              </div>
-              <button class="boton-item">Agregar al Carrito</button>
-            </div>
-          </div>
-          <div class="categoria-item" id="productos_logitech">
-            <h3 class="categoria-titulo">Logitech</h3>
-            <div class="item">
-              <div class="cabecera-card">
-                <span class="titulo-item">Logitech</span>
-                <img
-                  src="assets/imgs/Redragon_3.webp"
-                  alt=""
-                  class="img-item"
-                />
-              </div>
-              <div class="medio-card">
-                <span class="info-item"
-                  >Mouse Pad Redragon Flick Medium P030</span
-                >
-                <span class="precio-item">S/20.00</span>
-              </div>
-              <button class="boton-item">Agregar al Carrito</button>
-            </div>
-          </div>
-        </div>
-      </section>
-      <!-- FIN CONTENIDO PRODUCTOS -->
-    </main>
-    <footer class="footer-distributed">
-      <div class="footer-left">
-        <h3><img src="./assets/imgs/logo-footer.png" alt="logo" /></h3>
-
-        <p class="footer-links">
-          <a title="Ir a inicio" href="/" class="link-1">Home</a>
-
-          <a title="Ir a blog" href="#">Blog</a>
-
-          <a title="" href="#">Pricing</a>
-
-          <a title="Ver sobre nosotros" href="#">About</a>
-
-          <a title="Ver preguntas" href="#">Faq</a>
-
-          <a title="Ir a contáctanos" href="#">Contact</a>
-        </p>
+      <div>
+        <i class="fa fa-mail"></i>
+        <p><a href="mailto:support@company.com">spacer@company.com</a></p>
       </div>
+    </address>
 
-      <address class="footer-center">
-        <div>
-          <i class="fa fa-map-marker"></i>
-          <p><span>Jr. Hermán Velarde 260</span> Lima, Lima</p>
-        </div>
-        <div>
-          <i class="fa fa-phone"></i>
-          <p>930 517 169</p>
-        </div>
-        <div>
-          <i class="fa fa-envelope"></i>
-          <p><a href="mailto:support@company.com">spacer@company.com</a></p>
-        </div>
-      </address>
+    <div class="footer-right">
+      <p class="footer-company-about">
+        <span>Acerca de nosotros</span>
+        Somos una empresa de venta de periféricos para tu PC, nosotros estamos
+        dispuestos a ofrecerte el servicio de calidad que mereces.
+      </p>
 
-      <div class="footer-right">
-        <p class="footer-company-about">
-          <span>Acerca de nosotros</span>
-          Somos una empresa de venta de periféricos para tu PC, nosotros estamos
-          dispuestos a ofrecerte el servicio de calidad que mereces.
-        </p>
-
-        <div class="footer-icons">
-          <a title="Ir a twitter" href="#" class="icon twitter"></a>
-          <a title="Ir a facebook" href="#" class="icon facebook"></a>
-          <a title="Ir a whatsapp" href="#" class="icon whatsapp"></a>
-        </div>
+      <div class="footer-icons">
+        <a title="Ir a twitter" href="#" class="icon twitter"></a>
+        <a title="Ir a facebook" href="#" class="icon facebook"></a>
+        <a title="Ir a whatsapp" href="#" class="icon whatsapp"></a>
       </div>
+    </div>
 
-      <p class="footer-company-name">Spacer © 2023</p>
-    </footer>
+    <p class="footer-company-name">Spacer © 2023</p>
+  </footer>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
-    <script src="./js/index.js"></script>
-  </body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+  <script src="./js/index.js"></script>
+</body>
+
 </html>
