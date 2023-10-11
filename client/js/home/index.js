@@ -96,4 +96,4 @@ export default function init() {
   startCarrouselAnimation();
 }
 
-export { preventRedirect, loadHeaderLottieAnimation };
+export { preventRedirect, loadHeaderLottieAnimation, handleCheckAuth };

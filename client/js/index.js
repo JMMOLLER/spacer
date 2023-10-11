@@ -8,6 +8,8 @@ if((path === "/" || path.includes("index"))){
   import ("./login/index.js").then((module) => module.default());
 } else if(path.includes("/pages/perfil")) {
   import("./perfil/index.js").then((module) => module.default());
+} else if(path.includes("/pages/carrito")){
+  import("./cart/index.js").then((module) => module.default());
 } else {
-  console.warn("404");
+  console.warn("404 - No reconocemos esta ruta.");
 }
