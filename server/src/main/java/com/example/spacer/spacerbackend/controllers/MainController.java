@@ -1,7 +1,9 @@
 package com.example.spacer.spacerbackend.controllers;
 
 import com.example.spacer.spacerbackend.models.ClientModel;
+import com.example.spacer.spacerbackend.models.ProductModel;
 import com.example.spacer.spacerbackend.services.ClientService;
+import com.example.spacer.spacerbackend.services.ProductService;
 import com.example.spacer.spacerbackend.services.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -19,9 +21,11 @@ import org.springframework.web.servlet.view.RedirectView;
 public class MainController {
 
   ClientService clientService;
+  ProductService productService;
 
   @Autowired
-  public void ClientController(ClientService clientService) {
+  public void ClientController(ClientService clientService, ProductService productService) {
+    this.productService = productService;
     this.clientService = clientService;
   }
 
@@ -40,19 +44,32 @@ public class MainController {
   public ResponseEntity<byte[]> getClientImage(@PathVariable String username) {
     ClientModel client = this.clientService.getClientByUsername(username);
 
-    if (client != null && client.getImg() != null) {
-      HttpHeaders headers = new HttpHeaders();
-      headers.setContentType(MediaType.IMAGE_JPEG);
-      headers.setContentLength(client.getImg().length);
+    assert client != null;
+    return getImgResponseEntity(client.getImg());
+  }
 
-      return new ResponseEntity<>(client.getImg(), headers, HttpStatus.OK);
-    } else {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
+  @GetMapping("/producto/{id}.jpg")
+  public ResponseEntity<byte[]> getProductImage(@PathVariable String id) {
+    ProductModel product = this.productService.getProductById(id);
+
+    assert product != null;
+    return getImgResponseEntity(product.getImg());
   }
 
   @GetMapping("/**")
   public ResponseEntity<?> notFound() {
     return new ResponseEntity<>(new Response(HttpStatus.NOT_FOUND, HttpStatus.NOT_FOUND.name(), "Not found"), HttpStatus.NOT_FOUND);
+  }
+
+  private ResponseEntity<byte[]> getImgResponseEntity(byte[] img) {
+    if (img != null) {
+      HttpHeaders headers = new HttpHeaders();
+      headers.setContentType(MediaType.IMAGE_JPEG);
+      headers.setContentLength(img.length);
+
+      return new ResponseEntity<>(img, headers, HttpStatus.OK);
+    } else {
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
   }
 }

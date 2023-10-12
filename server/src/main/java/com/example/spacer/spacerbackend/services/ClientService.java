@@ -30,7 +30,7 @@ public class ClientService {
     ArrayList<Object> clientsSummary = new ArrayList<>();
     for (ClientModel client : clients) {
       try {
-        clientsSummary.add(new ClientService().getClientInfoSummary(client));
+        clientsSummary.add(new FilterImg(client).getFilteredObject());
       } catch (IllegalAccessException e) {
         throw new RuntimeException(e);
       }
@@ -121,20 +121,5 @@ public class ClientService {
     } else {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El cliente con el username '{username}' no existe");
     }
-  }
-
-  public Map<String, Object> getClientInfoSummary(ClientModel cs) throws IllegalAccessException {
-    Map<String, Object> client = new HashMap<>();
-
-    Field[] fields = cs.getClass().getDeclaredFields();
-    for (Field field : fields) {
-      field.setAccessible(true);
-      if(field.getName().equals("img")) continue;
-      String fieldName = field.getName();
-      Object value = field.get(cs);
-      client.put(fieldName, value);
-    }
-
-    return client;
   }
 }

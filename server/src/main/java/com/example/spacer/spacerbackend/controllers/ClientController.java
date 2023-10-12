@@ -3,6 +3,7 @@ package com.example.spacer.spacerbackend.controllers;
 import com.example.spacer.spacerbackend.auth.TokensUtils;
 import com.example.spacer.spacerbackend.models.ClientModel;
 import com.example.spacer.spacerbackend.services.ClientService;
+import com.example.spacer.spacerbackend.services.FilterImg;
 import com.example.spacer.spacerbackend.services.Response;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,7 +37,7 @@ public class ClientController {
       );
       assert payload != null;
       ClientModel cs = this.clientService.getClientByUsername(payload.get("username").toString());
-      Response response = new Response(HttpStatus.OK, HttpStatus.OK.name(), new ClientService().getClientInfoSummary(cs));
+      Response response = new Response(HttpStatus.OK, HttpStatus.OK.name(), new FilterImg(cs).getFilteredObject());
       return new ResponseEntity<>(response, HttpStatus.OK);
     } catch (Exception e) {
       Response response = new Response(HttpStatus.BAD_REQUEST, ExceptionUtils.getRootCause(e).getMessage(), null);
@@ -84,7 +85,7 @@ public class ClientController {
       }
 
       ClientModel cs = this.clientService.updateClient(client, payload.get("username").toString(), request);
-      Response response = new Response(HttpStatus.OK, HttpStatus.OK.name(), new ClientService().getClientInfoSummary(cs));
+      Response response = new Response(HttpStatus.OK, HttpStatus.OK.name(), new FilterImg(cs).getFilteredObject());
       return new ResponseEntity<>(response, HttpStatus.OK);
     } catch (Exception e) {
       Response response = new Response(HttpStatus.BAD_REQUEST, ExceptionUtils.getRootCause(e).getMessage(), null);
