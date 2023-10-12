@@ -24,7 +24,7 @@ public class ProductService {
     ArrayList<Object> productsSummary = new ArrayList<>();
     for (ProductModel product : products) {
       try {
-        productsSummary.add(new ProductService().getProductInfoSummary(product));
+        productsSummary.add(new FilterImg(product).getFilteredObject());
       } catch (IllegalAccessException e) {
         throw new RuntimeException(e);
       }
@@ -33,19 +33,7 @@ public class ProductService {
     return productsSummary;
   }
 
-  public Map<String, Object> getProductInfoSummary(ProductModel productModel) throws IllegalAccessException {
-    Map<String, Object> product = new HashMap<>();
-
-    Field[] fields = productModel.getClass().getDeclaredFields();
-    for (Field field : fields) {
-      field.setAccessible(true);
-      if (field.getName().equals("img"))
-        continue;
-      String fieldName = field.getName();
-      Object value = field.get(productModel);
-      product.put(fieldName, value);
-    }
-
-    return product;
+  public ProductModel getProductById(String id) {
+    return this.productRepository.findById(Long.valueOf(id)).orElse(null);
   }
 }
