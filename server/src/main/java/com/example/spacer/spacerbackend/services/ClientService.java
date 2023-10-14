@@ -10,32 +10,25 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 @Service
 public class ClientService {
   ClientRepository clientRepository;
+  CartService cartService;
 
   @Autowired
-  public void ClientRepository(ClientRepository clientRepository) {
+  public void ClientRepository(ClientRepository clientRepository, CartService cartService) {
     this.clientRepository = clientRepository;
+    this.cartService = cartService;
   }
 
-  public ArrayList<Object> getAllClients() {
-    ArrayList<ClientModel> clients = (ArrayList<ClientModel>) clientRepository.findAll();
-    ArrayList<Object> clientsSummary = new ArrayList<>();
-    for (ClientModel client : clients) {
-      try {
-        clientsSummary.add(new FilterImg(client).getFilteredObject());
-      } catch (IllegalAccessException e) {
-        throw new RuntimeException(e);
-      }
-    }
-    return clientsSummary;
+  public ClientModel[] getAllClients() {
+    List<ClientModel> clients = clientRepository.findAll();
+    return clients.toArray(new ClientModel[0]);
   }
 
   public ClientModel newClient(ClientModel client) {
@@ -120,6 +113,27 @@ public class ClientService {
       return client.get();
     } else {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El cliente con el username '{username}' no existe");
+    }
+  }
+
+  public ClientModel addToCart(Map<String, Integer> formData, String username) {
+    try {
+      Optional<ClientModel> existingClient = clientRepository.findOneByUsername(username);
+      if (existingClient.isPresent()) {
+        ClientModel client = existingClient.get();
+        cartService.createOrUpdate(
+          Long.valueOf(
+            formData.getOrDefault("productId", null)
+          ),
+          client.getId(),
+          formData.getOrDefault("quantity", null)
+        );
+        return clientRepository.save(client);
+      } else {
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El cliente no existe");
+      }
+    } catch (Exception e) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
     }
   }
 }

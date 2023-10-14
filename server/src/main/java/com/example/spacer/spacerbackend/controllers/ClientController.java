@@ -3,15 +3,12 @@ package com.example.spacer.spacerbackend.controllers;
 import com.example.spacer.spacerbackend.auth.TokensUtils;
 import com.example.spacer.spacerbackend.models.ClientModel;
 import com.example.spacer.spacerbackend.services.ClientService;
-import com.example.spacer.spacerbackend.services.FilterImg;
 import com.example.spacer.spacerbackend.services.Response;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,7 +34,7 @@ public class ClientController {
       );
       assert payload != null;
       ClientModel cs = this.clientService.getClientByUsername(payload.get("username").toString());
-      Response response = new Response(HttpStatus.OK, HttpStatus.OK.name(), new FilterImg(cs).getFilteredObject());
+      Response response = new Response(HttpStatus.OK, HttpStatus.OK.name(), cs);
       return new ResponseEntity<>(response, HttpStatus.OK);
     } catch (Exception e) {
       Response response = new Response(HttpStatus.BAD_REQUEST, ExceptionUtils.getRootCause(e).getMessage(), null);
@@ -58,12 +55,30 @@ public class ClientController {
     }
   }
 
+  @PostMapping("/carrito")
+  @ResponseBody
+  public ResponseEntity<Response> addToCart(HttpServletRequest request, @RequestBody Map<String, Integer> formData) {
+    try {
+      String authorizationHeader = request.getHeader("Authorization");
+      Map<String, Object> payload = TokensUtils.getPayloadFromToken(
+        authorizationHeader.replace("Bearer ", "")
+      );
+      assert payload != null;
+      ClientModel cs = this.clientService.addToCart(formData, payload.get("username").toString());
+      Response response = new Response(HttpStatus.CREATED, HttpStatus.CREATED.name(), cs);
+      return new ResponseEntity<>(response, HttpStatus.CREATED);
+    } catch (Exception e) {
+      Response response = new Response(HttpStatus.BAD_REQUEST, ExceptionUtils.getRootCause(e).getMessage(), null);
+      return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+  }
+
   @PutMapping()
   @ResponseBody
   public ResponseEntity<Response> updateClient(
-                                               HttpServletRequest request,
-                                               @RequestPart(value = "img", required = false) MultipartFile img,
-                                               @RequestParam Map<String, Object> formData
+     HttpServletRequest request,
+     @RequestPart(value = "img", required = false) MultipartFile img,
+     @RequestParam Map<String, Object> formData
   ) {
     try {
       String authorizationHeader = request.getHeader("Authorization");
@@ -85,7 +100,7 @@ public class ClientController {
       }
 
       ClientModel cs = this.clientService.updateClient(client, payload.get("username").toString(), request);
-      Response response = new Response(HttpStatus.OK, HttpStatus.OK.name(), new FilterImg(cs).getFilteredObject());
+      Response response = new Response(HttpStatus.OK, HttpStatus.OK.name(), cs);
       return new ResponseEntity<>(response, HttpStatus.OK);
     } catch (Exception e) {
       Response response = new Response(HttpStatus.BAD_REQUEST, ExceptionUtils.getRootCause(e).getMessage(), null);
