@@ -1,7 +1,13 @@
 package com.example.spacer.spacerbackend.models;
 
+import com.example.spacer.spacerbackend.repositories.ClientRepository;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
+
+import java.util.List;
+import java.util.Map;
 
 @Getter
 @Entity
@@ -21,6 +27,7 @@ public class ClientModel {
   private String lastName;
   @lombok.Setter
   @Column(name="imgcli")
+  @JsonIgnore
   private byte[] img;
   @lombok.Setter
   @Column(name="urlcli")
@@ -34,6 +41,12 @@ public class ClientModel {
   @lombok.Setter
   @Column(name="crdcli")
   private Integer cardNumber;
+
+  @lombok.Setter
+  @OneToMany(mappedBy = "clientId", cascade = CascadeType.ALL)
+  @JsonManagedReference
+  private List<CartModel> cart;
+
   @lombok.Setter
   private String password;
   @lombok.Setter
@@ -44,5 +57,4 @@ public class ClientModel {
   public void setId(Long id) {
     this.id = id;
   }
-
 }

@@ -1,5 +1,7 @@
 package com.example.spacer.spacerbackend.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -13,21 +15,24 @@ public class ProductModel {
   private Long id;
 
   @lombok.Setter
-  // @Column(name="marca")
   private String marca;
   @lombok.Setter
   @Column(name = "despro")
   private String description;
   @lombok.Setter
   @Column(name = "prepro")
-  private String price;
+  private double price;
+
   @lombok.Setter
-  @Column(name = "idcat")
-  private Integer categoryId;
+  @ManyToOne
+  @JoinColumn(name="idcat")
+  private CategoryModel categoryId;
+
   @lombok.Setter
   @Column(name = "stock")
-  private String stock;
+  private int stock;
   @lombok.Setter
+  @JsonIgnore
   @Column(name = "imgprod")
   private byte[] img;
   @lombok.Setter
