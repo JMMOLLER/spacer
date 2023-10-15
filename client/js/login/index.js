@@ -58,6 +58,9 @@ const handleLogin = async (credentials) => {
 window.onload = () => {
   const form = document.querySelector("form");
   form.addEventListener("submit", handleSubmit);
+  
+  form.querySelector("input[type='submit']")
+  .removeAttribute("disabled")
 };
 
 export default function init() {
@@ -66,9 +69,7 @@ export default function init() {
     module.userIsAuth().then((res) =>
     res
       ? (window.location.href = "/")
-      : document
-        .querySelector("input[type='submit']")
-        .removeAttribute("disabled"));
+      : null);
   })
   console.info("login");
 }
