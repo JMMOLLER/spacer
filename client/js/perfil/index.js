@@ -148,8 +148,15 @@ const handleFormSubmit = () => {
   form.addEventListener("submit", updateUserInfo);
 };
 
+const handleImageError = (e) => {
+  e.target.src = "https://spacer-ecommerce.vercel.app/assets/imgs/user.webp";
+  e.target.style.filter = "blur(2px)";
+}
+
 export default async function init() {
   const module = await import("../home/index.js");
+  const img = document.querySelector(".perfil__img")
+  img.onerror = handleImageError
   module.preventRedirect();
   module.loadHeaderLottieAnimation();
   module.handleCheckAuth();
