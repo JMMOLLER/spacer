@@ -1,3 +1,5 @@
+let eventSubmitIsAdded = false;
+
 const toggleSubmit = (inputValue) => {
   const submitGp = document.querySelector(".inputSubmit-group");
   const input = document.querySelector(
@@ -9,11 +11,9 @@ const toggleSubmit = (inputValue) => {
 };
 
 const showError = (show) => {
-  const span = document.querySelector("#error")
-  show
-    ? span.classList.remove("hidden")
-    : span.classList.add("hidden");
-}
+  const span = document.querySelector("#error");
+  show ? span.classList.remove("hidden") : span.classList.add("hidden");
+};
 
 const loadLottieAnimation = () => {
   const returnElement = document.querySelector(".animation_arrow_container");
@@ -23,7 +23,7 @@ const loadLottieAnimation = () => {
     renderer: "svg",
     loop: false,
     autoplay: false,
-    path: "../assets/lotties/arrow-left.json"
+    path: "../assets/lotties/arrow-left.json",
   });
 
   returnElement.addEventListener("mouseenter", () => {
@@ -44,7 +44,7 @@ const handleSubmit = (e) => {
 const handleLogin = async (credentials) => {
   showError(false);
   const fetchAPI = (await import("../globals/index.js")).fetchAPI;
-  const res = await fetchAPI('/auth', credentials, "POST");
+  const res = await fetchAPI("/auth", credentials, "POST");
   if (res?.statusCode === 200) {
     sessionStorage.setItem("token", res?.response?.token);
     window.location.href = "/";
@@ -55,22 +55,38 @@ const handleLogin = async (credentials) => {
   return res ? true : false;
 };
 
-window.onload = () => {
+window.onload = () => handleAddEventSubmit();
+
+const handleAddEventSubmit = () => {
   const form = document.querySelector("form");
   form.addEventListener("submit", handleSubmit);
+
+  form.querySelector("input[type='submit']").removeAttribute("disabled");
+
+  eventSubmitIsAdded = true;
+  console.log(form.querySelector("input[type='submit']"));
 };
+
+const forceAddEventSubmit = () => {
+  const idInterval = setInterval(() => {
+    if (eventSubmitIsAdded) {
+      clearInterval(idInterval);
+      return;
+    }
+    handleAddEventSubmit();
+    console.log("interval");
+  }, 500);
+}
 
 export default function init() {
   loadLottieAnimation();
-  import ("../globals/index.js").then((module) => {
-    module.userIsAuth().then((res) =>
-    res
-      ? (window.location.href = "/")
-      : document
-        .querySelector("input[type='submit']")
-        .removeAttribute("disabled"));
-  })
+  import("../globals/index.js").then((module) => {
+    module
+      .userIsAuth()
+      .then((res) => (res ? (window.location.href = "/") : null));
+  });
   console.info("login");
+  forceAddEventSubmit();
 }
 
-export { toggleSubmit }
+export { toggleSubmit };
