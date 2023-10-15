@@ -19,11 +19,11 @@ const loadLottieAnimation = () => {
   const returnElement = document.querySelector(".animation_arrow_container");
 
   const animation = lottie.loadAnimation({
-    container: document.getElementById("animation_arrow"), // the dom element that will contain the animation
+    container: document.getElementById("animation_arrow"),
     renderer: "svg",
     loop: false,
     autoplay: false,
-    path: "../assets/lotties/arrow-left.json", // the path to the animation json
+    path: "../assets/lotties/arrow-left.json"
   });
 
   returnElement.addEventListener("mouseenter", () => {
@@ -44,7 +44,7 @@ const handleSubmit = (e) => {
 const handleLogin = async (credentials) => {
   showError(false);
   const fetchAPI = (await import("../globals/index.js")).fetchAPI;
-  const res = await fetchAPI('/auth', credentials, "POST"); // no puede user esta funcion porque no esta definida
+  const res = await fetchAPI('/auth', credentials, "POST");
   if (res?.statusCode === 200) {
     sessionStorage.setItem("token", res?.response?.token);
     window.location.href = "/";
