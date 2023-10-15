@@ -91,12 +91,7 @@ public class ClientController {
       ClientModel client = this.getClientFromFormData(formData);
 
       if (img != null) {
-        String contentType = img.getContentType();
-        if(contentType != null && contentType.startsWith("image")) {
-          client.setImg(img.getBytes());
-        }else{
-          throw new Exception("img format not valid");
-        }
+        client.setImg(img.getBytes());
       }
 
       ClientModel cs = this.clientService.updateClient(client, payload.get("username").toString(), request);

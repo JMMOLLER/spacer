@@ -6,9 +6,10 @@ export default function init() {
     })
     .then(() => {
       import("../globals/index.js").then((module) =>
-        !module.userIsAuth()
+        !module.userIsAuth().then((isAuth) => 
+          !isAuth
           ? (window.location.href = "/pages/login.html")
-          : null
+          : null)
       ); // Se importa el módulo globals y se llama a la función userIsAuth para verificar si el usuario está autenticado
     });
 
