@@ -3,7 +3,6 @@
 @import url("./productos.css");
 @import url("./login.css");
 @import url("./perfil.css");
-@import url("./carrito.css");
 
 main {
   position: relative;

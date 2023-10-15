@@ -6,10 +6,8 @@ if((path === "/" || path.includes("index"))){
   import ("./home/index.js").then((module) => module.default());
 } else if (path.includes("login")){
   import ("./login/index.js").then((module) => module.default());
-} else if(path.includes("/pages/perfil")) {
+} else if(path.includes("/pages/perfil.html")) {
   import("./perfil/index.js").then((module) => module.default());
-} else if(path.includes("/pages/carrito")){
-  import("./cart/index.js").then((module) => module.default());
 } else {
-  console.warn("404 - No reconocemos esta ruta.");
+  console.warn("404");
 }

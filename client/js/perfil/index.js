@@ -2,36 +2,27 @@ const inputController = () => {
   const form = document.querySelector("form.spacer_form");
   const inputs = form.querySelectorAll("input:not([type='submit'])");
   const submitButton = form.querySelector("input[type='submit']");
-  const imgInput = document.querySelector("#new-image");
-
-  const inputHandlerEvent = inputHandler.bind(null, inputs, submitButton, imgInput);
 
   inputs.forEach((input) => {
-    input.addEventListener("input", inputHandlerEvent);
-    imgInput.addEventListener("change", inputHandlerEvent);
+    input.addEventListener("input", () => {
+      let allInputsEmpty = true;
+
+      inputs.forEach((input) => {
+        if (input.value.trim() !== "") {
+          allInputsEmpty = false;
+          input.classList.add("filled");
+        }else{
+          input.classList.remove("filled");
+        }
+      });
+
+      if (allInputsEmpty) {
+        submitButton.disabled = true;
+      } else {
+        submitButton.disabled = false;
+      }
+    });
   });
-};
-
-const inputHandler = (inputs, submitButton, imgInput) => {
-  let allInputsEmpty = true;
-
-  inputs.forEach((input) => {
-    if (input.value.trim() !== "") {
-      allInputsEmpty = false;
-      input.classList.add("filled");
-    } else {
-      input.classList.remove("filled");
-    }
-  });
-  if(imgInput.value.trim() !== "") {
-    allInputsEmpty = false;
-  }
-
-  if (allInputsEmpty) {
-    submitButton.disabled = true;
-  } else {
-    submitButton.disabled = false;
-  }
 };
 
 const fillUserInfo = async () => {
@@ -88,25 +79,20 @@ const filterFormData = (formData) => {
 const updateUserInfo = async (e) => {
   e.preventDefault();
 
-  const toggleSubmit = await import("../login/index.js").then(
-    (module) => module.toggleSubmit
-  );
+  const toggleSubmit = await import("../login/index.js").then(module => module.toggleSubmit)
 
-  const inputSubmitValue = "Actualizar Datos";
+  const inputSubmitValue = "Actualizar Datos"
 
   toggleSubmit(inputSubmitValue);
 
   const module = await import("../globals/index.js");
   const fetchUpdate = module.customFetch;
 
-  const form = new FormData(e.target);
-  form.append("img", document.querySelector("#new-image").files[0] || "");
-  const formData = filterFormData(form);
+  const formData = filterFormData(new FormData(e.target));
 
   // formData.forEach((value, key) => {
   //   console.log(key, value);
   // });
-  // return;
 
   const myHeaders = new Headers();
   myHeaders.append(
@@ -125,20 +111,14 @@ const updateUserInfo = async (e) => {
 
   toggleSubmit(inputSubmitValue);
 
-  console.log(updateResponse);
-  if (updateResponse.statusCode === 401) {
+  if (updateResponse.statusCode > 400 && updateResponse.statusCode < 500) {
     alert("Tu sesión a expirado, por favor inicia sesión nuevamente.");
     window.location.href = "/pages/login.html";
-  } else if(updateResponse.statusCode === 200) {
-    const res = confirm(
-      "Tu información se ha actualizado correctamente.\n¿Deseas ver los datos actualizados?"
-    );
-    if (res) {
-      window.location.reload();
-    }
-  }else{
-    alert(updateResponse.description || "Ha ocurrido un error, intenta nuevamente.");
-    return;
+  }
+  console.log(updateResponse);
+  const res = confirm("Tu información se ha actualizado correctamente.\n¿Deseas ver los datos actualizados?");
+  if (res) {
+    window.location.reload();
   }
 };
 
@@ -152,7 +132,6 @@ export default async function init() {
   const module = await import("../home/index.js");
   module.preventRedirect();
   module.loadHeaderLottieAnimation();
-  module.handleCheckAuth();
   inputController();
   fillUserInfo();
   handleFormSubmit();

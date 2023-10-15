@@ -21,7 +21,6 @@ ul#menuCategorias li {
   padding: 0 1.5rem;
   position: relative;
   text-align: center;
-  font-weight: 500;
   transition: background-color 0.3s ease;
 }
 

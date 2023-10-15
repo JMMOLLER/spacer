@@ -10,25 +10,6 @@
 }
 
 @font-face {
-  font-family: 'Kanit';
-  font-weight: bold;
-  font-style: normal;
-  src: url("../../assets/fonts/Kanit/Kanit-Bold.ttf") format("truetype");
-}
-
-@font-face {
-  font-family: 'Kanit';
-  font-weight: lighter;
-  src: url("../../assets/fonts/Kanit/Kanit-Light.ttf") format("truetype");
-}
-
-@font-face {
-  font-family: 'Kanit';
-  font-weight: 500;
-  src: url("../../assets/fonts/Kanit/Kanit-Medium.ttf") format("truetype");
-}
-
-@font-face {
   font-family: 'JosefinSans';
   font-weight: normal;
   font-style: normal;
@@ -59,38 +40,4 @@ a {
 input[type=file], /* FF, IE7+, chrome (except button) */
 input[type=file]::-webkit-file-upload-button { /* chromes and blink button */
   cursor: pointer; 
-}
-
-.fa {
-  display: inline-block;
-  width: 25px;
-  height: 25px;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  margin: 10px;
-}
-
-.fa.fa-map {
-  background-image: url("/assets/icons/location.png");
-}
-.fa.fa-phone {
-  background-image: url("/assets/icons/phone.png");
-}
-.fa.fa-mail {
-  background-image: url("/assets/icons/mail.png");
-}
-.fa.fa-back {
-  background-image: url("/assets/icons/down.svg");
-  rotate: 90deg;
-}
-.fa.fa-next {
-  background-image: url("/assets/icons/down.svg");
-  rotate: -90deg;
-}
-.fa.fa-delete {
-  background-image: url("/assets/icons/delete.svg");
-}
-.fa.fa-arrow_right {
-  background-image: url("/assets/icons/arrow-right.svg");
 }
