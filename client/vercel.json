@@ -2,8 +2,8 @@
   "cleanUrls": true,
   "crons": [
     {
-      "path": "/cron",
-      "schedule": "10 * 60 * 1000"
+      "path": "/api/cron",
+      "schedule": "0 5 * * *"
     }
   ]
 }
