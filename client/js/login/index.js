@@ -64,7 +64,6 @@ const handleAddEventSubmit = () => {
   form.querySelector("input[type='submit']").removeAttribute("disabled");
 
   eventSubmitIsAdded = true;
-  console.log(form.querySelector("input[type='submit']"));
 };
 
 const forceAddEventSubmit = () => {
@@ -74,7 +73,7 @@ const forceAddEventSubmit = () => {
       return;
     }
     handleAddEventSubmit();
-    console.log("interval");
+    console.log("Event submit has been forcibly added to form");
   }, 500);
 }
 
