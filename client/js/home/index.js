@@ -75,12 +75,19 @@ function checkInput() {
   }
 }
 
+/**
+ * @description Verifica si el usuario esta logueado y si lo esta, cambia el href del boton perfil
+ *
+ * @returns {void}
+ *
+ */
 const handleCheckAuth = () => {
   import("../globals/index.js")
     .then(async(module) => {
       const userIsAuth = await module.userIsAuth();
       if (userIsAuth) {
         document.querySelector("#perfil").href = "/pages/perfil.html";
+        document.querySelector("#carrito").href = "/pages/carrito.html";
       }
     })
     .catch((err) => {
@@ -96,4 +103,4 @@ export default function init() {
   startCarrouselAnimation();
 }
 
-export { preventRedirect, loadHeaderLottieAnimation };
+export { preventRedirect, loadHeaderLottieAnimation, handleCheckAuth };

@@ -1,12 +1,10 @@
 .marcas {
-  width: 75vw;
+  width: 100%;
   height: auto;
   margin: 1rem auto;
   overflow: hidden;
   border: none;
   border-radius: 20px;
-  background-color: rgb(106, 107, 107);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
   padding: 20px;
 }
 
