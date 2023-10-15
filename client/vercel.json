@@ -1,3 +1,9 @@
 {
-  "cleanUrls": true
+  "cleanUrls": true,
+  "crons": [
+    {
+      "path": "/cron",
+      "schedule": "10 * 60 * 1000"
+    }
+  ]
 }
