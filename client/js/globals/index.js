@@ -1,4 +1,4 @@
-const API_URL = "https://spacer-api.up.railway.app/api";
+const API_URL = "https://spacer-api.onrender.com/api";
 const apiResponseModel = {
   statusCode: 0,
   message: "",
@@ -52,22 +52,27 @@ export async function getUserInfo() {
  * @returns {Promise<apiResponseModel>}
  */
 export async function fetchAPI(path, body, method) {
-  const res = await fetch(`${API_URL}${path}`, {
-    method: !method ? "GET" : method,
-    headers: {
-      "Content-Type": contentTypeHandler(method),
-      "Authorization": `Bearer ${sessionStorage.getItem("token")}`,
-    },
-    body: method === "GET" ? null : JSON.stringify(body)
-  });
+  try {
+    const res = await fetch(`${API_URL}${path}`, {
+      method: !method ? "GET" : method,
+      headers: {
+        "Content-Type": contentTypeHandler(method),
+        "Authorization": `Bearer ${sessionStorage.getItem("token")}`,
+      },
+      body: method === "GET" ? null : JSON.stringify(body)
+    });
 
-  if (!res.ok) {
-    const error = await res.json();
-    return error;
+    if (!res.ok) {
+      const error = await res.json();
+      return error;
+    }
+
+    const response = await res.json();
+    return response;
+  } catch (error) {
+    console.error(error);
+    return { statusCode: 500, message: "Unknow Error" };
   }
-
-  const response = await res.json();
-  return response;
 }
 
 /**
