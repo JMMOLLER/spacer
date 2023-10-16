@@ -26,13 +26,43 @@ const inputController = () => {
 
   inputsFormDatos.forEach((input) => {
     input.addEventListener("input", inputHandlerDatos);
-    imgInput.addEventListener("change", inputHandlerDatos);
+    imgInput.addEventListener("change", (e) => {
+      const profileImg = document.querySelector(".perfil__img");
+
+      if(e.target.files[0]?.type.includes("image")){
+        profileImg.src = URL.createObjectURL(e.target.files[0]);
+      }else{
+        import("../globals/index.js").then((module) => profileImg.src = module.getUserImg());
+        removeFileFromFileList(0, e.target)
+      }
+      inputHandlerDatos();
+    });
   });
 
   inputsFormSeguridad.forEach((input) => {
     input.addEventListener("input", inputHandlerSeguridad);
   });
 };
+
+
+/**
+ * @description Función que se encarga de remover un archivo de la lista de archivos de un input - Código hecho por: Tunji Oyeniran
+ * 
+ * @param {int} index 
+ * @param {HTMLInputElement} input 
+ */
+const removeFileFromFileList = (index, input) => {
+  const dt = new DataTransfer()
+  const { files } = input
+  
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i]
+    if (index !== i)
+      dt.items.add(file) // here you exclude the file. thus removing it.
+  }
+  
+  input.files = dt.files // Assign the updates list
+}
 
 /**
  * @description Función que se encarga de habilitar o deshabilitar el botón de submit
@@ -76,7 +106,7 @@ const inputHandler = (inputs, submitButton, imgInput) => {
       }
     });
 
-    if (imgInput != null && imgInput.value.trim() !== "") {
+    if (imgInput != null && imgInput.files[0]?.type.includes("image")) {
       allInputsEmpty = false;
     }
   }
@@ -105,7 +135,7 @@ const fillUserInfo = async () => {
 
   const userInfo = await getUserInfo();
 
-  img_profile.src = userInfo.url_img;
+  img_profile.src = userInfo.urlImg;
   fullName.textContent = `${userInfo.firstName} ${userInfo.lastName}`;
   email.textContent = userInfo.email;
   address.textContent = userInfo.address || "Sin dirección";
@@ -225,6 +255,8 @@ const setHandlersOnForms = () => {
 };
 
 const handleImageError = (e) => {
+  console.error("Error al cargar la imagen de usuario en la ruta: "+e.target.src);
+
   e.target.src = "https://spacer-ecommerce.vercel.app/assets/imgs/user.webp";
   e.target.style.filter = "blur(2px)";
 };
