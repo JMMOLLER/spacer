@@ -4,6 +4,7 @@ const apiResponseModel = {
   message: "",
   response: {} || null,
 };
+let username = "";
 
 /**
  * Este método se encarga de verificar si el usuario tiene
@@ -18,6 +19,7 @@ export function userIsAuth() {
       fetchAPI("/auth/info", null, "GET")
         .then((res) => {
           if (res.statusCode === 200) {
+            username = res.response.username;
             resolve(true);
           } else {
             sessionStorage.removeItem("token");
@@ -32,6 +34,19 @@ export function userIsAuth() {
       resolve(false);
     }
   });
+}
+
+/**
+ * @description Este método se encarga de obtener el nombre de usuario
+ * 
+ * @returns {String}
+ */
+export function getUsername() {
+  return username;
+}
+
+export function getUserImg () {
+  return API_URL.replace("api", "cliente") + "/" + username + ".jpg";
 }
 
 /**
@@ -100,10 +115,15 @@ const contentTypeHandler = (method) => {
  * @returns 
  */
 export async function customFetch(path, requestOptions){
-  const res = await fetch(`${API_URL}${path}`, requestOptions);
-  if(!res.ok){
-    const error = await res.json();
-    return error;
+  try {
+    let res = await fetch(`${API_URL}${path}`, requestOptions);
+    if(!res.ok){
+      const error = await res.json();
+      return error;
+    }
+    return await res.json();
+  } catch (error) {
+    console.error(error);
+    return { statusCode: 500, message: "Unknow Error" };
   }
-  return await res.json();
 }
