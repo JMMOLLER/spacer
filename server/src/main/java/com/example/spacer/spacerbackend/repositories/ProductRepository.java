@@ -10,4 +10,12 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProductRepository extends CrudRepository<ProductModel, Long> {
   List<ProductModel> findAll();
+
+  default ProductModel findOneByUrlProd(String urlprod){
+    List<ProductModel> products = this.findAll();
+    for(ProductModel product : products){
+      if(product.getUrlImg().contains(urlprod)) return product;
+    }
+    return null;
+  };
 }

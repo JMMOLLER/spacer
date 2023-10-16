@@ -22,7 +22,7 @@ public class ProductService {
     return products.toArray(new ProductModel[0]);
   }
 
-  public ProductModel getProductById(String id) {
-    return this.productRepository.findById(Long.valueOf(id)).orElse(null);
+  public ProductModel getProductByUrlProd(String urlprod) {
+    return this.productRepository.findOneByUrlProd(urlprod);
   }
 }

@@ -34,9 +34,11 @@ public class ClientModel {
   @Column(name="imgcli")
   @JsonIgnore
   private byte[] img;
+
   @lombok.Setter
-  @Column(name="urlcli")
-  private String url_img;
+  @Transient
+  private String urlImg;
+
   @lombok.Setter
   @Column(name="rolcli")
   private Integer rol;
@@ -68,9 +70,9 @@ public class ClientModel {
     this.id = id;
   }
 
-  public String getUrl_img() {
+  public String getUrlImg() {
     HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
     String urlBase = request.getRequestURL().toString().replace(request.getRequestURI(), request.getContextPath());
-    return this.url_img.replace("{domain}", urlBase);
+    return urlBase + "/cliente/" + this.username + ".jpg";
   }
 }
