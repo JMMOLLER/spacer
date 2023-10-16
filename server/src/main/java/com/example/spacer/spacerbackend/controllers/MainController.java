@@ -53,7 +53,8 @@ public class MainController {
   public ResponseEntity<byte[]> getProductImage(@PathVariable String id) {
     ProductModel product = this.productService.getProductById(id);
 
-    assert product != null;
+    if(product == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
     return getImgResponseEntity(product.getImg());
   }
 
