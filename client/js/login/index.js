@@ -1,13 +1,21 @@
 let eventSubmitIsAdded = false;
 
-const toggleSubmit = (inputValue) => {
-  const submitGp = document.querySelector(".inputSubmit-group");
-  const input = document.querySelector(
-    ".inputSubmit-group>input[type='submit']"
-  );
-  submitGp.classList.toggle("submitted");
-  input.disabled = !input.disabled;
-  input.setAttribute("value", input.disabled ? "" : inputValue);
+/**
+ * @description Función que se encarga de habilitar o deshabilitar el botón de submit y aplicar el loader.
+ * 
+ * @param {String} inputValue 
+ * @param {HTMLButtonElement} button 
+ */
+const toggleSubmit = (inputValue, button) => {
+  const btnSubmit = button
+  ? button
+  : document.querySelector(".inputSubmit-group>input[type='submit']");
+  
+  const parentBtn = btnSubmit?.parentElement;
+
+  parentBtn.classList.toggle("submitted");
+  btnSubmit.disabled = !btnSubmit.disabled;
+  btnSubmit.setAttribute("value", btnSubmit.disabled ? "" : inputValue);
 };
 
 const showError = (show) => {

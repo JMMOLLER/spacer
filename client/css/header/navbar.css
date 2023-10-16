@@ -8,7 +8,7 @@ nav {
   box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-ul#menuCategorias {
+ul#menuCategorias, ul#menu_secciones {
   list-style-type: none;
   padding: 0;
   display: flex;
@@ -16,7 +16,7 @@ ul#menuCategorias {
   justify-content: center;
 }
 
-ul#menuCategorias li {
+ul#menuCategorias li, ul#menu_secciones li {
   cursor: pointer;
   padding: 0 1.5rem;
   position: relative;
