@@ -1,11 +1,36 @@
+body#body_perfil, html#html_perfil {
+  overflow-x: hidden;
+}
+
+.perfil__main {
+  display: flex;
+  flex-direction: row;
+  width: 300vw;
+  transition: transform 0.3s ease-in-out;
+}
+
+.perfil__main[data-tab="seguridad"] {
+  transform: translateX(-100vw);
+}
+
+.perfil__main[data-tab="pedidos"] {
+  transform: translateX(-200vw);
+}
+
 .perfil__main h1 {
   text-align: center;
   margin: 1rem 0;
 }
 
+.perfil__main > section {
+  width: 100vw;
+  padding: .5rem;
+}
+
 .perfil__main .user_info {
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
   gap: 50px;
 }
 
@@ -99,4 +124,20 @@
   transform: translateY(-170%);
   font-size: 0.8rem;
   color: aqua;
+}
+
+/* ================= SECCTION ================ */
+
+section.active {
+  width: 100vw;
+}
+
+#selected_section {
+  position: absolute;
+  width: 122px;
+  height: 5px;
+  background-color: rgba(0, 255, 255, 0.562);
+  bottom: -10px;
+  left: -100%;
+  transition: all 0.3s ease-in-out;
 }

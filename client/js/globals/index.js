@@ -1,4 +1,4 @@
-const API_URL = "https://spacer-api.up.railway.app/api";
+const API_URL = "http://localhost:8080/api";
 const apiResponseModel = {
   statusCode: 0,
   message: "",
