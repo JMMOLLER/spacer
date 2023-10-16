@@ -7,15 +7,20 @@ import com.example.spacer.spacerbackend.services.ProductService;
 import com.example.spacer.spacerbackend.services.Response;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.view.RedirectView;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/")
@@ -45,7 +50,17 @@ public class MainController {
   public ResponseEntity<byte[]> getClientImage(@PathVariable String username) {
     ClientModel client = this.clientService.getClientByUsername(username);
 
-    assert client != null;
+    if(client == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    if(client.getImg() == null) {
+      try {
+        Resource resource = new ClassPathResource("/static/user-default.webp");
+        byte[] userImageBytes = StreamUtils.copyToByteArray(resource.getInputStream());
+        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(userImageBytes);
+      } catch (IOException e) {
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+    }
+
     return getImgResponseEntity(client.getImg());
   }
 

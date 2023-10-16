@@ -94,7 +94,7 @@ public class ClientController {
         client.setImg(img.getBytes());
       }
 
-      ClientModel cs = this.clientService.updateClient(client, payload.get("username").toString(), request);
+      ClientModel cs = this.clientService.updateClient(client, payload.get("username").toString());
       Response response = new Response(HttpStatus.OK, HttpStatus.OK.name(), cs);
       return new ResponseEntity<>(response, HttpStatus.OK);
     } catch (Exception e) {

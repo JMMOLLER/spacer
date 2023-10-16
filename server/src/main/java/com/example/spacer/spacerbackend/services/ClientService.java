@@ -33,25 +33,18 @@ public class ClientService {
     if (client.getId() != null) {
       client.setId(null);
     }
-    if(client.getUrl_img() == null){
-      client.setUrl_img("https://spacer-ecommerce.vercel.app/assets/imgs/user.webp");
-    }
     client.setPassword(new BCryptPasswordEncoder().encode(client.getPassword()));
     client.setRol(0);
     return clientRepository.save(client);
   }
 
-  public ClientModel updateClient(ClientModel client, String username, HttpServletRequest request) {
+  public ClientModel updateClient(ClientModel client, String username) {
     try {
       if (username != null) {
         Optional<ClientModel> existingClient = clientRepository.findOneByUsername(username);
         if (existingClient.isPresent()) {
 
           ClientModel newClientData = ClientDataSetter(client, existingClient.get());
-
-          if(client.getImg() != null){
-            newClientData.setUrl_img("{domain}" + "/cliente/" + newClientData.getUsername() + ".jpg");
-          }
 
           return clientRepository.save(newClientData);
         } else {
