@@ -39,7 +39,4 @@ public class ProductModel {
   @Column(name = "urlprod")
   private String urlImg;
 
-  public void setId(Long id) {
-    this.id = id;
-  }
 }

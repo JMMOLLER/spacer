@@ -49,9 +49,9 @@ public class MainController {
     return getImgResponseEntity(client.getImg());
   }
 
-  @GetMapping("/producto/{id}.jpg")
-  public ResponseEntity<byte[]> getProductImage(@PathVariable String id) {
-    ProductModel product = this.productService.getProductById(id);
+  @GetMapping("/producto/{urlprod}.jpg")
+  public ResponseEntity<byte[]> getProductImage(@PathVariable String urlprod) {
+    ProductModel product = this.productService.getProductByUrlProd(urlprod);
 
     if(product == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
