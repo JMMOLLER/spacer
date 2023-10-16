@@ -1,16 +1,16 @@
 package com.example.spacer.spacerbackend.models;
 
-import com.example.spacer.spacerbackend.repositories.ClientRepository;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 
 import java.util.List;
-import java.util.Map;
 
 @Getter
 @Entity
+@JsonIgnoreProperties({"newPassword"})
 @Table(name = "cliente")
 public class ClientModel {
 
@@ -47,6 +47,9 @@ public class ClientModel {
   @JsonManagedReference
   private List<CartModel> cart;
 
+  @lombok.Setter
+  @Transient
+  private String newPassword;
   @lombok.Setter
   private String password;
   @lombok.Setter

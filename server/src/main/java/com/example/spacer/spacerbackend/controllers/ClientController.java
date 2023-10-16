@@ -88,7 +88,7 @@ public class ClientController {
 
       assert payload != null;
 
-      ClientModel client = this.getClientFromFormData(formData);
+      ClientModel client = this.formDataToClientModel(formData);
 
       if (img != null) {
         client.setImg(img.getBytes());
@@ -103,9 +103,11 @@ public class ClientController {
     }
   }
 
-  private ClientModel getClientFromFormData(Map<String, Object> formData) {
+  private ClientModel formDataToClientModel(Map<String, Object> formData) {
     ObjectMapper objectMapper = new ObjectMapper();
-    return objectMapper.convertValue(formData, ClientModel.class);
+    ClientModel client = objectMapper.convertValue(formData, ClientModel.class);
+    client.setNewPassword(formData.get("new-password").toString());
+    return client;
   }
 
   @DeleteMapping()
