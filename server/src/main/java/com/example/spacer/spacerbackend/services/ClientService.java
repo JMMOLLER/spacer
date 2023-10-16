@@ -50,7 +50,6 @@ public class ClientService {
           ClientModel newClientData = ClientDataSetter(client, existingClient.get());
 
           if(client.getImg() != null){
-//            String baseUrl = request.getRequestURL().toString().replace(request.getRequestURI(), request.getContextPath());
             newClientData.setUrl_img("{domain}" + "/cliente/" + newClientData.getUsername() + ".jpg");
           }
 
@@ -88,8 +87,6 @@ public class ClientService {
     }
     if (newClientData.getNewPassword() != null) {
       BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-      String currentPassword = currentClientData.getPassword();
-      String newPassword = newClientData.getNewPassword();
       if (encoder.matches(newClientData.getNewPassword(), currentClientData.getPassword())) {
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La nueva contraseña no puede ser igual a la anterior.");
       } else if (newClientData.getNewPassword().trim().length() < 6) {

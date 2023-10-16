@@ -5,6 +5,7 @@ import com.example.spacer.spacerbackend.models.ProductModel;
 import com.example.spacer.spacerbackend.services.ClientService;
 import com.example.spacer.spacerbackend.services.ProductService;
 import com.example.spacer.spacerbackend.services.Response;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

@@ -106,7 +106,9 @@ public class ClientController {
   private ClientModel formDataToClientModel(Map<String, Object> formData) {
     ObjectMapper objectMapper = new ObjectMapper();
     ClientModel client = objectMapper.convertValue(formData, ClientModel.class);
-    client.setNewPassword(formData.get("new-password").toString());
+    if(formData.containsKey("new-password")){
+      client.setNewPassword(formData.get("new-password").toString());
+    }
     return client;
   }
 
