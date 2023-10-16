@@ -4,9 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Entity
@@ -57,7 +61,14 @@ public class ClientModel {
   @lombok.Setter
   private String username;
 
+
   public void setId(Long id) {
     this.id = id;
+  }
+
+  public String getUrl_img() {
+    HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
+    String urlBase = request.getRequestURL().toString().replace(request.getRequestURI(), request.getContextPath());
+    return this.url_img.replace("{domain}", urlBase);
   }
 }
