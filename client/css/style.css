@@ -35,6 +35,11 @@
   src: url("../../assets/fonts/JosefinSans/JosefinSans-Regular.ttf") format("truetype");
 }
 
+:root {
+  --color: #999;
+  --checked-color: #22aeff;
+}
+
 * {
   margin: 0;
   padding: 0;

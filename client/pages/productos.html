@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <header class="head">
+      <!-- Cabecera vista escritorio -->
+      <div class="container_top">
+        <div class="cabecera-left">
+          <a href="/">
+            <img src="/assets/imgs/logo.gif" class="logo" alt="logo" />
+          </a>
+        </div>
+        <div class="cabecera-center">
+          <form class="search-box">
+            <input type="text" placeholder="Busca lo que quieras" />
+            <button title="buscar" type="submit">
+              <img class="lupa" src="/assets/imgs/buscador_0.png" alt="imgs buscador" />
+            </button>
+            <div class="slider">
+              <div>
+                <img src="/assets/imgs/buscador_1.png" alt="imagenes productos" />
+              </div>
+              <div>
+                <img src="/assets/imgs/buscador_2.png" alt="imagenes productos" />
+              </div>
+              <div>
+                <img src="/assets/imgs/buscador_3.png" alt="imagenes productos" />
+              </div>
+              <div>
+                <img src="/assets/imgs/buscador_5.png" alt="imagenes productos" />
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="header-right">
+          <div class="container_wsp">
+            <a href="https://wa.me/+51930517169?text=Hola%20me%20gustar%C3%ADa%20consultar%20el%20precio%20del%20producto"
+              target="_blank" id="animation_wsp" title="Ir a Whatsapp"></a>
+            <div class="content_wsp">
+              <p class="title">Escríbenos</p>
+              <p class="content">930-517-169</p>
+            </div>
+          </div>
+          <div class="container_user link">
+            <i class="user_icon"></i>
+            <p>Mi cuenta</p>
+            <div class="content_dropdown" id="dropdown_options">
+              <a href="/pages/login.html" class="link">Iniciar sesión</a>
+              <a href="/pages/registro.html" class="link">Registrarse</a>
+            </div>
+          </div>
+          <div class="container_carrito">
+            <a href="/pages/login.html" id="carrito" class="container_carrito" title="Ir al carrito">
+              <div id="animation_cart">
+                <span class="notification" id="cart_cant">0</span>
+              </div>
+              <p class="content">Mi bolsa</p>
+            </a>
+          </div>
+        </div>
+      </div>
+      <nav>
+        <!-- Menú de Categorías principales -->
+        <ul id="menuCategorias">
+          <li data-categoria="categoria3">
+            Teclados
+            <!-- Subcategorías de Mouse -->
+            <ul class="subcategorias">
+              <li class="subcategoria-item" data-categoria="subcategoria4-1">
+                <a title="Ver productos" href="" class="categoria-link">HyperX</a>
+              </li>
+              <li class="subcategoria-item" data-categoria="subcategoria4-2">
+                <a title="Ver productos" href="" class="categoria-link">Logitech</a>
+              </li>
+              <li class="subcategoria-item" data-categoria="subcategoria4-3">
+                <a title="Ver productos" href="" class="categoria-link">Razer</a>
+              </li>
+              <li class="subcategoria-item" data-categoria="subcategoria4-4">
+                <a title="Ver productos" href="" class="categoria-link">Redragon</a>
+              </li>
+              <li class="subcategoria-item" data-categoria="subcategoria4-5">
+                <a title="Ver productos" href="" class="categoria-link">Astro</a>
+              </li>
+              <li class="subcategoria-item" data-categoria="subcategoria4-6">
+                <a title="Ver productos" href="" class="categoria-link">SteelSeries</a>
+              </li>
+            </ul>
+          </li>
+          <!-- Subcategorías de Teclados -->
+          <li data-categoria="categoria2">
+            Monitores
+            <!-- Subcategorías de Monitores -->
+            <ul class="subcategorias">
+              <li class="subcategoria-item" data-categoria="subcategoria2-1">
+                <a title="Ver productos" href="" class="categoria-link">LG</a>
+              </li>
+              <li class="subcategoria-item" data-categoria="subcategoria2-2">
+                <a title="Ver productos" href="" class="categoria-link">Samsung</a>
+              </li>
+              <li class="subcategoria-item" data-categoria="subcategoria2-3">
+                <a title="Ver productos" href="" class="categoria-link">Asus</a>
+              </li>
+              <li class="subcategoria-item" data-categoria="subcategoria2-4">
+                <a title="Ver productos" href="" class="categoria-link">MSI</a>
+              </li>
+              <li class="subcategoria-item" data-categoria="subcategoria2-5">
+                <a title="Ver productos" href="" class="categoria-link">Teros</a>
+              </li>
+              <li class="subcategoria-item" data-categoria="subcategoria2-6">
+                <a title="Ver productos" href="" class="categoria-link">Razer</a>
+              </li>
+            </ul>
+          </li>
+          <li data-categoria="categoria3">
+            Mouse
+            <!-- Subcategorías de Mouse -->
+            <ul class="subcategorias">
+              <li class="subcategoria-item" data-categoria="subcategoria4-1">
+                <a title="Ver productos" href="" class="categoria-link">Redragon</a>
+              </li>
+              <li class="subcategoria-item" data-categoria="subcategoria4-2">
+                <a title="Ver productos" href="" class="categoria-link">Antryx</a>
+              </li>
+              <li class="subcategoria-item" data-categoria="subcategoria4-3">
+                <a title="Ver productos" href="" class="categoria-link">Logitech</a>
+              </li>
+              <li class="subcategoria-item" data-categoria="subcategoria4-4">
+                <a title="Ver productos" href="" class="categoria-link">Razer</a>
+              </li>
+              <li class="subcategoria-item" data-categoria="subcategoria4-5">
+                <a title="Ver productos" href="" class="categoria-link">Apple</a>
+              </li>
+              <li class="subcategoria-item" data-categoria="subcategoria4-6">
+                <a title="Ver productos" href="" class="categoria-link">Sony</a>
+              </li>
+            </ul>
+          </li>
+          <li data-categoria="categoria4">
+            Camaras Web
+            <!-- Subcategorías de Camaras Web -->
+            <ul class="subcategorias">
+              <li class="subcategoria-item" data-categoria="subcategoria5-1">
+                <a title="Ver productos" href="" class="categoria-link">Logitech</a>
+              </li>
+              <li class="subcategoria-item" data-categoria="subcategoria5-2">
+                <a title="Ver productos" href="" class="categoria-link">Angetube</a>
+              </li>
+              <li class="subcategoria-item" data-categoria="subcategoria5-3">
+                <a title="Ver productos" href="" class="categoria-link">TedGem</a>
+              </li>
+            </ul>
+          </li>
+          <li data-categoria="categoria5">
+            Microfonos
+            <!-- Subcategorías de Microfonos -->
+            <ul class="subcategorias">
+              <li class="subcategoria-item" data-categoria="subcategoria6-1">
+                <a title="Ver productos" href="" class="categoria-link">Razer</a>
+              </li>
+              <li class="subcategoria-item" data-categoria="subcategoria6-2">
+                <a title="Ver productos" href="" class="categoria-link">Blue Yeti</a>
+              </li>
+              <li class="subcategoria-item" data-categoria="subcategoria6-3">
+                <a title="Ver productos" href="" class="categoria-link">Shure</a>
+              </li>
+              <li class="subcategoria-item" data-categoria="subcategoria6-4">
+                <a title="Ver productos" href="" class="categoria-link">HyperX</a>
+              </li>
+            </ul>
+          </li>
+          <li data-categoria="categoria6">
+            Sillas Gamer
+            <!-- Subcategorías de Sillas Gamer -->
+            <ul class="subcategorias">
+              <li class="subcategoria-item" data-categoria="subcategoria7-1">
+                <a title="Ver productos" href="" class="categoria-link">VertaGear</a>
+              </li>
+              <li class="subcategoria-item" data-categoria="subcategoria7-2">
+                <a title="Ver productos" href="" class="categoria-link">Corsair</a>
+              </li>
+              <li class="subcategoria-item" data-categoria="subcategoria7-3">
+                <a title="Ver productos" href="" class="categoria-link">DxRacer</a>
+              </li>
+              <li class="subcategoria-item" data-categoria="subcategoria7-4">
+                <a title="Ver productos" href="" class="categoria-link">Technisport</a>
+              </li>
+            </ul>
+          </li>
+          <li data-categoria="categoria7">
+            Accesorios
+            <!-- Subcategorías de Accesorios -->
+            <ul class="subcategorias">
+              <li class="subcategoria-item" data-categoria="subcategoria7-1">
+                Mousepad
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <!-- Cabecera vista movil -->
+    </header>
+
+    <main class="contenedor-padre">
+      <div class="contenedor-izquierdo">
+        <div class="filters-section">
+          <br />
+          <h3>Filtros</h3>
+
+          <div class="filtro-precio">
+            <label for="tipo-precio">Precio</label>
+            <div class="tipo-precio">
+              <form id="tipo-precio">
+                <div class="opcion-filtro">
+                  <label for="range-min" style="font-size: 15pt"
+                    >Precio Mínimo</label
+                  >
+                  <input
+                    type="range"
+                    name="range-min"
+                    id="range-min"
+                    max="6599"
+                    min="299"
+                    value="1099"
+                    step="2"
+                  />
+                  <span id="current-min-value">1099</span>
+                </div>
+                <div class="opcion-filtro">
+                  <label for="range-max" style="font-size: 15pt"
+                    >Precio Máximo</label
+                  >
+                  <input
+                    type="range"
+                    name="range-max"
+                    id="range-max"
+                    max="6599"
+                    min="299"
+                    value="4399"
+                    step="4"
+                  />
+                  <span id="current-max-value">4399</span>
+                </div>
+                <button
+                  class="boton"
+                  type="button"
+                  id="filtrar-precio"
+                  name="Filtrar"
+                >
+                  Filtrar
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <div class="filtro-pago">
+            <label for="tipo-pago">Categorias</label>
+            <div class="tipo">
+              <form id="tipo-pago">
+                <div class="opcion-pago">
+                  <input
+                    type="radio"
+                    name="modelo"
+                    value="Al contado"
+                    id="pago-al-contado"
+                  /><label for="pago-al-contado">Teclados</label>
+                </div>
+                <div class="opcion-pago">
+                  <input
+                    type="radio"
+                    name="modelo"
+                    value="12 cuotas"
+                    id="pago-12-cuotas"
+                  /><label for="pago-12-cuotas">Monitores</label>
+                </div>
+                <div class="opcion-pago">
+                  <input
+                    type="radio"
+                    name="modelo"
+                    value="12 cuotas"
+                    id="pago-12-cuotas"
+                  /><label for="pago-12-cuotas">Mouse</label>
+                </div>
+                <div class="opcion-pago">
+                  <input
+                    type="radio"
+                    name="modelo"
+                    value="12 cuotas"
+                    id="pago-12-cuotas"
+                  /><label for="pago-12-cuotas">Camaras Web</label>
+                </div>
+                <div class="opcion-pago">
+                  <input
+                    type="radio"
+                    name="modelo"
+                    value="12 cuotas"
+                    id="pago-12-cuotas"
+                  /><label for="pago-12-cuotas">Microfonos</label>
+                </div>
+                <div class="opcion-pago">
+                  <input
+                    type="radio"
+                    name="modelo"
+                    value="12 cuotas"
+                    id="pago-12-cuotas"
+                  /><label for="pago-12-cuotas">Sillas Gamer</label>
+                </div>
+                <div class="opcion-pago">
+                  <input
+                    type="radio"
+                    name="modelo"
+                    value="12 cuotas"
+                    id="pago-12-cuotas"
+                  /><label for="pago-12-cuotas">Accesorios</label>
+                </div>
+                <button
+                  class="boton"
+                  type="button"
+                  id="filtrar-categoria"
+                  name="Filtrar"
+                >
+                  Filtrar
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="contenedor-derecho">
+        <section class="contenedor">
+          <h2 class="titulo-contenedor-productos"></h2>
+          <div class="contenedor-items">
+            <div class="categoria-item" id="productos_vertagear">
+              <div class="item">
+                <div class="cabecera-card">
+                  <span class="titulo-item">VertaGear</span>
+                  <img
+                    src="https://paradagamer.com/cdn/shop/products/VG-PL4800SE_MB-MAIN_ver2_600x.png?v=1669815418"
+                    alt=""
+                    class="img-item"
+                  />
+                </div>
+                <div class="medio-card">
+                  <span class="info-item"
+                    >Silla Gamer Vertagear PL4800 Midnight Blue</span
+                  >
+                  <span class="precio-item">S/1299.00</span>
+                </div>
+                <button class="boton-item">Agregar al Carrito</button>
+              </div>
+              <div class="item">
+                <div class="cabecera-card">
+                  <span class="titulo-item">Vertagear</span>
+                  <img
+                    src="https://paradagamer.com/cdn/shop/files/Club_Universitario_SL5800_Burgundy_Main_600x.jpg?v=1683751603"
+                    alt=""
+                    class="img-item"
+                  />
+                </div>
+                <div class="medio-card">
+                  <span class="info-item"
+                    >Silla Gamer Vertagear SL5800 Universitario Edición
+                    Limitada</span
+                  >
+                  <span class="precio-item">S/1749.00</span>
+                </div>
+                <button class="boton-item">Agregar al Carrito</button>
+              </div>
+              <div class="item">
+                <div class="cabecera-card">
+                  <span class="titulo-item">Vertagear</span>
+                  <img
+                    src="https://paradagamer.com/cdn/shop/products/VG-SL5800SE_MG-MAIN_ver2_600x.png?v=1669825580"
+                    alt=""
+                    class="img-item"
+                  />
+                </div>
+                <div class="medio-card">
+                  <span class="info-item"
+                    >Silla Gamer Vertagear SL5800 Midnight Green</span
+                  >
+                  <span class="precio-item">S/1549.00</span>
+                </div>
+                <button class="boton-item">Agregar al Carrito</button>
+              </div>
+              <div class="item">
+                <div class="cabecera-card">
+                  <span class="titulo-item">Vertagear</span>
+                  <img
+                    src="https://paradagamer.com/cdn/shop/products/sl1000-blue-1_31bf5e99-c582-48b5-9903-8eaeb1dc641f_300x.jpg?v=1644343032"
+                    alt=""
+                    class="img-item"
+                  />
+                </div>
+                <div class="medio-card">
+                  <span class="info-item"
+                    >Silla de escritorio Vertagear SL2000 VG-SL2000 gamer
+                    ergonómica negra y azul</span
+                  >
+                  <span class="precio-item">S/599.00</span>
+                </div>
+                <button class="boton-item">Agregar al Carrito</button>
+              </div>
+            </div>
+            <div class="categoria-item" id="productos_redragon">
+              <div class="item">
+                <div class="cabecera-card">
+                  <span class="titulo-item">Redragon</span>
+                  <img
+                    src="https://paradagamer.com/cdn/shop/products/alpha_zeus_x_square_black_1_600x.png?v=1681229190"
+                    alt=""
+                    class="img-item"
+                  />
+                </div>
+                <div class="medio-card">
+                  <span class="info-item"
+                    >Audífono con Micro Redragon Zeus X RGB</span
+                  >
+                  <span class="precio-item">S/299.00</span>
+                </div>
+                <button class="boton-item">Agregar al Carrito</button>
+              </div>
+              <div class="item">
+                <div class="cabecera-card">
+                  <span class="titulo-item">Redragon</span>
+                  <img
+                    src="https://paradagamer.com/cdn/shop/products/M711_PNGWEB_1_600x.png?v=1681233930"
+                    alt=""
+                    class="img-item"
+                  />
+                </div>
+                <div class="medio-card">
+                  <span class="info-item"
+                    >Mouse Gamer Redragon Cobra Negro M711</span
+                  >
+                  <span class="precio-item">S/109.00</span>
+                </div>
+                <button class="boton-item">Agregar al Carrito</button>
+              </div>
+              <div class="item">
+                <div class="cabecera-card">
+                  <span class="titulo-item">Redragon</span>
+                  <img
+                    src="https://paradagamer.com/cdn/shop/products/K616-RGB-WG-2_600x.jpg?v=1681788449"
+                    alt=""
+                    class="img-item"
+                  />
+                </div>
+                <div class="medio-card">
+                  <span class="info-item"
+                    >Teclado Gamer Inalámbrico Redragon Fizz PRO Ingles</span
+                  >
+                  <br />
+                  <span class="precio-item">S/200.00</span>
+                </div>
+                <button class="boton-item">Agregar al Carrito</button>
+              </div>
+              <div class="item">
+                <div class="cabecera-card">
+                  <span class="titulo-item">Redragon</span>
+                  <img
+                    src="https://paradagamer.com/cdn/shop/products/2.Mediano_600x.png?v=1681338892"
+                    alt=""
+                    class="img-item"
+                  />
+                </div>
+                <div class="medio-card">
+                  <span class="info-item"
+                    >Mouse Pad Redragon Flick Medium P030</span
+                  >
+                  <span class="precio-item">S/20.00</span>
+                </div>
+                <button class="boton-item">Agregar al Carrito</button>
+              </div>
+            </div>
+            <div class="categoria-item" id="productos_logitech">
+              <div class="item">
+                <div class="cabecera-card">
+                  <span class="titulo-item">Logitech</span>
+                  <img
+                    src="https://paradagamer.com/cdn/shop/files/GW600_HQ_2_600x.jpg?v=1682543505"
+                    alt=""
+                    class="img-item"
+                  />
+                </div>
+                <div class="medio-card">
+                  <span class="info-item"
+                    >Cámara web Logitech C925E Black FHD</span
+                  >
+                  <span class="precio-item">S/369.00</span>
+                </div>
+                <button class="boton-item">Agregar al Carrito</button>
+              </div>
+              <div class="item">
+                <div class="cabecera-card">
+                  <span class="titulo-item">Logitech</span>
+                  <img
+                    src="https://coolboxpe.vtexassets.com/arquivos/ids/207627/920-007562_1.jpg?v=637831189853770000"
+                    alt=""
+                    class="img-item"
+                  />
+                </div>
+                <div class="medio-card">
+                  <span class="info-item"
+                    >Teclado inalámbrico Logitech K380, bluetooth,
+                    multidispositivo negro</span
+                  >
+                  <span class="precio-item">S/150.00</span>
+                </div>
+
+                <button class="boton-item">Agregar al Carrito</button>
+              </div>
+              <div class="item">
+                <div class="cabecera-card">
+                  <span class="titulo-item">Logitech</span>
+                  <img
+                    src="https://phantom.pe/media/catalog/product/cache/2d2e350e73065c0f42c90f0a12869353/l/o/logitech_1.jpg"
+                    alt=""
+                    class="img-item"
+                  />
+                </div>
+                <div class="medio-card">
+                  <span class="info-item"
+                    >Logitech G Pro Lightspeed Wireless Mouse RGB - Black</span
+                  >
+                  <span class="precio-item">S/380.00</span>
+                </div>
+                <button class="boton-item">Agregar al Carrito</button>
+              </div>
+              <div class="item">
+                <div class="cabecera-card">
+                  <span class="titulo-item">Logitech</span>
+                  <img
+                    src="https://oechsle.vteximg.com.br/arquivos/ids/4439880-1000-1000/image-5e4c36d0ce454e39820efdebe44a73b2.jpg?v=637638333720900000"
+                    alt=""
+                    class="img-item"
+                  />
+                </div>
+                <div class="medio-card">
+                  <span class="info-item"
+                    >Mouse Logitech G203 Lightsync Optical 8000 DPI RGB
+                    Lila</span
+                  >
+                  <br />
+                  <span class="precio-item">S/125.00</span>
+                </div>
+                <button class="boton-item">Agregar al Carrito</button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+    <script src="../js/index.js"></script>
+  </body>
+</html>

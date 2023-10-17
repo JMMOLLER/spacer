@@ -1,3 +1,6 @@
+import Global from "../globals/index.js";
+const module = Global.getInstance();
+
 const inputController = () => {
   const form = document.querySelectorAll("form.spacer_form");
   const inputsFormDatos = form[0].querySelectorAll(
@@ -32,7 +35,7 @@ const inputController = () => {
       if(e.target.files[0]?.type.includes("image")){
         profileImg.src = URL.createObjectURL(e.target.files[0]);
       }else{
-        import("../globals/index.js").then((module) => profileImg.src = module.getUserImg());
+        profileImg.src = module.getUserImg();
         removeFileFromFileList(0, e.target)
       }
       inputHandlerDatos();
@@ -143,14 +146,15 @@ const fillUserInfo = async () => {
 };
 
 const getUserInfo = async () => {
-  const module = await import("../globals/index.js");
   const userInfo = await module.getUserInfo();
 
-  if (userInfo.statusCode > 400 && userInfo.statusCode < 500) {
+  if (userInfo.statusCode === 401) {
     alert("Tu sesión a expirado, por favor inicia sesión nuevamente.");
     window.location.href = "/pages/login.html";
+  }else if(userInfo.statusCode !== 200){
+    alert(userInfo.description || "Ha ocurrido un error, intenta nuevamente.");
+    return;
   }
-  // console.log(userInfo);
 
   return userInfo.response;
 };
@@ -187,9 +191,6 @@ const handleFormSubmit = async (e) => {
 
   toggleSubmit(inputSubmitValue, btnSubmit);
 
-  const module = await import("../globals/index.js");
-  const fetchUpdate = module.customFetch;
-
   const form = new FormData(e.target);
 
   if(form.has("address")){
@@ -223,7 +224,7 @@ const handleFormSubmit = async (e) => {
     redirect: "follow",
   };
 
-  const updateResponse = await fetchUpdate("/cliente", requestOptions);
+  const updateResponse = await module.customFetch("/cliente", requestOptions);
 
   toggleSubmit(inputSubmitValue, btnSubmit);
 

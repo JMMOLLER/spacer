@@ -1,15 +1,26 @@
 const path = window.location.pathname;
 
-console.info(path);
+window.location.protocol.includes("http") ? console.info(path) : null;
 
-if((path === "/" || path.includes("index"))){
-  import ("./home/index.js").then((module) => module.default());
-} else if (path.includes("login")){
-  import ("./login/index.js").then((module) => module.default());
-} else if(path.includes("/pages/perfil")) {
-  import("./perfil/index.js").then((module) => module.default());
-} else if(path.includes("/pages/carrito")){
-  import("./cart/index.js").then((module) => module.default());
-} else {
-  console.warn("404 - No reconocemos esta ruta.");
+switch (true) {
+  case (path === "/" || path.includes("index")):
+    import("./home/index.js").then((module) => module.default());
+    break;
+  case path.includes("login"):
+    import("./login/index.js").then((module) => module.default());
+    break;
+  case path.includes("/pages/perfil"):
+    import("./perfil/index.js").then((module) => module.default());
+    break;
+  case path.includes("/pages/carrito"):
+    import("./cart/index.js").then((module) => module.default());
+    break;
+  case path.includes("/pages/registro"):
+    import("./registro/index.js").then((module) => module.default());
+    break;
+  case path.includes("/pages/productos"):
+    import("./productos/index.js").then((module) => module.default());
+    break;
+  default:
+    console.warn("404 - No reconocemos esta ruta.");
 }
