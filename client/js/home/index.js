@@ -83,10 +83,16 @@ function checkInput() {
  */
 const handleCheckAuth = () => {
   import("../globals/index.js")
-    .then(async(module) => {
+    .then(async (module) => {
       const userIsAuth = await module.userIsAuth();
       if (userIsAuth) {
-        document.querySelector("#perfil").href = "/pages/perfil.html";
+        const dropdown = document.querySelectorAll("#dropdown_options .link");
+        dropdown[0].href = "/pages/perfil.html";
+        dropdown[0].innerText = "Mi cuenta";
+
+        dropdown[1].href = "/logout";
+        dropdown[1].innerText = "Cerrar sesión";
+        dropdown[1].addEventListener("click", handleClickLogout);
         document.querySelector("#carrito").href = "/pages/carrito.html";
       }
     })
@@ -95,8 +101,12 @@ const handleCheckAuth = () => {
     });
 };
 
+const handleClickLogout = (e) => {
+  e.preventDefault();
+  module.logout();
+};
+
 export default function init() {
-  userIsAuth().then((res) => res ? document.querySelector("#perfil").href = "/pages/perfil.html": null);
   preventRedirect();
   handleCheckAuth();
   loadHeaderLottieAnimation();

@@ -36,6 +36,11 @@ export function userIsAuth() {
   });
 }
 
+export function logout() {
+  sessionStorage.removeItem("token");
+  window.location.href = "/pages/login.html";
+}
+
 /**
  * @description Este método se encarga de obtener el nombre de usuario
  * 
