@@ -1,16 +1,18 @@
+import Global from "../globals/index.js";
+const module = Global.getInstance();
 let eventSubmitIsAdded = false;
 
 /**
  * @description Función que se encarga de habilitar o deshabilitar el botón de submit y aplicar el loader.
- * 
- * @param {String} inputValue 
- * @param {HTMLButtonElement} button 
+ *
+ * @param {String} inputValue
+ * @param {HTMLButtonElement} button
  */
 const toggleSubmit = (inputValue, button) => {
   const btnSubmit = button
-  ? button
-  : document.querySelector(".inputSubmit-group>input[type='submit']");
-  
+    ? button
+    : document.querySelector(".inputSubmit-group>input[type='submit']");
+
   const parentBtn = btnSubmit?.parentElement;
 
   parentBtn.classList.toggle("submitted");
@@ -51,8 +53,7 @@ const handleSubmit = (e) => {
 
 const handleLogin = async (credentials) => {
   showError(false);
-  const fetchAPI = (await import("../globals/index.js")).fetchAPI;
-  const res = await fetchAPI("/auth", credentials, "POST");
+  const res = await module.fetchAPI("/auth", credentials, "POST");
   if (res?.statusCode === 200) {
     sessionStorage.setItem("token", res?.response?.token);
     window.location.href = "/";
@@ -83,15 +84,13 @@ const forceAddEventSubmit = () => {
     handleAddEventSubmit();
     console.log("Event submit has been forcibly added to form");
   }, 500);
-}
+};
 
 export default function init() {
   loadLottieAnimation();
-  import("../globals/index.js").then((module) => {
-    module
-      .userIsAuth()
-      .then((res) => (res ? (window.location.href = "/") : null));
-  });
+  module
+    .userIsAuth()
+    .then((res) => (res ? (window.location.href = "/") : null));
   console.info("login");
   forceAddEventSubmit();
 }

@@ -1,3 +1,6 @@
+import Global from "../globals/index.js";
+const module = Global.getInstance();
+
 export default function init() {
   import("../home/index.js")
     .then((module) => {
@@ -5,12 +8,11 @@ export default function init() {
       module.handleCheckAuth(); // Se importa el módulo home y se llama a la función handleCheckAuth para verificar si el usuario está autenticado
     })
     .then(() => {
-      import("../globals/index.js").then((module) =>
-        !module.userIsAuth().then((isAuth) => 
-          !isAuth
-          ? (window.location.href = "/pages/login.html")
-          : null)
-      ); // Se importa el módulo globals y se llama a la función userIsAuth para verificar si el usuario está autenticado
+      !module
+        .userIsAuth()
+        .then((isAuth) =>
+          !isAuth ? (window.location.href = "/pages/login.html") : null
+        ); // Se importa el módulo globals y se llama a la función userIsAuth para verificar si el usuario está autenticado
     });
 
   document
