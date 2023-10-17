@@ -1,4 +1,4 @@
-const API_URL = "https://spacer-api.up.railway.app/api";
+const API_URL = "https://spacer-api.onrender.com/api";
 const apiResponseModel = {
   statusCode: 0,
   message: "",
