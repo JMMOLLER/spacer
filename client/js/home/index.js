@@ -4,8 +4,12 @@ const module = Global.getInstance();
 const preventRedirect = () => {
   // agrega el evento click a todos los elementos del menu y evita que se redirija a otra pagina
   document
-    .querySelectorAll("#menuCategorias > li")
-    .forEach((el) => el.addEventListener("click", (e) => e.preventDefault()));
+    .querySelectorAll("#menuCategorias > li a")
+    .forEach((el) => el.addEventListener("click", (e) => {
+      if(e.target.href === window.location.href){
+        e.preventDefault();
+      }
+    }));
   document.querySelectorAll(".marcas > div > a").forEach((el) =>
     el.addEventListener("click", (e) => {
       e.preventDefault();
@@ -82,8 +86,8 @@ function checkInput() {
  * @returns {void}
  *
  */
-const handleCheckAuth = () => {
-  const userIsAuth = module.userIsAuth();
+const handleCheckAuth = async() => {
+  const userIsAuth = await module.userIsAuth();
   if (userIsAuth) {
     const dropdown = document.querySelectorAll("#dropdown_options .link");
     dropdown[0].href = "/pages/perfil.html";
