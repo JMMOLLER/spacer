@@ -7,8 +7,6 @@
   /* Oculta el contenido que desborde del contenedor */
   text-align: center;
   flex-grow: 1;
-<<<<<<< Updated upstream
-=======
   position: relative;
 }
 .productos.loading::before {
@@ -21,7 +19,6 @@
   z-index: 1;
   opacity: 0;
   animation: show 0.3s ease-in forwards;
->>>>>>> Stashed changes
 }
 
 .productos.loading > .loader {
@@ -53,10 +50,7 @@
 /* Estilo del contenedor de ítems */
 .productos .contenedor-items {
   display: flex;
-<<<<<<< Updated upstream
-=======
   justify-content: center;
->>>>>>> Stashed changes
   flex-wrap: wrap;
   gap: 30px;
   width: 100%;
@@ -493,8 +487,6 @@
   display: flex;
   gap: 20px;
   padding: 20px 2%;
-<<<<<<< Updated upstream
-=======
 }
 
 .medio-card {
@@ -553,7 +545,6 @@
 .container-error .text {
   font-size: 1.9rem;
   font-weight: 400;
->>>>>>> Stashed changes
 }
 
 .medio-card {
@@ -603,12 +594,9 @@
     width: 100%;
     padding: 0;
   }
-<<<<<<< Updated upstream
-=======
   .productos.loading > .loader {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
   }
->>>>>>> Stashed changes
 }
