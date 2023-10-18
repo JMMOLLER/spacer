@@ -75,6 +75,32 @@ public class CartService {
     }
   }
 
+  public void decreaseProduct(Long productId, Long clientId) {
+    try {
+      CartModel existingCart = this.findExisting(clientId, productId);
+      if (existingCart != null) {
+        this.findAndUpdate(existingCart, -1);
+      }else{
+        throw new Exception("El producto no existe en el carrito");
+      }
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  public void deleteProduct(Long productId, Long clientId) {
+    try {
+      CartModel existingCart = this.findExisting(clientId, productId);
+      if (existingCart != null) {
+        this.deleteCart(existingCart.getId());
+      }else{
+        throw new Exception("El producto no existe en el carrito");
+      }
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+
   public void deleteCart(Long id) {
     try {
       cartRepository.deleteById(id);
