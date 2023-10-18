@@ -196,6 +196,38 @@ class Global {
   }
 
   /**
+   * @description Este método se encarga de aumentar la cantidad de un producto en el carrito
+   * 
+   * @param {number} id 
+   * @returns {Promise<boolean>}
+   */
+  async decreaseProductQuantity(id) {
+    const res = await this.fetchAPI(`/cliente/carrito/decrease/${id}`, null, "POST");
+    return res.statusCode === 200 ? true : false;
+  }
+
+  /**
+   * @description Este método se encarga de remover un producto del carrito
+   * 
+   * @param {number} id
+   * @returns {Promise<boolean>}
+   */
+  async removeProductFromCart(id) {
+    const res = await this.fetchAPI(`/cliente/carrito/${id}`, null, "DELETE");
+    return res.response;
+  }
+
+  /**
+   * @description Este método se encarga de obtener los productos del carrito del usuario
+   * 
+   * @returns {Promise<Cart[]>}
+   */
+  async getCartProducts() {
+    const res = await this.fetchAPI("/cliente", null, "GET");
+    return res.response.cart;
+  }
+
+  /**
    * @description Este método se encarga de realizar el login del usuario
    *
    * @param {FormData} credentials

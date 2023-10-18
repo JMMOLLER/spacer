@@ -17,3 +17,10 @@
  * @property {number} stock - La cantidad en stock del producto.
  * @property {string} urlImg - La URL de la imagen del producto.
  */
+
+/**
+ * @typedef {Object} Cart
+ * @property {number} id - El ID del carrito.
+ * @property {Product} productId - Los productos del carrito.
+ * @property {number} quantity - La cantidad de producto.
+ */

@@ -268,39 +268,12 @@
         <div class="content_items">
           <div class="subtitles_content_items">
             <h3>Carrito de compras</h3>
-            <p>Tienes <span id="quantity_indicator">1</span> producto(s) en tu carrito</p>
+            <p>Tienes <span id="quantity_indicator">0</span> producto(s) en tu carrito</p>
           </div>
 
-          <div class="card_item">
-            <div class="featured_card_content">
-              <img
-                src="https://cdn7.kiwilimon.com/recetaimagen/38381/49179.jpg"
-                alt="imagen producto"
-              />
-              <div class="featured_card_info">
-                <h4>Producto 1</h4>
-                <p>Descripcion del producto</p>
-              </div>
-            </div>
+          <!-- AQUI VAN LOS PRODUCTOS -->
+          <span class="loader"></span>
 
-            <div class="content_card_quantity">
-              <button class="product_quantity down" id="quantity_down--1" type="button">
-                <i class="fa fa-back"></i>
-              </button>
-              <input type="number" value="1" name="cantidad" disabled id="cantidad_producto--1" />
-              <button class="product_quantity up" id="quantity_up--1" type="button" >
-                <i class="fa fa-next"></i>
-              </button>
-            </div>
-
-            <div class="content_price">
-              <h3>S/. 78.25</h3>
-            </div>
-
-            <div class="content_delete">
-              <button class="delete_product" type="button" id="delete_producto--1"><i class="fa fa-delete"></i></button>
-            </div>
-          </div>
         </div>
       </div>
       <div class="container_right">
@@ -342,17 +315,17 @@
           <div class="content_resume">
             <div class="resume_left">
               <p>Subtotal</p>
-              <p>Envío</p>
+              <p>Envío (2%)</p>
               <p>Total (IGV incl.)</p>
             </div>
             <div class="resume_right">
-              <p id="subtotal_price">S/. 78.25</p>
-              <p>S/. 0.00</p>
-              <p id="total_price">S/. 78.25</p>
+              <p id="subtotal_price">S/. 0.00</p>
+              <p id="total_envio">S/. 0.00</p>
+              <p id="total_price">S/. 0.00</p>
           </div>
         </div>
         <button class="checkout__button" type="submit">
-          <p id="total_confirm">S/. 78.25</p>
+          <p id="total_confirm">S/. 0.00</p>
           <p>Pagar <i class="fa fa-arrow_right"></i></p>
         </button>
       </form>
