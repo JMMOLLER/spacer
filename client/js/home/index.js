@@ -83,7 +83,7 @@ function checkInput() {
 /**
  * @description Verifica si el usuario esta logueado y si lo esta, cambia el href del boton perfil
  *
- * @returns {void}
+ * @returns {Promise<boolean>}
  *
  */
 const handleCheckAuth = async() => {

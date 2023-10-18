@@ -1,33 +1,19 @@
 import Global from "../globals/index.js";
 const module = Global.getInstance();
+let subtotal = 0.00;
 
 export default function init() {
-  import("../home/index.js")
-    .then((module) => {
-      module.loadHeaderLottieAnimation(); // Se importa el módulo home y se llama a la función loadHeaderLottieAnimation para cargar la animación del header
-      module.handleCheckAuth(); // Se importa el módulo home y se llama a la función handleCheckAuth para verificar si el usuario está autenticado
-    })
-    .then(() => {
-      !module
-        .userIsAuth()
-        .then((isAuth) =>
-          !isAuth ? (window.location.href = "/pages/login.html") : null
-        ); // Se importa el módulo globals y se llama a la función userIsAuth para verificar si el usuario está autenticado
-    });
-
-  document
-    .querySelectorAll(".product_quantity")
-    .forEach((element) => (element.onclick = handleQuantityClick)); // Seleccionamos todos los elementos con la clase product_quantity y se les agrega el evento onclick
-
-  document
-    .querySelectorAll(".delete_product")
-    .forEach((element) => addLottieDeleteAnimation(element)); // Seleccionamos todos los elementos con la clase delete_product y se les agrega la animación de Lottie
+  import("../home/index.js").then((module) => {
+    module.loadHeaderLottieAnimation(); // Se importa el módulo home y se llama a la función loadHeaderLottieAnimation para cargar la animación del header
+    module.handleCheckAuth().then((res) => !res ? (window.location.href = "/pages/login.html") : null); // Se importa el módulo home y se llama a la función handleCheckAuth para verificar si el usuario está autenticado
+  })
 
   const form = document.querySelector("#checkout"); // Seleccionamos el elemento con el id checkout
   form.addEventListener("submit", handleCheckoutSubmit); // Se agrega el evento submit al formulario
-  form
-    .querySelectorAll("input")
-    .forEach((input) => input.addEventListener("input", handleChangeInput)); // Seleccionamos todos los elementos input que estén dentro del formulario y se les agrega el evento input
+  form.querySelectorAll("input").forEach(
+    (input) => input.addEventListener("input", handleChangeInput)
+  ); // Seleccionamos todos los elementos input que estén dentro del formulario y se les agrega el evento input
+  renderCardItem();
 }
 
 const cardNameRegex = /^[a-zA-Z ]{2,30}$/; // Expresión regular para validar el nombre de la tarjeta de crédito
@@ -38,23 +24,26 @@ const cardCvvRegex = /^[0-9]{3}$/; // Expresión regular para validar el cvv de 
 /**
  * Esta función se encarga de manejar el evento click de los botones de cantidad de productos.
  *
- * @param {EventTarget} e
+ * @param {InputEvent} e
  */
-function handleQuantityClick(e) {
+async function handleQuantityClick(id, e) {
   e.preventDefault(); // Se detiene el comportamiento por defecto del elemento
   e.stopPropagation(); // Se detiene la propagación del evento
   const parentE = e.currentTarget?.parentNode; // Se obtiene el elemento padre del elemento que disparó el evento
+  const elem = e.currentTarget; // Se obtiene el elemento que disparó el evento
   const quantity = parentE?.querySelector("input"); // Se obtiene el elemento input que esté dentro del elemento padre
-  if (quantity?.value > 1 && e.currentTarget?.classList.contains("down")) {
+  const price = parseFloat(parentE.parentNode.querySelector(".content_price h3").innerText.replace("S/. ", ""));
+  if (quantity?.value > 1 && elem?.classList.contains("down")) {
     // Si el valor del input es mayor a 1 y el elemento que disparó el evento tiene la clase down
+    await module.decreaseProductQuantity(id); // Se llama a la función decreaseProductQuantity y se le pasa el id del producto
     quantity.value--; // Se le resta 1 al valor del input
-  } else if (
-    quantity?.value < 100 &&
-    e.currentTarget?.classList.contains("up")
-  ) {
-    // Si el valor del input es menor a 100 y el elemento que disparó el evento tiene la clase up
+    subtotal -= price;
+  } else if ( quantity?.value < 100 && elem?.classList.contains("up")) { // Si el valor del input es menor a 100 y el elemento que disparó el evento tiene la clase up
+    await module.addProductToCart(id); // Se llama a la función increaseProductQuantity y se le pasa el id del producto
     quantity.value++; // Se le suma 1 al valor del input
+    subtotal += price;
   }
+  updateTotal();
 }
 
 /**
@@ -337,3 +326,154 @@ const handleCardName = (cardName) => {
 
   handleInputValidation(cardName, validateCardName(cardName.value));
 };
+
+/**
+ * 
+ * @param {InputEvent} e 
+ * @param {number} id 
+ */
+async function handleDeleteProduct(id, e) {
+  const res = await module.removeProductFromCart(id);
+  if(res){
+    e.target.parentNode.parentNode.parentNode.remove();
+  }else{
+    alert("Ocurrió un error al eliminar el producto");
+  }
+};
+
+/**
+ * 
+ * @param {String} tag 
+ * @param {String} className 
+ * @param {String | HTMLElement} content 
+ * @param {Object} attributes 
+ * @returns 
+ */
+function createElement(tag, className, content = null, attributes = {}) {
+  const element = document.createElement(tag);
+  const classes = className?.split(' ');
+  classes?.forEach((c) => element.classList.add(c));
+
+  for (const key in attributes) {
+    element.setAttribute(key, attributes[key]);
+  }
+
+  if (content !== null) {
+    if (typeof content === 'string') {
+      element.textContent = content;
+    } else {
+      element.appendChild(content);
+    }
+  }
+
+  return element;
+}
+
+/**
+ * 
+ * @param {number} id 
+ * @param {String} imageUrl 
+ * @param {String} marca 
+ * @param {String} description 
+ * @param {number} quantity 
+ * @param {number} price 
+ * @returns 
+ */
+function createProductCardTemplate(id, imageUrl, marca, description, quantity, price) {
+  const cardItem = createElement('div', 'card_item', null, { 'data-id': id });
+
+  const featuredCardContent = createElement('div', 'featured_card_content');
+
+  const img = createElement('img', null, null, { src: imageUrl, alt: 'imagen producto' });
+  img.addEventListener('error', (e) => e.target.src = "/assets/imgs/no-available-image.png")
+
+  const featuredCardInfo = createElement('div', 'featured_card_info');
+
+  const productName = createElement('h4', null, marca);
+
+  const productDescription = createElement('p', null, description);
+
+  featuredCardInfo.appendChild(productName);
+  featuredCardInfo.appendChild(productDescription);
+
+  featuredCardContent.appendChild(img);
+  featuredCardContent.appendChild(featuredCardInfo);
+
+  const contentCardQuantity = createElement('div', 'content_card_quantity');
+
+  const faDown = createElement('i', 'fa fa-back', null, null);
+
+  const quantityDownButton = createElement('button', 'product_quantity down', faDown, {
+    type: 'button',
+  });
+  quantityDownButton.addEventListener('click', handleQuantityClick.bind(null, id));
+
+  const cantidadProducto = createElement('input', null, null, {
+    type: 'number',
+    value: quantity,
+    name: 'cantidad',
+    disabled: true,
+    id: `cantidad_producto--${id}`,
+  });
+
+  const faUp = createElement('i', 'fa fa-next', null, null);
+
+  const quantityUpButton = createElement('button', 'product_quantity up', faUp, {
+    type: 'button',
+  });
+  quantityUpButton.addEventListener('click', handleQuantityClick.bind(null, id));
+
+  const contentDelete = createElement('div', 'content_delete');
+  const buttonDelete = createElement('button', 'delete_product', null, {
+    type: 'button',
+  });
+  buttonDelete.addEventListener('click', handleDeleteProduct.bind(null, id));
+  contentDelete.appendChild(buttonDelete);
+  addLottieDeleteAnimation(buttonDelete);
+
+  contentCardQuantity.appendChild(quantityDownButton);
+  contentCardQuantity.appendChild(cantidadProducto);
+  contentCardQuantity.appendChild(quantityUpButton);
+  
+  const contentPrice = createElement('div', 'content_price');
+  
+  const productPrice = createElement('h3', null, `S/. ${price.toFixed(2)}`);
+
+  subtotal += price;
+  
+  contentPrice.appendChild(productPrice);
+  
+  cardItem.appendChild(featuredCardContent);
+  cardItem.appendChild(contentCardQuantity);
+  cardItem.appendChild(contentPrice);
+  cardItem.appendChild(contentDelete);
+
+  return cardItem;
+}
+
+async function renderCardItem(){
+  const cart = await module.getCartProducts();
+  document.querySelector(".loader").classList.add("hidden");
+  cart.forEach((product) => {
+    const cardItem = createProductCardTemplate(
+      product.productId.id,
+      product.productId.urlImg,
+      product.productId.marca,
+      product.productId.description,
+      product.quantity,
+      product.productId.price
+    );
+    document.querySelector('.content_items').appendChild(cardItem);
+  });
+  document.getElementById("quantity_indicator").innerText = cart.length;
+  updateTotal();
+}
+
+function updateTotal(){
+  const envioP = parseFloat(subtotal.toFixed(2) * 0.02);
+  const total = parseFloat(subtotal + envioP);
+  document.getElementById("subtotal_price").innerText = `S/. ${subtotal.toFixed(2)}`;
+  document.getElementById("total_envio").innerText = `S/. ${envioP.toFixed(2)}`;
+  document.getElementById("total_price").innerText = `S/. ${total.toFixed(2)}`;
+  document.getElementById("total_confirm").innerText = `S/. ${total.toFixed(2)}`;
+}
