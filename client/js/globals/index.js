@@ -1,3 +1,4 @@
+import "./types.js"
 
 class Global {
   static #instance;
