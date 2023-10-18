@@ -6,7 +6,7 @@ let isAuth = false;
 
 export default async function init() {
   loadHeaderLottieAnimation();
-  isAuth = handleCheckAuth();
+  isAuth = await handleCheckAuth();
   const products = await module.getAllProducts()
   if(!products){
     toggleLoader();
