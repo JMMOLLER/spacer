@@ -2,6 +2,14 @@ import Global from "../globals/index.js";
 const module = Global.getInstance();
 let eventSubmitIsAdded = false;
 
+export default function init() {
+  addBackLottieAnim();
+  module
+    .userIsAuth()
+    .then((res) => (res ? (window.location.href = "/") : null));
+  forceAddEventSubmit();
+}
+
 /**
  * @description Función que se encarga de habilitar o deshabilitar el botón de submit y aplicar el loader.
  *
@@ -20,12 +28,20 @@ const toggleSubmit = (inputValue, button) => {
   btnSubmit.setAttribute("value", btnSubmit.disabled ? "" : inputValue);
 };
 
+/**
+ * @description Función que se encarga de mostrar u ocultar el mensaje de error.
+ * 
+ * @param {boolean} show 
+ */
 const showError = (show) => {
   const span = document.querySelector("#error");
   show ? span.classList.remove("hidden") : span.classList.add("hidden");
 };
 
-const loadLottieAnimation = () => {
+/**
+ * @description Función que se encarga de añadir la animación de lottie al botón de regresar.
+ */
+const addBackLottieAnim = () => {
   const returnElement = document.querySelector(".animation_arrow_container");
 
   const animation = lottie.loadAnimation({
@@ -44,28 +60,41 @@ const loadLottieAnimation = () => {
   });
 };
 
+/**
+ * @description Función que se encarga de manejar el evento submit del formulario.
+ * 
+ * @param {InputEvent} e 
+ */
 const handleSubmit = (e) => {
   e.preventDefault();
   toggleSubmit("Iniciar Sesión");
   const credentials = new FormData(e.target);
-  handleLogin(Object.fromEntries(credentials));
+  handleLogin(credentials);
 };
 
+/**
+ * @description Función que se encarga de realizar el login del usuario
+ * 
+ * @param {FormData} credentials 
+ * @returns 
+ */
 const handleLogin = async (credentials) => {
   showError(false);
-  const res = await module.fetchAPI("/auth", credentials, "POST");
-  if (res?.statusCode === 200) {
-    sessionStorage.setItem("token", res?.response?.token);
+  const res = await module.login(Object.fromEntries(credentials))
+  if (res) {
     window.location.href = "/";
   } else {
     toggleSubmit("Iniciar Sesión");
     showError(true);
   }
-  return res ? true : false;
+  return res;
 };
 
 window.onload = () => handleAddEventSubmit();
 
+/**
+ * @description Función que se encarga de añadir el evento submit al formulario.
+ */
 const handleAddEventSubmit = () => {
   const form = document.querySelector("form");
   form.addEventListener("submit", handleSubmit);
@@ -75,6 +104,9 @@ const handleAddEventSubmit = () => {
   eventSubmitIsAdded = true;
 };
 
+/**
+ * @description Función que se encarga de forzar la adición del evento submit al formulario.
+ */
 const forceAddEventSubmit = () => {
   const idInterval = setInterval(() => {
     if (eventSubmitIsAdded) {
@@ -86,13 +118,4 @@ const forceAddEventSubmit = () => {
   }, 500);
 };
 
-export default function init() {
-  loadLottieAnimation();
-  module
-    .userIsAuth()
-    .then((res) => (res ? (window.location.href = "/") : null));
-  console.info("login");
-  forceAddEventSubmit();
-}
-
-export { toggleSubmit };
+export { toggleSubmit, addBackLottieAnim, showError };

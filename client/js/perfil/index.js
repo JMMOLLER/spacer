@@ -1,5 +1,28 @@
+import { inputValidator } from "../utils/index.js";
 import Global from "../globals/index.js";
 const module = Global.getInstance();
+
+export default async function init() {
+  const module = await import("../home/index.js");
+  const img = document.querySelector(".perfil__img");
+  img.onerror = handleImageError;
+  module.preventRedirect();
+  module.loadHeaderLottieAnimation();
+  module.handleCheckAuth();
+  inputController();
+  fillUserInfo();
+  setHandlersOnForms();
+
+  document
+    .querySelector("#menu_secciones")
+    .childNodes.forEach((node) =>
+      node.nodeName === "LI"
+        ? node.addEventListener("click", handleNavClick)
+        : null
+    );
+
+  updateNavLine();
+}
 
 const inputController = () => {
   const form = document.querySelectorAll("form.spacer_form");
@@ -13,14 +36,14 @@ const inputController = () => {
   const btnSubmitSeguridad = form[1].querySelector("input[type='submit']");
   const imgInput = document.querySelector("#new-image");
 
-  const inputHandlerDatos = inputHandler.bind(
+  const inputHandlerDatos = toggleSubmitButtonWithImg.bind(
     null,
     inputsFormDatos,
     btnSubmitDatos,
     imgInput
   );
 
-  const inputHandlerSeguridad = inputHandler.bind(
+  const inputHandlerSeguridad = toggleSubmitButton.bind(
     null,
     inputsFormSeguridad,
     btnSubmitSeguridad,
@@ -28,44 +51,50 @@ const inputController = () => {
   );
 
   inputsFormDatos.forEach((input) => {
-    input.addEventListener("input", inputHandlerDatos);
+
+    input.addEventListener("input", (e) => {
+      inputValidator(e.target);
+      inputHandlerDatos(e);
+    });
+
     imgInput.addEventListener("change", (e) => {
       const profileImg = document.querySelector(".perfil__img");
 
-      if(e.target.files[0]?.type.includes("image")){
+      if (e.target.files[0]?.type.includes("image")) {
         profileImg.src = URL.createObjectURL(e.target.files[0]);
-      }else{
+      } else {
         profileImg.src = module.getUserImg();
-        removeFileFromFileList(0, e.target)
+        removeFileFromFileList(0, e.target);
       }
       inputHandlerDatos();
     });
   });
 
   inputsFormSeguridad.forEach((input) => {
-    input.addEventListener("input", inputHandlerSeguridad);
+    input.addEventListener("input", (e) => {
+      inputValidator(e.target);
+      inputHandlerSeguridad(e);
+    });
   });
 };
 
-
 /**
  * @description Función que se encarga de remover un archivo de la lista de archivos de un input - Código hecho por: Tunji Oyeniran
- * 
- * @param {int} index 
- * @param {HTMLInputElement} input 
+ *
+ * @param {int} index
+ * @param {HTMLInputElement} input
  */
 const removeFileFromFileList = (index, input) => {
-  const dt = new DataTransfer()
-  const { files } = input
-  
+  const dt = new DataTransfer();
+  const { files } = input;
+
   for (let i = 0; i < files.length; i++) {
-    const file = files[i]
-    if (index !== i)
-      dt.items.add(file) // here you exclude the file. thus removing it.
+    const file = files[i];
+    if (index !== i) dt.items.add(file); // here you exclude the file. thus removing it.
   }
-  
-  input.files = dt.files // Assign the updates list
-}
+
+  input.files = dt.files; // Assign the updates list
+};
 
 /**
  * @description Función que se encarga de habilitar o deshabilitar el botón de submit
@@ -74,51 +103,16 @@ const removeFileFromFileList = (index, input) => {
  * @param {HTMLButtonElement} submitButton
  * @param {HTMLInputElement} imgInput
  */
-const inputHandler = (inputs, submitButton, imgInput) => {
-  let allInputsEmpty = true;
+const toggleSubmitButton = (inputs, submitButton, imgInput) => {
+  submitButton.disabled = ![...inputs].every(
+    (input) => input.value.trim() !== "" && !input.classList.contains("error")
+  );
+};
 
-  const inputsPassword = [];
-  inputs.forEach((input) => {
-    if (input.type === "password") {
-      inputsPassword.push(input);
-    }
-  });
-
-  if (inputsPassword.length > 0) {
-    inputsPassword.forEach((input) => {
-      if (input.value.trim() !== "") {
-        input.classList.add("filled");
-      } else {
-        input.classList.remove("filled");
-      }
-    });
-
-    if (
-      inputsPassword[0].value.trim().length > 6 &&
-      inputsPassword[1].value.trim().length > 6
-    ) {
-      allInputsEmpty = false;
-    }
-  } else {
-    inputs.forEach((input) => {
-      if (input.value.trim() !== "") {
-        allInputsEmpty = false;
-        input.classList.add("filled");
-      } else {
-        input.classList.remove("filled");
-      }
-    });
-
-    if (imgInput != null && imgInput.files[0]?.type.includes("image")) {
-      allInputsEmpty = false;
-    }
-  }
-
-  if (allInputsEmpty) {
-    submitButton.disabled = true;
-  } else {
-    submitButton.disabled = false;
-  }
+const toggleSubmitButtonWithImg = (inputs, submitButton, imgInput) => {
+  submitButton.disabled = ![...inputs].some(
+    (input) => input.value.trim() !== "" && !input.classList.contains("error") || imgInput.files[0]
+  );
 };
 
 const fillUserInfo = async () => {
@@ -151,7 +145,7 @@ const getUserInfo = async () => {
   if (userInfo.statusCode === 401) {
     alert("Tu sesión a expirado, por favor inicia sesión nuevamente.");
     window.location.href = "/pages/login.html";
-  }else if(userInfo.statusCode !== 200){
+  } else if (userInfo.statusCode !== 200) {
     alert(userInfo.description || "Ha ocurrido un error, intenta nuevamente.");
     return;
   }
@@ -175,8 +169,8 @@ const filterFormData = (formData) => {
 
 /**
  * @description Función que se encarga de enviar los datos del formulario al servidor
- * 
- * @param {SubmitEvent} e 
+ *
+ * @param {SubmitEvent} e
  * @returns {void}
  */
 const handleFormSubmit = async (e) => {
@@ -193,10 +187,10 @@ const handleFormSubmit = async (e) => {
 
   const form = new FormData(e.target);
 
-  if(form.has("address")){
+  if (form.has("address")) {
     form.append("img", document.querySelector("#new-image").files[0] || "");
-  }else{
-    if(form.get("password") !== form.get("new-password")){
+  } else {
+    if (form.get("password") !== form.get("new-password")) {
       alert("Las contraseñas no coinciden.");
       toggleSubmit(inputSubmitValue, btnSubmit);
       e.target.querySelector("input[type='submit']").disabled = true;
@@ -256,7 +250,9 @@ const setHandlersOnForms = () => {
 };
 
 const handleImageError = (e) => {
-  console.error("Error al cargar la imagen de usuario en la ruta: "+e.target.src);
+  console.error(
+    "Error al cargar la imagen de usuario en la ruta: " + e.target.src
+  );
 
   e.target.src = "https://spacer-ecommerce.vercel.app/assets/imgs/user.webp";
   e.target.style.filter = "blur(2px)";
@@ -279,24 +275,4 @@ const updateNavLine = () => {
 
 window.addEventListener("resize", updateNavLine);
 
-export default async function init() {
-  const module = await import("../home/index.js");
-  const img = document.querySelector(".perfil__img");
-  img.onerror = handleImageError;
-  module.preventRedirect();
-  module.loadHeaderLottieAnimation();
-  module.handleCheckAuth();
-  inputController();
-  fillUserInfo();
-  setHandlersOnForms();
-
-  document
-    .querySelector("#menu_secciones")
-    .childNodes.forEach((node) =>
-      node.nodeName === "LI"
-        ? node.addEventListener("click", handleNavClick)
-        : null
-    );
-
-  updateNavLine();
-}
+export { toggleSubmitButton as inputHandler };

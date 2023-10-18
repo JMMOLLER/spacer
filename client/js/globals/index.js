@@ -149,9 +149,7 @@ class Global {
    * @returns {String}
    */
   getUserImg() {
-    return (
-      this.#API_URL.replace("api", "cliente") + "/" + this.#username + ".jpg"
-    );
+    return this.#API_URL.replace(/\/api/, "/cliente") + "/" + this.#username + ".jpg";
   }
 
   /**
@@ -180,6 +178,32 @@ class Global {
     } catch (error) {
       console.error(error);
       return { statusCode: 500, message: "Unknow Error" };
+    }
+  }
+
+  /**
+   * @description Este método se encarga de realizar el login del usuario
+   *
+   * @param {FormData} credentials
+   * @returns {Promise<boolean>}
+   */
+  async login(credentials) {
+    try {
+      const formData = new FormData();
+      formData.append("username", credentials.username);
+      formData.append("password", credentials.password);
+      const res = await this.fetchAPI(
+        "/auth",
+        Object.fromEntries(formData),
+        "POST"
+      );
+      if (res?.statusCode === 200) {
+        sessionStorage.setItem("token", res?.response?.token);
+      }
+      return res.statusCode === 200 ? true : false;
+    } catch (error) {
+      console.error(error);
+      return fasle;
     }
   }
 
