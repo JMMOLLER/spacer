@@ -43,11 +43,12 @@ public class AuthConfig {
       )
       .authorizeHttpRequests(authorizeRequests ->
         authorizeRequests
-        .requestMatchers("*").permitAll()
-        .requestMatchers(HttpMethod.POST, "/api/cliente").permitAll()
-        .requestMatchers("/api/auth").permitAll()
-        .requestMatchers("/api/**").authenticated()
-        .anyRequest().permitAll()
+          .requestMatchers("*").permitAll()
+          .requestMatchers(HttpMethod.POST, "/api/cliente").permitAll()
+          .requestMatchers(HttpMethod.GET, "/api/producto/all").permitAll()
+          .requestMatchers("/api/auth").permitAll()
+          .requestMatchers("/api/**").authenticated()
+          .anyRequest().permitAll()
       ).sessionManagement(sessionManagement ->
         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
       ).addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
