@@ -1,18 +1,12 @@
 .productos {
   max-width: 1500px;
-  margin: auto;
-  /* Centra verticalmente el contenido */
-  padding: 50px;
-  /* Aumenta el espaciado interior para un aspecto más aireado */
-  background-color: #f8f8f8;
-  /* Cambia el fondo del contenedor */
-  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
   /* Agrega una suave sombra */
   border-radius: 10px;
   /* Agrega bordes redondeados */
   overflow: hidden;
   /* Oculta el contenido que desborde del contenedor */
   text-align: center;
+  flex-grow: 1;
 }
 
 /* Estilo del contenedor de ítems */
@@ -27,6 +21,7 @@
 
 .titulo-contenedor-productos {
   font-size: 2.5rem;
+  text-align: center;
 }
 
 .categoria-titulo {
@@ -62,7 +57,6 @@
   min-height: 456px;
   max-width: 220px;
   /* Aumenta ligeramente el ancho máximo */
-  margin: auto;
   border: 1px solid #ddd;
   /* Cambia el color del borde a un gris más claro */
   border-radius: 10px;
@@ -324,24 +318,8 @@
   margin: 30px 0px;
 }
 
-/* GRID SYSTEM */
-
-.container {
-  width: 100%;
-  height: auto;
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(5, auto);
-  grid-template-areas:
-    "cell1 cell1 cell1 cell1 cell1"
-    "cell2 cell3 cell3 cell3 cell3"
-    "cell2 cell3 cell3 cell3 cell3"
-    "cell2 cell3 cell3 cell3 cell3";
-  grid-gap: 10px;
-}
 /* ============== LISTA DE CATEGORIA ============== */
 .category_list {
-  grid-area: cell1;
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -366,7 +344,6 @@
 }
 /* ============== FILTROS ============== */
 .filters-section {
-  grid-area: cell2;
   min-height: 45rem;
   display: flex;
   flex-direction: column;
@@ -455,8 +432,7 @@
 .contenedor-padre {
   display: flex;
   gap: 20px;
-  padding: 0 2%;
-  padding-top: 20px;
+  padding: 20px 2%;
 }
 
 .boton {
