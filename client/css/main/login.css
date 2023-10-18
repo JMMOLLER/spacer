@@ -78,7 +78,7 @@
   scale: 1;
 }
 
-.loader {
+.inputSubmit-group .loader {
   display: inline-block;
   position: absolute;
   width: 30px;
