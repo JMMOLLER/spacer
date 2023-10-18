@@ -73,6 +73,42 @@ public class ClientController {
     }
   }
 
+  @PostMapping("/carrito/decrease/{productId}")
+  @ResponseBody
+  public ResponseEntity<Response> decreaseProduct(HttpServletRequest request, @PathVariable Long productId) {
+    try {
+      String authorizationHeader = request.getHeader("Authorization");
+      Map<String, Object> payload = TokensUtils.getPayloadFromToken(
+        authorizationHeader.replace("Bearer ", "")
+      );
+      assert payload != null;
+      ClientModel cs = this.clientService.decreaseProduct(productId, payload.get("username").toString());
+      Response response = new Response(HttpStatus.OK, HttpStatus.OK.name(), cs);
+      return new ResponseEntity<>(response, HttpStatus.OK);
+    } catch (Exception e) {
+      Response response = new Response(HttpStatus.BAD_REQUEST, ExceptionUtils.getRootCause(e).getMessage(), null);
+      return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @DeleteMapping("/carrito/{productId}")
+  @ResponseBody
+  public ResponseEntity<Response> deleteProductOnCart(HttpServletRequest request, @PathVariable Long productId) {
+    try {
+      String authorizationHeader = request.getHeader("Authorization");
+      Map<String, Object> payload = TokensUtils.getPayloadFromToken(
+        authorizationHeader.replace("Bearer ", "")
+      );
+      assert payload != null;
+      boolean cs = this.clientService.deleteProductOnCart(productId, payload.get("username").toString());
+      Response response = new Response(HttpStatus.OK, HttpStatus.OK.name(), cs);
+      return new ResponseEntity<>(response, HttpStatus.OK);
+    } catch (Exception e) {
+      Response response = new Response(HttpStatus.BAD_REQUEST, ExceptionUtils.getRootCause(e).getMessage(), null);
+      return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+  }
+
   @PutMapping()
   @ResponseBody
   public ResponseEntity<Response> updateClient(

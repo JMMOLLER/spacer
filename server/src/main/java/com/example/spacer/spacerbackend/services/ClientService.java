@@ -136,4 +136,40 @@ public class ClientService {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
     }
   }
+
+  public ClientModel decreaseProduct(Long productId, String username) {
+    try {
+      Optional<ClientModel> existingClient = clientRepository.findOneByUsername(username);
+      if (existingClient.isPresent()) {
+        ClientModel client = existingClient.get();
+        cartService.decreaseProduct(
+          productId,
+          client.getId()
+        );
+        return clientRepository.save(client);
+      } else {
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El cliente no existe");
+      }
+    } catch (Exception e) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+    }
+  }
+
+  public boolean deleteProductOnCart(Long productId, String username) {
+    try {
+      Optional<ClientModel> existingClient = clientRepository.findOneByUsername(username);
+      if (existingClient.isPresent()) {
+        ClientModel client = existingClient.get();
+        cartService.deleteProduct(
+          productId,
+          client.getId()
+        );
+        return true;
+      } else {
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El cliente no existe");
+      }
+    } catch (Exception e) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+    }
+  }
 }
