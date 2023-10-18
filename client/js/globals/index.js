@@ -1,3 +1,4 @@
+
 class Global {
   static #instance;
 

@@ -556,6 +556,27 @@
 >>>>>>> Stashed changes
 }
 
+.medio-card {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  justify-content: space-evenly;
+}
+.info-item {
+  max-height: 100px;
+  overflow: hidden;
+}
+
+#loader {
+  width: 50%;
+  height: auto;
+  margin: 0 auto;
+}
+#loader span {
+  font-size: 1.9rem;
+  font-weight: 400;
+}
+
 .boton {
   display: inline-block;
   padding: 8px 20px;
