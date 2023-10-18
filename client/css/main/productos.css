@@ -1,4 +1,4 @@
-.contenedor {
+.productos {
   max-width: 1500px;
   margin: auto;
   /* Centra verticalmente el contenido */
@@ -16,12 +16,13 @@
 }
 
 /* Estilo del contenedor de ítems */
-.contenedor .contenedor-items {
-  position: relative;
-  margin-top: 50px;
+.productos .contenedor-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
   width: 100%;
+  margin-top: 30px;
   transition: transform 0.3s ease;
-  /* Añade transición para efecto de zoom */
 }
 
 .titulo-contenedor-productos {
@@ -57,7 +58,7 @@
 }
 
 /* Estilo de los ítems */
-.contenedor .contenedor-items .item {
+.productos .contenedor-items .item {
   min-height: 456px;
   max-width: 220px;
   /* Aumenta ligeramente el ancho máximo */
@@ -79,7 +80,7 @@
 }
 
 /* Estilo de imagen dentro de los ítems */
-.contenedor .contenedor-items .item .img-item {
+.productos .contenedor-items .item .img-item {
   width: 100%;
   max-height: 200px;
   /* Limita la altura de la imagen */
@@ -88,7 +89,7 @@
 }
 
 /* Efecto de sombra y escala al pasar el ratón sobre los ítems */
-.contenedor .contenedor-items .item:hover {
+.productos .contenedor-items .item:hover {
   box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.2);
   /* Sombra más pronunciada */
   transform: scale(1.05);
@@ -96,7 +97,7 @@
 }
 
 /* Estilo del título del ítem */
-.contenedor .contenedor-items .item .titulo-item {
+.productos .contenedor-items .item .titulo-item {
   font-weight: bold;
   text-transform: uppercase;
   color: #333;
@@ -109,7 +110,7 @@
 }
 
 /* Estilo del precio del ítem */
-.contenedor .contenedor-items .item .precio-item {
+.productos .contenedor-items .item .precio-item {
   font-weight: bold;
   font-size: 20px;
   /* Aumenta el tamaño del precio */
@@ -120,7 +121,7 @@
 }
 
 /* Estilo del botón de ítem */
-.contenedor .contenedor-items .item .boton-item {
+.productos .contenedor-items .item .boton-item {
   display: block;
   margin: 10px auto;
   border: none;
@@ -136,7 +137,7 @@
 }
 
 /* Efecto de cambio de color y escala al pasar el ratón sobre el botón */
-.contenedor .contenedor-items .item .boton-item:hover {
+.productos .contenedor-items .item .boton-item:hover {
   background-color: #771b54;
   /* Cambia el color al pasar el ratón */
   transform: scale(1.05);
@@ -453,14 +454,9 @@
 
 .contenedor-padre {
   display: flex;
-  margin-left: 100px;
-  margin-right: 100px;
-}
-.contenedor-derecho {
-  display: flex;
-}
-.contenedor-izquierdo {
-  width: 300px;
+  gap: 20px;
+  padding: 0 2%;
+  padding-top: 20px;
 }
 
 .boton {
@@ -479,4 +475,14 @@
 .boton:hover {
   background-color: #258cd1;
   transform: scale(1.05);
+}
+
+@media screen and (max-width: 767px) {
+  .filters-section {
+    display: none;
+  }
+  .productos {
+    width: 100%;
+    padding: 0;
+  }
 }
