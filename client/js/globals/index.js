@@ -1,18 +1,13 @@
+
 class Global {
   static #instance;
 
   #API_URL;
-  #apiResponseModel;
   #username;
 
   constructor() {
     if (!Global.#instance) {
       this.#API_URL = "https://spacer-api.onrender.com/api";
-      this.#apiResponseModel = {
-        statusCode: 0,
-        message: "",
-        response: {} || null,
-      };
       this.#username = "";
       Global.#instance = this;
       console.log("Global instance created");
@@ -37,14 +32,6 @@ class Global {
 
   set API_URL(value) {
     this.#API_URL = value;
-  }
-
-  get apiResponseModel() {
-    return this.#apiResponseModel;
-  }
-
-  set apiResponseModel(value) {
-    this.#apiResponseModel = value;
   }
 
   get username() {
@@ -89,7 +76,7 @@ class Global {
    * @param {string} path
    * @param {object | null} body
    * @param {string} method
-   * @returns {Promise<apiResponseModel>}
+   * @returns {Promise<API_RESPONSE>}
    */
   async fetchAPI(path, body, method) {
     try {
@@ -111,7 +98,7 @@ class Global {
       return response;
     } catch (error) {
       console.error(error);
-      return { statusCode: 500, message: "Unknow Error" };
+      return { statusCode: 500, message: "Unknow Error", response: null };
     }
   }
 
@@ -149,13 +136,15 @@ class Global {
    * @returns {String}
    */
   getUserImg() {
-    return this.#API_URL.replace(/\/api/, "/cliente") + "/" + this.#username + ".jpg";
+    return (
+      this.#API_URL.replace(/\/api/, "/cliente") + "/" + this.#username + ".jpg"
+    );
   }
 
   /**
    * Este método se encarga de obtener la información del usuario
    *
-   * @returns {Promise<apiResponseModel>}
+   * @returns {Promise<API_RESPONSE>}
    */
   async getUserInfo() {
     return await this.fetchAPI("/cliente", null, "GET");
@@ -165,7 +154,7 @@ class Global {
    *
    * @param {string} path
    * @param {object} requestOptions
-   * @returns {Promise<apiResponseModel>}
+   * @returns {Promise<API_RESPONSE>}
    */
   async customFetch(path, requestOptions) {
     try {
@@ -179,6 +168,30 @@ class Global {
       console.error(error);
       return { statusCode: 500, message: "Unknow Error" };
     }
+  }
+
+  /**
+   *
+   * @returns {Promise<Product[]>}
+   */
+  async getAllProducts() {
+    const products = await this.fetchAPI("/producto/all", null, "GET");
+    return products.response;
+  }
+
+  /**
+   * @description Este método se encarga de obtener los productos del carrito
+   * 
+   * @param {number} id 
+   * @returns {Promise<boolean>}
+   */
+  async addProductToCart(id) {
+    const data = {
+      productId: id,
+      quantity: 1,
+    };
+    const res = await this.fetchAPI("/cliente/carrito", data, "POST");
+    return res.statusCode === 201 ? true : false;
   }
 
   /**

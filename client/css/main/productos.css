@@ -1,31 +1,67 @@
-.contenedor {
+.productos {
   max-width: 1500px;
-  margin: auto;
-  /* Centra verticalmente el contenido */
-  padding: 50px;
-  /* Aumenta el espaciado interior para un aspecto más aireado */
-  background-color: #f8f8f8;
-  /* Cambia el fondo del contenedor */
-  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
   /* Agrega una suave sombra */
   border-radius: 10px;
   /* Agrega bordes redondeados */
   overflow: hidden;
   /* Oculta el contenido que desborde del contenedor */
   text-align: center;
+  flex-grow: 1;
+  position: relative;
+}
+.productos.loading::before {
+  content: "";
+  position: absolute;
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-color: #00000080;
+  z-index: 1;
+  opacity: 0;
+  animation: show 0.3s ease-in forwards;
 }
 
+.productos.loading > .loader {
+  position: fixed;
+  width: 48px;
+  height: 48px;
+  border: 5px solid #fff;
+  border-bottom-color: #ff3d00;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite, show 0.3s ease-in forwards;
+  top: 50%;
+  left: 58%;
+  transform: translate(-58%, -50%);
+  z-index: 1;
+}
+
+@keyframes show {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+
 /* Estilo del contenedor de ítems */
-.contenedor .contenedor-items {
-  position: relative;
-  margin-top: 50px;
+.productos .contenedor-items {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 30px;
   width: 100%;
+  margin-top: 30px;
   transition: transform 0.3s ease;
-  /* Añade transición para efecto de zoom */
 }
 
 .titulo-contenedor-productos {
+  user-select: none;
   font-size: 2.5rem;
+  text-align: center;
 }
 
 .categoria-titulo {
@@ -57,11 +93,10 @@
 }
 
 /* Estilo de los ítems */
-.contenedor .contenedor-items .item {
+.productos .contenedor-items .item {
   min-height: 456px;
   max-width: 220px;
   /* Aumenta ligeramente el ancho máximo */
-  margin: auto;
   border: 1px solid #ddd;
   /* Cambia el color del borde a un gris más claro */
   border-radius: 10px;
@@ -79,7 +114,7 @@
 }
 
 /* Estilo de imagen dentro de los ítems */
-.contenedor .contenedor-items .item .img-item {
+.productos .contenedor-items .item .img-item {
   width: 100%;
   max-height: 200px;
   /* Limita la altura de la imagen */
@@ -88,7 +123,7 @@
 }
 
 /* Efecto de sombra y escala al pasar el ratón sobre los ítems */
-.contenedor .contenedor-items .item:hover {
+.productos .contenedor-items .item:hover {
   box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.2);
   /* Sombra más pronunciada */
   transform: scale(1.05);
@@ -96,7 +131,7 @@
 }
 
 /* Estilo del título del ítem */
-.contenedor .contenedor-items .item .titulo-item {
+.productos .contenedor-items .item .titulo-item {
   font-weight: bold;
   text-transform: uppercase;
   color: #333;
@@ -109,7 +144,7 @@
 }
 
 /* Estilo del precio del ítem */
-.contenedor .contenedor-items .item .precio-item {
+.productos .contenedor-items .item .precio-item {
   font-weight: bold;
   font-size: 20px;
   /* Aumenta el tamaño del precio */
@@ -120,7 +155,7 @@
 }
 
 /* Estilo del botón de ítem */
-.contenedor .contenedor-items .item .boton-item {
+.productos .contenedor-items .item .boton-item {
   display: block;
   margin: 10px auto;
   border: none;
@@ -136,7 +171,7 @@
 }
 
 /* Efecto de cambio de color y escala al pasar el ratón sobre el botón */
-.contenedor .contenedor-items .item .boton-item:hover {
+.productos .contenedor-items .item .boton-item:hover {
   background-color: #771b54;
   /* Cambia el color al pasar el ratón */
   transform: scale(1.05);
@@ -294,7 +329,6 @@
   vertical-align: auto;
 }
 .tipo {
-  padding: 20px;
   border-color: black;
   border-radius: 25px;
   background-size: auto;
@@ -323,24 +357,8 @@
   margin: 30px 0px;
 }
 
-/* GRID SYSTEM */
-
-.container {
-  width: 100%;
-  height: auto;
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(5, auto);
-  grid-template-areas:
-    "cell1 cell1 cell1 cell1 cell1"
-    "cell2 cell3 cell3 cell3 cell3"
-    "cell2 cell3 cell3 cell3 cell3"
-    "cell2 cell3 cell3 cell3 cell3";
-  grid-gap: 10px;
-}
 /* ============== LISTA DE CATEGORIA ============== */
 .category_list {
-  grid-area: cell1;
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -365,9 +383,9 @@
 }
 /* ============== FILTROS ============== */
 .filters-section {
-  grid-area: cell2;
   min-height: 45rem;
   display: flex;
+  max-width: 250px;
   flex-direction: column;
   justify-content: flex-start;
   font-weight: bolder;
@@ -376,12 +394,26 @@
   font-style: inherit;
   padding: 0 10px;
   gap: 20px;
+  text-align: center;
 }
 .filtro-precio,
 .filtro-pago,
 .filtro-modalidad {
   border-top: 2px solid black;
   padding: 20px;
+}
+#tipo-precio {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+.opcion-filtro {
+  font-size: 15pt;
+}
+.opcion-filtro input {
+  width: 100%;
 }
 .filtro-pago input,
 .filtro-modalidad input {
@@ -453,14 +485,87 @@
 
 .contenedor-padre {
   display: flex;
-  margin-left: 100px;
-  margin-right: 100px;
+  gap: 20px;
+  padding: 20px 2%;
 }
-.contenedor-derecho {
+
+.medio-card {
   display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  justify-content: space-evenly;
 }
-.contenedor-izquierdo {
-  width: 300px;
+.info-item {
+  max-height: 100px;
+  overflow: hidden;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.container-loader, .container-error {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20%;
+}
+
+.container-error {
+  margin-top: 0;
+}
+
+.container-error img {
+  width: 50%;
+  min-width: 300px;
+}
+
+.container-loader .loader {
+  width: 48px;
+  height: 48px;
+  border: 5px solid #fff;
+  border-bottom-color: #ff3d00;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.container-loader .text,
+.container-error .text {
+  font-size: 1.9rem;
+  font-weight: 400;
+}
+
+.medio-card {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  justify-content: space-evenly;
+}
+.info-item {
+  max-height: 100px;
+  overflow: hidden;
+}
+
+#loader {
+  width: 50%;
+  height: auto;
+  margin: 0 auto;
+}
+#loader span {
+  font-size: 1.9rem;
+  font-weight: 400;
 }
 
 .boton {
@@ -479,4 +584,19 @@
 .boton:hover {
   background-color: #258cd1;
   transform: scale(1.05);
+}
+
+@media screen and (max-width: 767px) {
+  .filters-section {
+    display: none;
+  }
+  .productos {
+    width: 100%;
+    padding: 0;
+  }
+  .productos.loading > .loader {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
 }

@@ -39,6 +39,7 @@ ul#menuCategorias li, ul#menu_secciones li {
   box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
   border-radius: 10px;
   overflow: hidden;
+  z-index: 1;
 }
 
 .subcategoria-item:hover::before {
