@@ -24,6 +24,7 @@ public class ProductService {
     return products.toArray(new ProductModel[0]);
   }
 
+  @Cacheable(value = "products", key = "#urlprod")
   public ProductModel getProductByUrlProd(String urlprod) {
     return this.productRepository.findOneByUrlProd(urlprod);
   }
