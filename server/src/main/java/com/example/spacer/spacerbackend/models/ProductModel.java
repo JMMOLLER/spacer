@@ -8,12 +8,13 @@ import lombok.Getter;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 @Getter
 @Entity
 @Table(name = "producto")
-public class ProductModel {
+public class ProductModel implements Serializable {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "idpro")
