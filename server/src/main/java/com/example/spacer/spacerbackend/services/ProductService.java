@@ -3,6 +3,7 @@ package com.example.spacer.spacerbackend.services;
 import com.example.spacer.spacerbackend.models.ProductModel;
 import com.example.spacer.spacerbackend.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ public class ProductService {
     this.productRepository = productRepository;
   }
 
+  @Cacheable(value = "products")
   public ProductModel[] getAllProducts() {
     List<ProductModel> products = productRepository.findAll();
     return products.toArray(new ProductModel[0]);
