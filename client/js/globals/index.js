@@ -5,11 +5,13 @@ class Global {
 
   #API_URL;
   #username;
+  #token;
 
   constructor() {
     if (!Global.#instance) {
       this.#API_URL = "https://spacer-api.onrender.com/api";
       this.#username = "";
+      this.#token = this.#checkSessionCookie();
       Global.#instance = this;
       console.log("Global instance created");
     }
@@ -43,27 +45,56 @@ class Global {
     this.#username = value;
   }
 
+  get token() {
+    return this.#token;
+  }
+
+  set token(value) {
+    this.#token = value;
+  }
+
   /**
-   * Este método se encarga de verificar si el usuario tiene
-   * un token de sesión válido
+   * @description Este método se encarga de verificar si el usuario tiene una cookie de sesión válida
+   * 
+   * @returns {string | null}
+   */
+  #checkSessionCookie() {
+    const cookies = document.cookie.split("; ").map((cookie) => {
+      const [key, value] = cookie.split("=");
+      return { key, value };
+    });
+    const token = cookies.find((cookie) => cookie.key === "SESSIONID")?.value;
+    
+    return token ?? null;
+  }
+
+  /**
+   * @description Este método se encarga de limpiar la cookie de sesión
+   */
+  #cleanSessionCookie() {
+    document.cookie = "SESSIONID=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    this.#token = null;
+  }
+
+  /**
+   * @description Este método se encarga de verificar si el usuario tiene un token de sesión válido
    *
    * @returns {Promise<boolean>}
    */
   async userIsAuth() {
-    const token = sessionStorage.getItem("token");
-    if (token) {
+    if (this.#token) {
       try {
         const res = await this.fetchAPI("/auth/info", null, "GET");
         if (res.statusCode === 200) {
           this.#username = res.response.username;
           return true;
         } else {
-          sessionStorage.removeItem("token");
+          this.#cleanSessionCookie();
           return false;
         }
       } catch (error) {
         console.error(error);
-        sessionStorage.removeItem("token");
+        this.#cleanSessionCookie();
         return false;
       }
     } else {
@@ -85,7 +116,7 @@ class Global {
         method: !method ? "GET" : method,
         headers: {
           "Content-Type": this.contentTypeHandler(method),
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          Authorization: `Bearer ${this.#token ?? ""}`,
         },
         body: method === "GET" ? null : JSON.stringify(body),
       });
@@ -244,7 +275,9 @@ class Global {
         "POST"
       );
       if (res?.statusCode === 200) {
-        sessionStorage.setItem("token", res?.response?.token);
+        const expDate = new Date(res?.response?.payload?.exp * 1000);
+        const cookieExp = expDate.toUTCString();
+        document.cookie = `SESSIONID=${res?.response?.token}; SameSite=None; Secure; path=/; expires=${cookieExp}`;
       }
       return res.statusCode === 200 ? true : false;
     } catch (error) {
@@ -254,10 +287,10 @@ class Global {
   }
 
   /**
-   * Removes the session token from sessionStorage and redirects the user to the login page.
+   * @description Este método se encarga de realiazar el logout del usuario
    */
   logout() {
-    sessionStorage.removeItem("token");
+    this.#cleanSessionCookie();
     window.location.href = "/pages/login.html";
   }
 }
