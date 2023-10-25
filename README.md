@@ -22,6 +22,8 @@ El objetivo de este proyecto llamado Spacer es crear una tienda en línea especi
 - Carrito de Compras
 - Administración de Usuario (Cliente)
 - Panel de Administrador (Administradores)
+- Emulación SPA en página de productos
+- Encriptación de contraseñas
 
 ## Tecnologías Utilizadas⚡
 
@@ -38,6 +40,8 @@ El objetivo de este proyecto llamado Spacer es crear una tienda en línea especi
 - MySQL (gestionado con phpMyAdmin)
 - Spring Security
 - JWT para autenticación
+- Redis (manejador de caché)
+- BCrypt
 
 ## Despliegue 🚀
 
