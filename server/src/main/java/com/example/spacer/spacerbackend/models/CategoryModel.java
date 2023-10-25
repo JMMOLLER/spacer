@@ -7,7 +7,6 @@ import lombok.Getter;
 
 import java.io.Serializable;
 
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Getter
 @Entity
 @Table(name = "categoria")
