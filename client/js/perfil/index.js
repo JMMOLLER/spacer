@@ -208,7 +208,7 @@ const handleFormSubmit = async (e) => {
   const myHeaders = new Headers();
   myHeaders.append(
     "Authorization",
-    `Bearer ${sessionStorage.getItem("token")}`
+    `Bearer ${module.token}`
   );
 
   const requestOptions = {
