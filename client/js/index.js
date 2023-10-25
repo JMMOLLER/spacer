@@ -1,6 +1,6 @@
 const path = window.location.pathname;
 
-window.location.protocol.includes("http") ? console.info(path) : null;
+window.location.protocol.includes("http:") ? console.info(path) : null;
 
 switch (true) {
   case (path === "/" || path.includes("index")):
