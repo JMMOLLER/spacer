@@ -31,7 +31,9 @@ El objetivo de este proyecto llamado Spacer es crear una tienda en línea especi
 
 - HTML
 - CSS (con animaciones personalizadas)
-- JavaScript (sin frameworks)
+- JavaScript (vanilla)
+- JSDoc
+- Vercel
 
 ### Backend
 
