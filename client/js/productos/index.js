@@ -3,17 +3,34 @@ import { loadHeaderLottieAnimation, handleCheckAuth } from "../home/index.js";
 import Global from "../globals/index.js";
 const module = Global.getInstance();
 let isAuth = false;
+/**
+ * @description Almacena los productos
+ * @type {Product[] | null}
+ */
+let products;
+/**
+ * @description Almacena los productos filtrados
+ * @type {Product[] | null}
+ * */
+let filtered;
 
 export default async function init() {
   loadHeaderLottieAnimation();
+  addFilterCategoryFormListener();
+  addFilterPriceFormListener();
+  addEventInputChangeListener();
+  preventDefaultInNav();
+  addPopStateListener();
+
   isAuth = await handleCheckAuth();
-  const products = await module.getAllProducts()
+  products = await module.getAllProducts();
+
   if(!products){
     toggleLoader();
     toggleError();
   }else{
     toggleLoader();
-    products.forEach((product) => renderCardProduct(product));
+    filterProducts();
   }
 
 }
@@ -31,6 +48,232 @@ function toggleLoadingSection() {
 }
 
 /**
+ * @description Evita que se redirija a la página de la categoría
+ */
+function preventDefaultInNav() {
+  document.querySelectorAll(".categoria-link").forEach((element) => {
+    element.addEventListener("click", redirectHandler);
+  });
+}
+
+/**
+ * 
+ * @param {InputEvent} e 
+ */
+function redirectHandler(e) {
+  e.preventDefault();
+  const link = e.currentTarget.href;
+  window.history.pushState({}, '', link);
+  filterProducts();
+}
+
+/**
+ * @description Obtiene el parámetro de búsqueda de la URL
+ * 
+ * @returns {SearchParam[] | null} - El parámetro de búsqueda de la URL
+ */
+function getSearhParams(){
+  const params = [];
+  let search = window.location.search.replace("?", "");
+
+  if(search.length === 0) return null;
+
+  search = search.split("&");
+  
+  search.forEach(
+    (param) => params.push({
+      key: decodeURIComponent(param.split("=")[0]),
+      value: decodeURIComponent(param.split("=")[1])
+    })
+  );
+
+  return params;
+}
+
+/**
+ * @description Filtra los productos por categoría
+ */
+function filterProducts(){
+  cleanProductsRendered();
+  const searchParams = getSearhParams();
+
+  filterProductsByCategory(searchParams); // Este método debe ser el primero en ejecutarse
+  filterProductsByPriceRange(searchParams);
+  filterProductsByBrand(searchParams);
+
+  renderFilteredProducts();
+}
+
+/**
+ * @description Renderiza los productos filtrados en el DOM
+ */
+function renderFilteredProducts(){
+  filtered?.forEach((product) => renderCardProduct(product));
+}
+
+/**
+ * @description Filtra los productos por categoría
+ * 
+ * @param {SearchParam[]} searchParams
+ */
+function filterProductsByCategory(searchParams){
+  const categoryParam = searchParams?.find((param) => (param.key).toLowerCase() === "categoria");
+  if(categoryParam) {
+    filtered = products?.filter(
+      (product) => (product.categoryId.name).toUpperCase() === (categoryParam.value).toUpperCase()
+    )
+  }else{
+    filtered = products;
+  }
+}
+
+/**
+ * @description Filtra los productos por rango de precio
+ * 
+ * @param {SearchParam[]} searchParams 
+ */
+function filterProductsByPriceRange(searchParams){
+  const minParam = searchParams?.find((param) => (param.key).toLowerCase() === "min");
+  const maxParam = searchParams?.find((param) => (param.key).toLowerCase() === "max");
+
+  if(minParam){
+    filtered = filtered?.filter((product) => product.price >= Number(minParam.value));
+  }
+  if(maxParam){
+    filtered = filtered?.filter((product) => product.price <= Number(maxParam.value));
+  }
+}
+
+/**
+ * 
+ * @param {SearchParam[]} searchParams 
+ */
+function filterProductsByBrand(searchParams){
+  const brandParam = searchParams?.find((param) => (param.key).toLowerCase() === "marca");
+  if(brandParam){
+    filtered = filtered?.filter((product) => (product.marca).toUpperCase() === (brandParam.value).toUpperCase());
+  }
+}
+
+/**
+ * @description Limpia los productos renderizados en el DOM
+ */
+function cleanProductsRendered(){
+  document.querySelectorAll(".item")?.forEach((item) => item.remove());
+}
+
+/**
+ * @description Agrega un listener al evento popstate del navegador
+ */
+function addPopStateListener(){
+  window.addEventListener("popstate", filterProducts);
+}
+
+/**
+ * @description Agrega un listener al evento submit del formulario de filtro de categoría
+ */
+function addFilterCategoryFormListener(){
+  document.querySelector("#filtro-categorias").addEventListener("submit", filterCategoryFormHandler);
+}
+
+/**
+ * @description Agrega un listener al evento submit del formulario de filtro de precio
+ */
+function addFilterPriceFormListener(){
+  document.querySelector("#filtro-precio").addEventListener("submit", filterPriceFormHandler);
+}
+
+/**
+ * @description Agrega un listener al evento input de los inputs de precio
+ */
+function addEventInputChangeListener(){
+  document.querySelector("#price-min").addEventListener("input", (e) => {
+    const label = document.querySelector("#current-min-value");
+    const max = Number(document.querySelector("#price-max").value);
+    const value = Number(e.target.value);
+
+    if(value < 100) {
+      e.target.value = 100;
+      label.textContent = "-";
+    }else if(max < (value)+200){
+      e.target.value = (value)-200;
+      label.textContent = "-";
+    }else{
+      label.textContent = e.target.value;
+    }
+  });
+
+
+  document.querySelector("#price-max").addEventListener("input", (e) => {
+    const label = document.querySelector("#current-max-value");
+    const min = Number(document.querySelector("#price-min").value);
+    const value = Number(e.target.value);
+
+    if(value > 6600) {
+      e.target.value = 6599;
+      label.textContent = "-";
+    }else if(min > (value)-200){
+      e.target.value = (value)+200;
+      label.textContent = "-";
+    }else{
+      label.textContent = value;
+    }
+  });
+}
+
+/**
+ * 
+ * @param {SubmitEvent} e 
+ */
+function filterCategoryFormHandler(e){
+  e.preventDefault();
+  const selected = e.target.querySelector("input:checked");
+  let url = window.location;
+  url = url.origin + url.pathname + `?${selected?.value || ""}`;
+  window.history.pushState({}, '', url);
+  filterProducts();
+}
+
+/**
+ * @description Filtra los productos por precio
+ * 
+ * @param {SubmitEvent} e 
+ */
+function filterPriceFormHandler(e){
+  e.preventDefault();
+  const ranges = e.target.querySelectorAll("span");
+  const minRange = ranges[0];
+  const maxRange = ranges[1];
+
+  let url = new URL(window.location);
+
+  let search = url.search;
+  let bindParam = "?";
+
+  if(search.includes("?")){
+    bindParam = "&";
+  }
+  if(search.includes("min") || search.includes("max")){
+    url.search = search.replace(/&?min=\d+&?/g, "").replace(/&?max=\d+&?/g, "");
+  }
+
+  
+  if(minRange.textContent === "-"){
+    url.search += `${bindParam}max=${maxRange.textContent}`;
+  }else if(maxRange.textContent === "-"){
+    url.search += `${bindParam}min=${minRange.textContent}`;
+  }else{
+    url.search += `${bindParam}min=${minRange.textContent}&max=${maxRange.textContent}`;
+  }
+  
+  if(minRange.textContent === "-" && maxRange.textContent === "-") url = window.location.origin + window.location.pathname;
+
+  window.history.pushState({}, '', url);
+  filterProducts();
+}
+
+/**
+ * @description Renderiza un producto en el DOM
  * 
  * @param {Product} product 
  */
@@ -42,7 +285,7 @@ function renderCardProduct(product) {
 }
 
 /**
- * Crea un template de elemento.
+ * @description Crea un template de elemento.
  *
  * @param {string} titulo - El título del elemento.
  * @param {string} src - La ruta de la imagen.
@@ -91,7 +334,7 @@ function createItemTemplate(titulo, src, info, precio, id, category) {
 }
 
 /**
- * Crea un elemento con una clase específica.
+ * @description Crea un elemento con una clase específica.
  *
  * @param {string} tagName - El nombre de la etiqueta del elemento.
  * @param {string} className - El nombre de la clase a añadir.

@@ -613,6 +613,12 @@
   max-width: 100%;
 }
 
+#filtrar-categoria {
+  margin-top: 15px;
+  margin-left: 25%;
+  margin-right: 25%;
+}
+
 .boton {
   display: inline-block;
   padding: 8px 20px;

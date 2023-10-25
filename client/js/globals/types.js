@@ -24,3 +24,9 @@
  * @property {Product} productId - Los productos del carrito.
  * @property {number} quantity - La cantidad de producto.
  */
+
+/**
+ * @typedef {Object} SearchParam
+ * @property {string} key - La clave del parámetro.
+ * @property {string} value - El valor del parámetro.
+ */
