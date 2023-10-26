@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CartService {
@@ -28,26 +27,26 @@ public class CartService {
     return carts.toArray(new CartModel[0]);
   }
 
-  public CartModel newCart(Long productId, Long clientId, Integer quantity) {
+  public void newCart(Long productId, Long clientId, Integer quantity) {
     CartModel cart = new CartModel();
     cart.setQuantity(quantity);
     cart.setProductId(this.productRepository.findById(productId).orElse(null));
     cart.setClientId(this.clientRepository.findById(clientId).orElse(null));
-    return cartRepository.save(cart);
+    cartRepository.save(cart);
   }
 
   public CartModel findExisting(Long clientId, Long productId) {
     return cartRepository.findOneByClientIdAndProductId(clientId, productId).orElse(null);
   }
 
-  public CartModel findAndUpdate(CartModel existingCart, int newQuantity) {
+  public void findAndUpdate(CartModel existingCart, int newQuantity) {
     int resultQ = existingCart.getQuantity() + newQuantity;
     if (resultQ < 1) {
       this.deleteCart(existingCart.getId());
-      return null;
+      return;
     }
     existingCart.setQuantity(resultQ);
-    return cartRepository.save(existingCart);
+    cartRepository.save(existingCart);
   }
 
   public void createOrUpdate(Long productId, Long clientId, Integer quantity) {
