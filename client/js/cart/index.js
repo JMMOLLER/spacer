@@ -1,6 +1,11 @@
+import "../globals/types.js";
 import Global from "../globals/index.js";
 const module = Global.getInstance();
 let subtotal = 0.00;
+/**
+ * @type {Cart[] | undefined} cart
+ */
+let cart;
 
 export default function init() {
   import("../home/index.js").then((module) => {
@@ -32,18 +37,46 @@ async function handleQuantityClick(id, e) {
   const parentE = e.currentTarget?.parentNode; // Se obtiene el elemento padre del elemento que disparó el evento
   const elem = e.currentTarget; // Se obtiene el elemento que disparó el evento
   const quantity = parentE?.querySelector("input"); // Se obtiene el elemento input que esté dentro del elemento padre
-  const price = parseFloat(parentE.parentNode.querySelector(".content_price h3").innerText.replace("S/. ", ""));
   if (quantity?.value > 1 && elem?.classList.contains("down")) {
     // Si el valor del input es mayor a 1 y el elemento que disparó el evento tiene la clase down
     await module.decreaseProductQuantity(id); // Se llama a la función decreaseProductQuantity y se le pasa el id del producto
     quantity.value--; // Se le resta 1 al valor del input
-    subtotal -= price;
+    decreaseLocalCart(id);
   } else if ( quantity?.value < 100 && elem?.classList.contains("up")) { // Si el valor del input es menor a 100 y el elemento que disparó el evento tiene la clase up
     await module.addProductToCart(id); // Se llama a la función increaseProductQuantity y se le pasa el id del producto
     quantity.value++; // Se le suma 1 al valor del input
-    subtotal += price;
+    encreaseLocalCart(id);
   }
+  updateSubTotal();
   updateTotal();
+}
+
+/**
+ * @description Esta función se encarga de disminuir la cantidad de un producto en el carrito
+ * 
+ * @param {number} id 
+ */
+function decreaseLocalCart(id) {
+  cart = cart.map((product) => {
+    if (product.productId.id === id) {
+      product.quantity--;
+    }
+    return product;
+  });
+}
+
+/**
+ * @description Esta función se encarga de aumentar la cantidad de un producto en el carrito
+ * 
+ * @param {number} id 
+ */
+function encreaseLocalCart(id) {
+  cart = cart.map((product) => {
+    if (product.productId.id === id) {
+      product.quantity++;
+    }
+    return product;
+  });
 }
 
 /**
@@ -335,7 +368,10 @@ const handleCardName = (cardName) => {
 async function handleDeleteProduct(id, e) {
   const res = await module.removeProductFromCart(id);
   if(res){
-    e.target.parentNode.parentNode.parentNode.remove();
+    document.querySelector(`div[data-id='${id}']`).remove();
+    cart = cart.filter((product) => product.productId.id !== id);
+    updateSubTotal();
+    updateTotal();
   }else{
     alert("Ocurrió un error al eliminar el producto");
   }
@@ -439,7 +475,7 @@ function createProductCardTemplate(id, imageUrl, marca, description, quantity, p
   
   const productPrice = createElement('h3', null, `S/. ${price.toFixed(2)}`);
 
-  subtotal += price;
+  subtotal += price * quantity;
   
   contentPrice.appendChild(productPrice);
   
@@ -452,7 +488,7 @@ function createProductCardTemplate(id, imageUrl, marca, description, quantity, p
 }
 
 async function renderCardItem(){
-  const cart = await module.getCartProducts();
+  cart = await module.getCartProducts();
   document.querySelector(".loader").classList.add("hidden");
   cart.forEach((product) => {
     const cardItem = createProductCardTemplate(
@@ -465,15 +501,19 @@ async function renderCardItem(){
     );
     document.querySelector('.content_items').appendChild(cardItem);
   });
-  document.getElementById("quantity_indicator").innerText = cart.length;
   updateTotal();
 }
 
 function updateTotal(){
   const envioP = parseFloat(subtotal.toFixed(2) * 0.02);
   const total = parseFloat(subtotal + envioP);
+  document.getElementById("quantity_indicator").innerText = document.querySelectorAll(".card_item").length;
   document.getElementById("subtotal_price").innerText = `S/. ${subtotal.toFixed(2)}`;
   document.getElementById("total_envio").innerText = `S/. ${envioP.toFixed(2)}`;
   document.getElementById("total_price").innerText = `S/. ${total.toFixed(2)}`;
   document.getElementById("total_confirm").innerText = `S/. ${total.toFixed(2)}`;
+}
+
+function updateSubTotal(){
+  subtotal = cart.reduce((acc, product) => acc + (product.productId.price * product.quantity), 0);
 }
