@@ -4,6 +4,8 @@ import com.example.spacer.spacerbackend.models.ClientModel;
 import com.example.spacer.spacerbackend.repositories.ClientRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -24,11 +26,13 @@ public class ClientService {
     this.cartService = cartService;
   }
 
+  @CacheEvict(value = "clients", key = "allClients")
   public ClientModel[] getAllClients() {
     List<ClientModel> clients = clientRepository.findAll();
     return clients.toArray(new ClientModel[0]);
   }
 
+  @CacheEvict(value = "clients", key = "allClients")
   public ClientModel newClient(ClientModel client) {
     if (client.getId() != null) {
       client.setId(null);
@@ -38,6 +42,7 @@ public class ClientService {
     return clientRepository.save(client);
   }
 
+  @CacheEvict(value = "client", key = "#username")
   public ClientModel updateClient(ClientModel client, String username) {
     try {
       if (username != null) {
@@ -55,6 +60,17 @@ public class ClientService {
       }
     } catch (Exception e) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+    }
+  }
+
+  @Cacheable(value = "client", key = "#username")
+  public ClientModel getClientByUsername(String username) {
+    Optional<ClientModel> client = clientRepository.findOneByUsername(username);
+    if (client.isPresent()) {
+      int test = client.get().getCart().size();
+      return client.get();
+    } else {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El cliente con el username '{username}' no existe");
     }
   }
 
@@ -94,6 +110,7 @@ public class ClientService {
     return currentClientData;
   }
 
+  @CacheEvict(value = "client", key = "#client.username")
   public ClientModel deleteClient(ClientModel client) {
     if (client.getId() != null) {
       Optional<ClientModel> existingClient = clientRepository.findById(client.getId());
@@ -107,15 +124,7 @@ public class ClientService {
     throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No se puede procesar la petición sin el id del cliente.");
   }
 
-  public ClientModel getClientByUsername(String username) {
-    Optional<ClientModel> client = clientRepository.findOneByUsername(username);
-    if (client.isPresent()) {
-      return client.get();
-    } else {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El cliente con el username '{username}' no existe");
-    }
-  }
-
+  @CacheEvict(value = "client", key = "#username")
   public ClientModel addToCart(Map<String, Integer> formData, String username) {
     try {
       Optional<ClientModel> existingClient = clientRepository.findOneByUsername(username);
@@ -137,6 +146,7 @@ public class ClientService {
     }
   }
 
+  @CacheEvict(value = "client", key = "#username")
   public ClientModel decreaseProduct(Long productId, String username) {
     try {
       Optional<ClientModel> existingClient = clientRepository.findOneByUsername(username);
@@ -155,6 +165,7 @@ public class ClientService {
     }
   }
 
+  @CacheEvict(value = "client", key = "#username")
   public boolean deleteProductOnCart(Long productId, String username) {
     try {
       Optional<ClientModel> existingClient = clientRepository.findOneByUsername(username);
