@@ -134,3 +134,11 @@ span#error.hidden {
   font-size: 0.8rem;
   color: aqua;
 }
+
+
+
+.opciones_login{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
