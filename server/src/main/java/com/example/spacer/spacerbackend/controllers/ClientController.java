@@ -3,6 +3,7 @@ package com.example.spacer.spacerbackend.controllers;
 import com.example.spacer.spacerbackend.auth.TokensUtils;
 import com.example.spacer.spacerbackend.models.ClientModel;
 import com.example.spacer.spacerbackend.services.ClientService;
+import com.example.spacer.spacerbackend.services.MailSenderService;
 import com.example.spacer.spacerbackend.services.Response;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,10 +20,12 @@ import java.util.Map;
 @RequestMapping("/api/cliente")
 public class ClientController {
   ClientService clientService;
+  MailSenderService mailSenderService;
 
   @Autowired
-  public ClientController(ClientService clientService) {
+  public ClientController(ClientService clientService, MailSenderService mailSenderService) {
     this.clientService = clientService;
+    this.mailSenderService = mailSenderService;
   }
 
   @GetMapping()
@@ -123,6 +126,7 @@ public class ClientController {
       );
 
       assert payload != null;
+      boolean pwdChanged = formData.containsKey("new-password");
 
       ClientModel client = this.formDataToClientModel(formData);
 
@@ -131,6 +135,11 @@ public class ClientController {
       }
 
       ClientModel cs = this.clientService.updateClient(client, payload.get("username").toString());
+
+      if(pwdChanged){
+        mailSenderService.sendPwdChanged(cs.getEmail());
+      }
+
       Response response = new Response(HttpStatus.OK, HttpStatus.OK.name(), cs);
       return new ResponseEntity<>(response, HttpStatus.OK);
     } catch (Exception e) {
