@@ -15,13 +15,14 @@ public class TokensUtils {
   private final static String ACCESS_TOKEN_SECRET = "sE7e9KY6SDYBqCfRWtL+PuBW6alRsah8UqXcdRRIXx8=";
   private final static Long ACCESS_TOKEN_VALIDITY_SECONDS = 5400L;
 
-  public static String createToken(String username, String email) {
+  public static String createToken(String username, String email, Long userId) {
     long expirationTime = ACCESS_TOKEN_VALIDITY_SECONDS * 1_000;
     Date expirationDate = new Date(System.currentTimeMillis() + expirationTime);
 
     Map<String, Object> claims = new HashMap<>();
     claims.put("email", email);
     claims.put("username", username);
+    claims.put("userId", userId);
 
 
     return Jwts.builder().setSubject(username).setExpiration(expirationDate).addClaims(claims)

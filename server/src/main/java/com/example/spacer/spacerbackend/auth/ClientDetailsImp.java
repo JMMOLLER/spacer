@@ -53,4 +53,8 @@ public class ClientDetailsImp implements UserDetails {
     return ClientModel.getEmail();
   }
 
+  public Long getId() {
+    return ClientModel.getId();
+  }
+
 }
