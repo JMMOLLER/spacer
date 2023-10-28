@@ -26,12 +26,12 @@ public class MailSenderService {
     this.helper = new MimeMessageHelper(message, true);
   }
 
-  public void sendForgotPwd(String to) throws MessagingException {
+  public void sendForgotPwd(String to, String reqId) throws MessagingException {
     String subject = "¿Olvidaste tu contraseña?";
     helper.setTo(to);
     helper.setSubject(subject);
 
-    String htmlContent = emailTemplateService.getTemplateForgotPwd(subject);
+    String htmlContent = emailTemplateService.getTemplateForgotPwd(subject, reqId);
     helper.setText(htmlContent, true);
 
     mailSender.send(message);

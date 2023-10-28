@@ -2,7 +2,6 @@ package com.example.spacer.spacerbackend.services;
 
 import com.example.spacer.spacerbackend.models.ClientModel;
 import com.example.spacer.spacerbackend.repositories.ClientRepository;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -26,13 +25,13 @@ public class ClientService {
     this.cartService = cartService;
   }
 
-  @CacheEvict(value = "clients", key = "allClients")
+  @Cacheable(value = "clients")
   public ClientModel[] getAllClients() {
     List<ClientModel> clients = clientRepository.findAll();
     return clients.toArray(new ClientModel[0]);
   }
 
-  @CacheEvict(value = "clients", key = "allClients")
+  @CacheEvict(value = "clients", allEntries = true)
   public ClientModel newClient(ClientModel client) {
     if (client.getId() != null) {
       client.setId(null);
@@ -71,6 +70,31 @@ public class ClientService {
       return client.get();
     } else {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El cliente con el username '{username}' no existe");
+    }
+  }
+
+  @CacheEvict(value = "client", key = "#client.getUsername()")
+  public ClientModel updatePassword(Long userId, String newPassword){
+    try {
+      Optional<ClientModel> existingClient = clientRepository.findById(userId);
+      if (existingClient.isPresent()) {
+        ClientModel client = existingClient.get();
+
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        if (newPassword.trim().length() < 6) {
+          throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La nueva contraseña debe tener al menos 6 caracteres.");
+        } else if (encoder.matches(newPassword, client.getPassword())) {
+          throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La nueva contraseña no puede ser igual a la anterior.");
+        }
+
+        client.setPassword(new BCryptPasswordEncoder().encode(newPassword));
+        clientRepository.save(client);
+        return client;
+      } else {
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El cliente no existe");
+      }
+    } catch (Exception e) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
     }
   }
 
@@ -182,5 +206,10 @@ public class ClientService {
     } catch (Exception e) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
     }
+  }
+
+  public ClientModel getClientByEmail(String email) {
+    Optional<ClientModel> client = clientRepository.findOneByEmail(email);
+    return client.orElse(null);
   }
 }
