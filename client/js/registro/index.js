@@ -16,7 +16,7 @@ export default function init() {
 const handleFormSubmit = (e) => {
   e.preventDefault();
   const form = new FormData(e.target);
-  form.forEach((value, key) => console.log(key + ": ", value));
+  // form.forEach((value, key) => console.log(key + ": ", value));
   toggleSubmit("Registrando...");
   handleRegister(Object.fromEntries(form));
 };

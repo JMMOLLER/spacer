@@ -50,6 +50,7 @@ public class ClientController {
   public ResponseEntity<Response> createClient(@RequestBody ClientModel cliente) {
     try {
       ClientModel cs = this.clientService.newClient(cliente);
+      mailSenderService.sendNewClient(cs.getEmail(), cs.getUsername());
       Response response = new Response(HttpStatus.CREATED, HttpStatus.CREATED.name(), cs);
       return new ResponseEntity<>(response, HttpStatus.CREATED);
     } catch (Exception e) {

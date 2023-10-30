@@ -48,4 +48,16 @@ public class MailSenderService {
 
     mailSender.send(message);
   }
+
+  public void sendNewClient(String to, String username) throws MessagingException {
+    String subject = "¡Bienvenido a Spacer!";
+
+    helper.setTo(to);
+    helper.setSubject(subject);
+
+    String htmlContent = emailTemplateService.getTemplateNewClient(subject, username);
+    helper.setText(htmlContent, true);
+
+    mailSender.send(message);
+  }
 }

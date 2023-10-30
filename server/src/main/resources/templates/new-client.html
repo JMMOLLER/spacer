@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title th:text="${title}"></title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        .html {
+            background-color: #ccc;
+        }
+
+        .body {
+            min-width: 320px;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: white;
+        }
+
+        header {
+            width: 100%;
+            padding-top: 1rem;
+        }
+
+        .header-icon {
+            width: 50%;
+            margin-left: 25%;
+        }
+
+        .main {
+            text-align: justify-all;
+            font-family: Arial, sans-serif;
+            padding: 0 30px;
+        }
+
+        .title-main {
+            text-align: center;
+            font-size: 1.5rem;
+            margin-top: 15px;
+        }
+
+        .text-main {
+            margin: 10px 0;
+        }
+
+        .main-button {
+            all: unset;
+            display: block;
+            text-align: center;
+            text-decoration: none;
+            background-color: aquamarine;
+            border-radius: 50px;
+            color: black !important;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .main-link {
+            all: unset;
+            display: block;
+            color: cornflowerblue;
+            font-weight: bold;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        footer {
+            height: 80px;
+            background-color: #f1f1f1;
+            align-items: center;
+            justify-content: space-around;
+            padding: 1rem 0;
+            margin-top: 1rem;
+        }
+
+        footer{
+            position: relative;
+            background: #373737;
+            box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.12);
+            box-sizing: border-box;
+            width: 100%;
+            text-align: left;
+            font: bold 16px sans-serif;
+            justify-content: space-around;
+            align-content: center;
+            height: auto;
+        }
+
+        footer .footer-left,
+        footer .footer-center,
+        footer .footer-right{
+            display: block;
+            width: 100%;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* Footer left */
+
+        footer .footer-left{
+            width: auto;
+        }
+
+        /* The company logo */
+
+        .footer-left h3 {
+            width: 100%;
+        }
+
+        .footer-left h3 > * {
+            width: 100%;
+        }
+
+        /* Footer links */
+
+        footer .footer-links{
+            color:  #ffffff;
+            margin: 20px 0 12px;
+            padding: 0;
+            text-align: center;
+        }
+
+        footer .footer-links a{
+            display:inline-block;
+            line-height: 1.8;
+            font-weight:400;
+            text-decoration: none;
+            color:  inherit;
+        }
+
+        footer .footer-company-name{
+            color:  #fff;
+            font-size: 14px;
+            font-weight: normal;
+            text-align: center;
+            margin: 0;
+        }
+
+        /* Footer Center */
+
+        footer .footer-center{
+            font-style: inherit;
+        }
+
+        footer .footer-center i{
+            background-color:  #33383b;
+            color: #ffffff;
+            font-size: 25px;
+            text-align: center;
+            line-height: 42px;
+            vertical-align: middle;
+        }
+
+        footer .footer-center i{
+            font-size: 17px;
+            line-height: 38px;
+        }
+
+        footer .footer-center p{
+            display: inline-block;
+            color: #ffffff;
+            font-weight:400;
+            vertical-align: middle;
+            margin:0;
+        }
+
+        footer .footer-center p span{
+            display:block;
+            font-weight: normal;
+            font-size:14px;
+            line-height:2;
+        }
+
+        footer .footer-center p a{
+            color:  lightseagreen;
+            text-decoration: none;
+        }
+
+        /* Footer Right */
+
+        footer .footer-right{
+            padding: 0 10px;
+        }
+
+        footer .footer-company-about{
+            line-height: 20px;
+            color:  #92999f;
+            font-size: 13px;
+            font-weight: normal;
+            margin: 0;
+        }
+
+        footer .footer-company-about span{
+            display: block;
+            color:  #ffffff;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        footer .footer-icons{
+            margin: 15px 0;
+        }
+
+        footer .footer-icons .icon {
+            display: inline-block;
+            height: 10px;
+            width: 10px;
+            cursor: pointer;
+            background-color:  #33383b;
+            border-radius: 2px;
+            background-size: 60%;
+            background-position: center;
+            background-repeat: no-repeat;
+
+            padding: 10px;
+            box-sizing: content-box;
+        }
+
+        .icon.twitter {
+            background-image: url("https://imgur.com/A508kIl.png");
+        }
+        .icon.facebook {
+            background-image: url("https://imgur.com/NrU3fBb.png");
+        }
+        .icon.whatsapp {
+            background-image: url("https://i.imgur.com/8O9DwCR.png");
+        }
+
+    </style>
+</head>
+<body>
+<div class="html">
+    <div class="body">
+        <header>
+            <img
+                    src="https://i.imgur.com/oS51R6k.gif"
+                    alt="Lock icon" class="header-icon"
+            >
+        </header>
+        <div class="main">
+            <h1 class="title-main" th:text="${subject}"></h1>
+            <p class="text-main">
+                Estimado <span th:text="${username}"></span> su cuenta se registró exitosamente, apreciamos que nos haya elegido.
+            </p>
+            <p class="text-main">Ya puede comprar en nuestra tienda online. Explore en nuestro gran catálogo de productos y encuentre lo que busca.</p>
+            <p class="text-main">También puede personalizar su cuenta haciendo click en el botón de abajo:</p>
+
+            <a th:href="@{${urlPerfil}}" class="main-button">
+                Ir a mi perfil
+            </a>
+
+            <p class="text-main">Si no funciona, copia y pega el siguiente enlace en tu navegador:</p>
+
+            <a th:href="@{${urlPerfil}}" class="main-link">
+                <span th:text="${urlPerfil}"></span>
+            </a>
+        </div>
+        <footer>
+            <div class="footer-left">
+                <h3><img src="https://spacer-ecommerce.vercel.app/assets/imgs/logo-footer.png" alt="logo" /></h3>
+
+                <p class="footer-links">
+                    <a title="Ir a inicio" href="https://spacer-ecommerce.vercel.app/" target="_blank" class="link-1">Home</a>
+                    -
+                    <a title="Ver sobre nosotros" href="https://spacer-ecommerce.vercel.app/#about" target="_blank">About</a>
+                    -
+                    <a title="Ver preguntas" href="#">Faq</a>
+                    -
+                    <a title="Ir a contáctanos" href="https://spacer-ecommerce.vercel.app/#contact" target="_blank">Contact</a>
+                </p>
+            </div>
+
+            <address class="footer-center">
+                <div>
+                    <i class="fa fa-map"></i>
+                    <p>Jr. Hermán Velarde 260 Lima, Lima</p>
+                </div>
+                <div>
+                    <i class="fa fa-phone"></i>
+                    <p>930 517 169</p>
+                </div>
+                <div>
+                    <i class="fa fa-mail"></i>
+                    <p><a href="mailto:spacer.ecommerce@gmail.com">spacer.ecommerce@gmail.com</a></p>
+                </div>
+            </address>
+
+            <div class="footer-right">
+                <p class="footer-company-about">
+                    <span>Acerca de nosotros</span>
+                    Somos una empresa de venta de periféricos para tu PC, nosotros estamos
+                    dispuestos a ofrecerte el servicio de calidad que mereces.
+                </p>
+
+                <div class="footer-icons">
+                    <a title="Ir a twitter" href="#" class="icon twitter"></a>
+                    <a title="Ir a facebook" href="#" class="icon facebook"></a>
+                    <a title="Ir a whatsapp" href="#" class="icon whatsapp"></a>
+                </div>
+            </div>
+
+            <p class="footer-company-name">Spacer © 2023</p>
+        </footer>
+    </div>
+</div>
+</body>
+</html>
