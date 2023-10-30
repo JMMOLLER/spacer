@@ -9,12 +9,12 @@ import java.io.Serializable;
 @Getter
 @Setter
 @Entity
-@Table(name = "password_reset")
+@Table(name = "contraseñas")
 public class PasswordResetModel implements Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
-  @Column(name="idpwdres")
+  @Column(name="idcon")
   private String id;
 
   @Column(name="idcli")
