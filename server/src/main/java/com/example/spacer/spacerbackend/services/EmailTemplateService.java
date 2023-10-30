@@ -33,4 +33,15 @@ public class EmailTemplateService {
       return templateEngine.process("password-changed", context);
   }
 
+  public String getTemplateNewClient(String subject, String username){
+
+      Context context = new Context();
+      context.setVariable("subject", "Gracias por registrarte");
+      context.setVariable("title", subject);
+      context.setVariable("username", username);
+      context.setVariable("urlPerfil", urlBase + "/pages/perfil/");
+
+      return templateEngine.process("new-client", context);
+  }
+
 }
