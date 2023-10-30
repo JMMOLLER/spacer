@@ -65,10 +65,15 @@ public class ClientModel implements Serializable {
   private String email;
   @lombok.Setter
   private String username;
-
-
   public void setId(Long id) {
     this.id = id;
+  }
+
+  // This method is used to get the url of the image of the client - not must be deleted
+  public String getUrlImg() {
+    HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
+    String urlBase = request.getRequestURL().toString().replace(request.getRequestURI(), request.getContextPath());
+    return urlBase + "/cliente/" + this.username + ".jpg";
   }
 
 }
