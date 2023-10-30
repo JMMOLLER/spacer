@@ -61,14 +61,15 @@ public class CartService {
 
       CartModel existingCart = this.findExisting(clientId, productId);
 
-      if (existingCart != null) {
-        this.findAndUpdate(existingCart, quantity);
-      }else{
+      if(quantity < 1) throw new Exception("La cantidad no puede ser menor a 1");
 
-        if(quantity < 1) throw new Exception("La cantidad no puede ser menor a 1");
-
+      if (existingCart == null) {
         this.newCart(productId, clientId, quantity);
+        return;
       }
+
+      this.findAndUpdate(existingCart, quantity);
+
     } catch (Exception e) {
       throw new RuntimeException(e);
     }

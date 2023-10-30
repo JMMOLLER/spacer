@@ -71,9 +71,4 @@ public class ClientModel implements Serializable {
     this.id = id;
   }
 
-  public String getUrlImg() {
-    HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
-    String urlBase = request.getRequestURL().toString().replace(request.getRequestURI(), request.getContextPath());
-    return urlBase + "/cliente/" + this.username + ".jpg";
-  }
 }
