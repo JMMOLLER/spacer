@@ -3,11 +3,25 @@ const module = Global.getInstance();
 let eventSubmitIsAdded = false;
 
 export default function init() {
+  const btnBack = document.querySelector(".animation_arrow_container");
   addBackLottieAnim();
+  addBackEventListener(btnBack);
   module
     .userIsAuth()
     .then((res) => (res ? (window.location.href = "/") : null));
   forceAddEventSubmit();
+}
+
+/**
+ * @description Función que se encarga de añadir el evento click al botón de regresar.
+ * 
+ * @param {HTMLElement} el 
+ */
+function addBackEventListener(el) {
+  el.addEventListener("click", (e) => {
+    e.preventDefault();
+    window.history.back();
+  });
 }
 
 /**
@@ -118,4 +132,4 @@ const forceAddEventSubmit = () => {
   }, 500);
 };
 
-export { toggleSubmit, addBackLottieAnim, showError };
+export { toggleSubmit, addBackLottieAnim, showError, addBackEventListener };

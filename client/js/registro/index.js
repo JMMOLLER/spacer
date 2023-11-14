@@ -1,16 +1,24 @@
 import { inputValidator } from "../utils/index.js";
-import { addBackLottieAnim, toggleSubmit, showError } from "../login/index.js";
+import {
+  addBackLottieAnim,
+  toggleSubmit,
+  showError,
+  addBackEventListener,
+} from "../login/index.js";
 import { inputHandler } from "../perfil/index.js";
 import Global from "../globals/index.js";
 const module = Global.getInstance();
 
 export default function init() {
+  const form = document.querySelector("form.spacer_form");
+  const btnBack = document.querySelector(".animation_arrow_container");
+  form.addEventListener("submit", handleFormSubmit);
+  addBackEventListener(btnBack);
   addBackLottieAnim();
-  document
-    .querySelector("form.spacer_form")
-    .addEventListener("submit", handleFormSubmit);
   inputController();
-  module.userIsAuth().then((res) => (res ? (window.location.href = "/") : null));
+  module
+    .userIsAuth()
+    .then((res) => (res ? (window.location.href = "/") : null));
 }
 
 const handleFormSubmit = (e) => {
@@ -25,10 +33,12 @@ const handleRegister = async (credentials) => {
   showError(false);
   const res = await module.fetchAPI("/cliente", credentials, "POST");
   if (res?.statusCode === 201) {
-    if(await module.login(credentials)){
+    if (await module.login(credentials)) {
       window.location.href = "/";
-    }else{
-      alert("Ha ocurrido un error al iniciar sesión, por favor inicia sesión manualmente.");
+    } else {
+      alert(
+        "Ha ocurrido un error al iniciar sesión, por favor inicia sesión manualmente."
+      );
       toggleSubmit("Registrarse");
       showError(true);
     }
