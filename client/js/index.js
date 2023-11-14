@@ -2,6 +2,8 @@ const path = window.location.pathname;
 
 window.location.protocol.includes("http:") ? console.info(path) : null;
 
+let nextStep;
+
 switch (true) {
   case (path === "/" || path.includes("index")):
     import("./home/index.js").then((module) => module.default());
@@ -22,7 +24,10 @@ switch (true) {
     import("./productos/index.js").then((module) => module.default());
     break;
   case path.includes("/pages/forgot-password"):
-    import("./forgotPassword/index.js").then((module) => module.default());
+    import("./forgotPassword/index.js").then((module) => {
+      module.default();
+      nextStep = module.nextStep;
+    });
     break;
   default:
     console.warn("404 - No reconocemos esta ruta.");

@@ -18,38 +18,51 @@ export default function init() {
  * @description Función que se encarga de añadir el evento click al botón de regresar.
  *
  * @param {HTMLElement} el
+ * @param {HTMLElement | null} customAnimEl
  */
-function addBackEventListener(el) {
-  addAnimationClose(el, false, () => {
+function addBackEventListener(el, customAnimEl) {
+  const callback = () => {
     window.history.back();
-  });
+  };
+  addAnimationClose(el, false, callback, customAnimEl);
 }
 
 /**
+ * @summary Función que se encarga de añadir una animación cuando cambias entre formularios.
+ * 
+ * @description La función esta principalmente orientada para que el parametro firstEl sea un elemento de tipo <a> por lo que existe el parametro continueDefault que se encarga de continuar con el comportamiento por defecto y el customAnimEl que se encarga de añadir la animación a un elemento personalizado ya que por defecto se añade la animación al elemento con la clase .spacer_form. Por último tenermos el parametro callback que se encarga de ejecutar una función personalizada cuando la animación ha terminado.
  *
- * @param {HTMLElement} el
+ * @param {HTMLElement} firstEl
  * @param {boolean} continueDefault
- * @param {CallableFunction} callback
+ * @param {CallableFunction | null} callback
+ * @param {HTMLElement | null} customAnimEl
  */
-function addAnimationClose(el, continueDefault, callback) {
-  el.classList.add("close");
+function addAnimationClose(firstEl, continueDefault, callback, customAnimEl) {
   const handleClick = (e) => {
     e.preventDefault();
 
-    const form = document.querySelector(".spacer_form");
-    form.classList.add("close");
+    customAnimEl = 
+      customAnimEl 
+        ? customAnimEl
+        : document.querySelector("form.spacer_form");
 
-    form.addEventListener("animationend", () => {
+    customAnimEl.classList.toggle("close");
+
+    const handleAnimationEnd = () => {
       if (continueDefault) {
-        el.removeEventListener("click", handleClick);
-        e.target.click();
+        firstEl.removeEventListener("click", handleClick);
+        firstEl.click();
       }
       if (typeof callback === "function") {
         callback();
       }
-    });
+      e.target.removeEventListener("animationend", handleAnimationEnd);
+    };
+
+    customAnimEl.addEventListener("animationend", handleAnimationEnd);
+    e.target.removeEventListener("click", handleClick);
   };
-  el.addEventListener("click", handleClick);
+  firstEl.addEventListener("click", handleClick);
 }
 
 /**
@@ -84,21 +97,23 @@ const showError = (show) => {
  * @description Función que se encarga de añadir la animación de lottie al botón de regresar.
  */
 const addBackLottieAnim = () => {
-  const returnElement = document.querySelector(".animation_arrow_container");
+  const returnElement = document.querySelectorAll(".animation_arrow_container");
 
-  const animation = lottie.loadAnimation({
-    container: document.getElementById("animation_arrow"),
-    renderer: "svg",
-    loop: false,
-    autoplay: false,
-    path: "../assets/lotties/arrow-left.json",
-  });
-
-  returnElement.addEventListener("mouseenter", () => {
-    animation.play();
-  });
-  animation.addEventListener("complete", () => {
-    animation.stop();
+  returnElement.forEach((el) => {
+    const animation = lottie.loadAnimation({
+      container: el.children[0],
+      renderer: "svg",
+      loop: false,
+      autoplay: false,
+      path: "../assets/lotties/arrow-left.json",
+    });
+  
+    el.addEventListener("mouseenter", () => {
+      animation.play();
+    });
+    animation.addEventListener("complete", () => {
+      animation.stop();
+    });
   });
 };
 
