@@ -1,6 +1,5 @@
 package com.example.spacer.spacerbackend.services;
 
-import com.example.spacer.spacerbackend.models.ClientModel;
 import com.example.spacer.spacerbackend.models.PasswordResetModel;
 import com.example.spacer.spacerbackend.repositories.PasswordResetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,12 +30,7 @@ public class PasswordResetService {
     return this.passwordResetRepository.findById(id).orElse(null);
   }
 
-  public boolean deleteRequestReset(String id) {
-    try {
-      this.passwordResetRepository.deleteById(id);
-      return true;
-    } catch (Exception e) {
-      return false;
-    }
+  public void deleteRequestReset(String id) {
+    this.passwordResetRepository.deleteById(id);
   }
 }

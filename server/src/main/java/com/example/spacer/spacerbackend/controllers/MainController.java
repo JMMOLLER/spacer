@@ -49,13 +49,12 @@ public class MainController {
 
   @GetMapping("/api")
   public ResponseEntity<?> apiHome() {
-    return new ResponseEntity<>(new Response(HttpStatus.OK, HttpStatus.OK.name(), "Welcome to Spacer API on v1.3.1 🚀!"), HttpStatus.OK);
+    return new ResponseEntity<>(new Response(HttpStatus.OK, HttpStatus.OK.name(), "Welcome to Spacer API on v1.3.2 🚀!"), HttpStatus.OK);
   }
 
   @PostMapping("/cliente/reset-password")
   private ResponseEntity<Response> createForgotPasswordRequest(@RequestBody Map<String, String> body) {
     try {
-
       ClientModel client = this.clientService.getClientByEmail(body.get("email"));
 
       if (client == null) {
@@ -71,7 +70,7 @@ public class MainController {
 
       String reqId = this.passwordResetService.createRequestReset(client.getId());
 
-      this.mailSenderService.sendForgotPwd(client.getEmail(), reqId);
+      this.mailSenderService.sendForgotPwd(client.getEmail(), reqId.substring(0, 5).toUpperCase());
 
       Response response = new Response(HttpStatus.CREATED, HttpStatus.CREATED.name(), null);
       return new ResponseEntity<>(response, HttpStatus.OK);
