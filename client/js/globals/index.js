@@ -184,13 +184,13 @@ class Global {
 
   /**
    *
-   * @param {string} path
-   * @param {object} requestOptions
+   * @param {string} url
+   * @param {requestOptions} requestOptions
    * @returns {Promise<API_RESPONSE>}
    */
-  async customFetch(path, requestOptions) {
+  async customFetch(url, requestOptions) {
     try {
-      let res = await fetch(`${this.#API_URL}${path}`, requestOptions);
+      let res = await fetch(url, requestOptions);
       if (!res.ok) {
         const error = await res.json();
         return error;

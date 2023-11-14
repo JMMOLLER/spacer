@@ -30,3 +30,12 @@
  * @property {string} key - La clave del parámetro.
  * @property {string} value - El valor del parámetro.
  */
+
+/**
+ * @typedef {Object} requestOptions
+ * @property {string} method
+ * @property {object} headers
+ * @property {object} body
+ * @property {string} redirect
+ * @property {string} referrerPolicy
+ */
