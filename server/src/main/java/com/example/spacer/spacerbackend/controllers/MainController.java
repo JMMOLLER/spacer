@@ -49,13 +49,22 @@ public class MainController {
 
   @GetMapping("/api")
   public ResponseEntity<?> apiHome() {
-    return new ResponseEntity<>(new Response(HttpStatus.OK, HttpStatus.OK.name(), "Welcome to Spacer API on v1.3.2 🚀!"), HttpStatus.OK);
+    return new ResponseEntity<>(new Response(HttpStatus.OK, HttpStatus.OK.name(), "Welcome to Spacer API on v1.3.3 🚀!"), HttpStatus.OK);
   }
 
   @PostMapping("/cliente/reset-password")
-  private ResponseEntity<Response> createForgotPasswordRequest(@RequestBody Map<String, String> body) {
+  private ResponseEntity<Response> createForgotPasswordRequest(@RequestBody Map<String, String> body, @RequestParam String consultCode) {
     try {
       ClientModel client = this.clientService.getClientByEmail(body.get("email"));
+
+      if(consultCode != null){
+        PasswordResetModel pr = this.passwordResetService.getPrByCode(consultCode.toLowerCase(), client.getId());
+        if(pr == null || !pr.getId().toUpperCase().startsWith(consultCode)){
+          return new ResponseEntity<>(new Response(HttpStatus.NOT_FOUND, "Código no reconocido", null), HttpStatus.NOT_FOUND);
+        }else {
+          return new ResponseEntity<>(new Response(HttpStatus.OK, HttpStatus.OK.name(), null), HttpStatus.OK);
+        }
+      }
 
       if (client == null) {
         Response response = new Response(HttpStatus.NOT_FOUND, "El email no existe", null);
@@ -80,24 +89,36 @@ public class MainController {
     }
   }
 
-  @PutMapping("/cliente/reset-password/{prId}")
+  @PutMapping("/cliente/reset-password/{code}")
   @ResponseBody
-  public ResponseEntity<Response> updatePassword(@RequestBody Map<String, Object> formData, @PathVariable String prId) {
+  public ResponseEntity<Response> updatePassword(@RequestBody Map<String, String> formData, @PathVariable String code) {
     try {
 
-      if(!Objects.equals(formData.get("new-password").toString(), formData.get("confirm-password").toString())){
+      if(formData.get("new-password") == null || formData.get("confirm-password") == null){
+        Response response = new Response(HttpStatus.BAD_REQUEST, "Las contraseñas no pueden estar vacías", null);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+      }
+
+      if(formData.get("new-password").trim().length() < 8){
+        Response response = new Response(HttpStatus.BAD_REQUEST, "La contraseña debe tener al menos 8 caracteres", null);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+      }
+
+      if(formData.get("new-password").equals(formData.get("confirm-password"))){
         Response response = new Response(HttpStatus.BAD_REQUEST, "Las contraseñas no coinciden", null);
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
       }
 
-      PasswordResetModel pr = this.passwordResetService.getPrById(prId);
+      Long clientId = this.clientService.getClientByEmail(formData.get("email")).getId();
+
+      PasswordResetModel pr = this.passwordResetService.getPrByCode(code, clientId);
 
       if(pr == null){
         return new ResponseEntity<>(new Response(HttpStatus.NOT_FOUND, "El link ha expirado", null), HttpStatus.NOT_FOUND);
       }
 
-      ClientModel client = this.clientService.updatePassword(pr.getClientId(), formData.get("new-password").toString());
-      this.passwordResetService.deleteRequestReset(prId);
+      ClientModel client = this.clientService.updatePassword(pr.getClientId(), formData.get("new-password"));
+      this.passwordResetService.deleteRequestReset(code);
       this.mailSenderService.sendPwdChanged(client.getEmail());
 
       Response response = new Response(HttpStatus.OK, HttpStatus.OK.name(), null);

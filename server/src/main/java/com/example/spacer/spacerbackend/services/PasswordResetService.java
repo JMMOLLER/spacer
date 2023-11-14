@@ -26,8 +26,13 @@ public class PasswordResetService {
     return this.passwordResetRepository.findOneByClientId(clientId).orElse(null);
   }
 
-  public PasswordResetModel getPrById(String id) {
-    return this.passwordResetRepository.findById(id).orElse(null);
+  public PasswordResetModel getPrByCode(String code, Long clientId) {
+    PasswordResetModel pr = this.passwordResetRepository.findByCode(code, clientId).orElse(null);
+    if (pr == null) return null;
+    else {
+      if (pr.getId().substring(0, 5).equals(code)) return pr;
+      else return null;
+    }
   }
 
   public void deleteRequestReset(String id) {
