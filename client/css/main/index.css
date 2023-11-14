@@ -5,6 +5,7 @@
 @import url("./perfil.css");
 @import url("./carrito.css");
 @import url("./registro.css");
+@import url("./forgot-password.css");
 
 main {
   position: relative;

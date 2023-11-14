@@ -4,8 +4,10 @@ let eventSubmitIsAdded = false;
 
 export default function init() {
   const btnBack = document.querySelector(".animation_arrow_container");
+  const linkElements = document.querySelectorAll(".opciones_login > a");
   addBackLottieAnim();
   addBackEventListener(btnBack);
+  linkElements.forEach((el) => addAnimationClose(el, true));
   module
     .userIsAuth()
     .then((res) => (res ? (window.location.href = "/") : null));
@@ -14,14 +16,40 @@ export default function init() {
 
 /**
  * @description Función que se encarga de añadir el evento click al botón de regresar.
- * 
- * @param {HTMLElement} el 
+ *
+ * @param {HTMLElement} el
  */
 function addBackEventListener(el) {
-  el.addEventListener("click", (e) => {
-    e.preventDefault();
+  addAnimationClose(el, false, () => {
     window.history.back();
   });
+}
+
+/**
+ *
+ * @param {HTMLElement} el
+ * @param {boolean} continueDefault
+ * @param {CallableFunction} callback
+ */
+function addAnimationClose(el, continueDefault, callback) {
+  el.classList.add("close");
+  const handleClick = (e) => {
+    e.preventDefault();
+
+    const form = document.querySelector(".spacer_form");
+    form.classList.add("close");
+
+    form.addEventListener("animationend", () => {
+      if (continueDefault) {
+        el.removeEventListener("click", handleClick);
+        e.target.click();
+      }
+      if (typeof callback === "function") {
+        callback();
+      }
+    });
+  };
+  el.addEventListener("click", handleClick);
 }
 
 /**
@@ -44,8 +72,8 @@ const toggleSubmit = (inputValue, button) => {
 
 /**
  * @description Función que se encarga de mostrar u ocultar el mensaje de error.
- * 
- * @param {boolean} show 
+ *
+ * @param {boolean} show
  */
 const showError = (show) => {
   const span = document.querySelector("#error");
@@ -76,8 +104,8 @@ const addBackLottieAnim = () => {
 
 /**
  * @description Función que se encarga de manejar el evento submit del formulario.
- * 
- * @param {InputEvent} e 
+ *
+ * @param {InputEvent} e
  */
 const handleSubmit = (e) => {
   e.preventDefault();
@@ -88,13 +116,13 @@ const handleSubmit = (e) => {
 
 /**
  * @description Función que se encarga de realizar el login del usuario
- * 
- * @param {FormData} credentials 
- * @returns 
+ *
+ * @param {FormData} credentials
+ * @returns
  */
 const handleLogin = async (credentials) => {
   showError(false);
-  const res = await module.login(Object.fromEntries(credentials))
+  const res = await module.login(Object.fromEntries(credentials));
   if (res) {
     window.location.href = "/";
   } else {
@@ -132,4 +160,10 @@ const forceAddEventSubmit = () => {
   }, 500);
 };
 
-export { toggleSubmit, addBackLottieAnim, showError, addBackEventListener };
+export {
+  toggleSubmit,
+  addBackLottieAnim,
+  showError,
+  addBackEventListener,
+  addAnimationClose,
+};

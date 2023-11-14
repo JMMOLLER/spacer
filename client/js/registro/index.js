@@ -4,6 +4,7 @@ import {
   toggleSubmit,
   showError,
   addBackEventListener,
+  addAnimationClose,
 } from "../login/index.js";
 import { inputHandler } from "../perfil/index.js";
 import Global from "../globals/index.js";
@@ -12,8 +13,10 @@ const module = Global.getInstance();
 export default function init() {
   const form = document.querySelector("form.spacer_form");
   const btnBack = document.querySelector(".animation_arrow_container");
+  const link = document.querySelector(".link-login");
   form.addEventListener("submit", handleFormSubmit);
   addBackEventListener(btnBack);
+  addAnimationClose(link, true);
   addBackLottieAnim();
   inputController();
   module
