@@ -1,7 +1,7 @@
 /**
  * @typedef {Object} API_RESPONSE
  * @property {number} statusCode - El código de estado de la respuesta.
- * @property {string} message - El mensaje asociado a la respuesta.
+ * @property {string} description - El mensaje asociado a la respuesta.
  * @property {any} response - La respuesta de la API (puede ser un objeto o null).
  */
 
