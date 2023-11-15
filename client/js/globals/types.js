@@ -32,8 +32,8 @@
  */
 
 /**
- * @typedef {Object} requestOptions
- * @property {string} method
+ * @typedef {Object} RequestOptions
+ * @property {"GET" | "POST" | "PUT" | "DELETE"} method
  * @property {object} headers
  * @property {object} body
  * @property {string} redirect
