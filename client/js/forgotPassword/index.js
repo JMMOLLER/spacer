@@ -170,34 +170,33 @@ function handlePasswordFormSubmit(event) {
 function handleSetter(obj, prop, value) {
   if (value > 3 || value < 0) value = 0;
   if (value === 0) {
-    handleNextStep(".spacer_form.success", ".spacer_form.email.hidden");
+    handleChangeStep(".spacer_form.email.hidden");
   } else if (value === 1) {
-    handleNextStep(".spacer_form.email", ".spacer_form.code.hidden");
+    handleChangeStep(".spacer_form.code.hidden");
   } else if (value === 2) {
-    handleNextStep(".spacer_form.code", ".spacer_form.password.hidden");
+    handleChangeStep(".spacer_form.password.hidden");
   } else if (value === 3) {
-    handleNextStep(".spacer_form.password", ".spacer_form.success.hidden");
+    handleChangeStep(".spacer_form.success.hidden");
   }
   obj[prop] = value;
   return true;
 }
 
 /**
- * @summary Este método se encarga de manejar la animación de el siguiente paso
+ * @summary Este método se encarga de manejar la animación cuando se cambia el valor de `currentStep` del objeto `steps`
  *
- * @param {string} currentCSSSelector
- * @param {string} nextCSSSelector
+ * @param {string} CSSSelector
  */
-function handleNextStep(currentCSSSelector, nextCSSSelector) {
-  const element = document.querySelector(currentCSSSelector);
+function handleChangeStep(CSSSelector) {
+  const currentForm = document.querySelector(".spacer_form:not(.hidden)");
   const callback = () => {
-    const newElement = document.querySelector(`${nextCSSSelector}.hidden`);
+    const newElement = document.querySelector(CSSSelector);
     newElement.classList.toggle("hidden");
-    element.classList.toggle("hidden");
-    element.classList.toggle("close");
+    currentForm.classList.toggle("hidden");
+    currentForm.classList.toggle("close");
   };
-  addAnimationClose(element, false, callback, element);
-  element.click();
+  addAnimationClose(currentForm, false, callback, currentForm);
+  currentForm.click();
 }
 
 export { nextStep };
