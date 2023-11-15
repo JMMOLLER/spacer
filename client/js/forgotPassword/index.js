@@ -43,25 +43,31 @@ let stepHandler = {
 let nextStep = new Proxy(steps, stepHandler);
 
 export default function init() {
-  const btnBack = document.querySelectorAll(".animation_arrow_container");
+  const btnBack = document.querySelector(".animation_arrow_container");
+  const btnCodeBack = document.querySelector("#code");
 
   addBackLottieAnim(); // Añade la animación al botón de regresar
 
-  btnBack.forEach((el) => addBackEventListener(el, el.parentElement)); // Añade el evento click al botón de regresar
+  addBackEventListener(btnBack, btnBack.parentElement); // Añade el evento click al botón de regresar
 
   document
     .querySelectorAll("form.spacer_form")
-    .forEach((form) => form.addEventListener("submit", handleFormSubmit)); // Añade el evento submit a los formularios
+    .forEach(
+      (form) => 
+      form.addEventListener("submit", handleFormSubmit)
+  ); // Añade el evento submit a los formularios
+
+  btnCodeBack.addEventListener("input", (e) => {
+    e.target.value = e.target.value.toLocaleUpperCase();
+    document.querySelector("#code").classList.remove("error");
+  }); // Añade el evento input al input del formulario código
 
   document
-    .querySelector("#code")
-    .addEventListener(
-      "input",
-      (e) => {
-        e.target.value = e.target.value.toLocaleUpperCase();
-        document.querySelector("#code").classList.remove("error")
-      }
-    ); // Añade el evento input al input del formulario código
+    .querySelector("form.code .animation_arrow_container")
+    .addEventListener("click", (e) => {
+      e.preventDefault();
+      nextStep.currentStep--;
+    }); // Añade el evento click al botón de regresar del formulario código
 }
 
 /**
@@ -70,27 +76,30 @@ export default function init() {
  * @param {InputEvent} event
  */
 function handleFormSubmit(event) {
-
   event.preventDefault();
 
-  const inputValue = event.target.querySelector("input[type='submit']").value;
+  const submitButton = event.target.querySelector("input[type='submit']");
 
-  toggleSubmit(inputValue, event.target.querySelector("input[type='submit']"));
+  const inputValue = submitButton?.value;
+
+  toggleSubmit(inputValue, submitButton);
 
   let res = nextStep.callbacks[nextStep.currentStep](event);
 
-  module.customFetch(res.url, res.requestOptions).then((res) => handleFetchResponse(res, inputValue, event.target));
+  module
+    .customFetch(res.url, res.requestOptions)
+    .then((res) => handleFetchResponse(res, inputValue, submitButton));
 }
 
 /**
  * @summary Este método se encarga de manejar la respuesta de la API
- * 
- * @param {API_RESPONSE} res 
- * @param {string} inputValue 
- * @param {HTMLElement} elem 
+ *
+ * @param {API_RESPONSE} res
+ * @param {string} inputValue
+ * @param {HTMLInputElement} submitButton
  */
-function handleFetchResponse(res, inputValue, elem) {
-  toggleSubmit(inputValue, elem.querySelector("input[type='submit']"));
+function handleFetchResponse(res, inputValue, submitButton) {
+  toggleSubmit(inputValue, submitButton);
 
   if ([200, 201].includes(res.statusCode)) {
     nextStep.currentStep++;
@@ -105,7 +114,7 @@ function handleFetchResponse(res, inputValue, elem) {
 
 /**
  * @summary Este método se encarga de manejar los errores de validación
- * 
+ *
  * @param {API_RESPONSE} res
  */
 function handleValidationErrors(res) {
@@ -123,7 +132,10 @@ function handleValidationErrors(res) {
     input.addEventListener("input", handleInput);
   });
 
-  alert("Validación fallida. Por favor, corrija los campos marcados.\n\nError: " + res.description);
+  alert(
+    "Validación fallida. Por favor, corrija los campos marcados.\n\nError: " +
+      res.description
+  );
 }
 
 /**
@@ -135,14 +147,17 @@ function handleServerError() {
 
 /**
  * @summary Este método se encarga de crear los `requestOptions` para la función `customFetch`
- * 
- * @param {string} urlSuffix 
- * @param {RequestOptions["method"]} method 
- * @param {object} bodyData 
+ *
+ * @param {string} urlSuffix
+ * @param {RequestOptions["method"]} method
+ * @param {object} bodyData
  * @returns {{requestOptions: RequestOptions, url: string}}
  */
 function createRequestOptions(urlSuffix, method, bodyData = {}) {
-  const url = module.API_URL.replace("/api", "/cliente/reset-password"+urlSuffix);
+  const url = module.API_URL.replace(
+    "/api",
+    "/cliente/reset-password" + urlSuffix
+  );
 
   const requestOptions = {
     headers: { "Content-Type": "application/json" },
@@ -155,8 +170,8 @@ function createRequestOptions(urlSuffix, method, bodyData = {}) {
 
 /**
  * @summary Este método se encarga de manejar el submit del formulario de email
- * 
- * @param {InputEvent} event 
+ *
+ * @param {InputEvent} event
  * @returns {{requestOptions: RequestOptions, url: string}} Retorna el resultado de la función `createRequestOptions`
  */
 function handleEmailFormSubmit(event) {
@@ -168,8 +183,8 @@ function handleEmailFormSubmit(event) {
 
 /**
  * @summary Este método se encarga de manejar el submit del formulario de código
- * 
- * @param {InputEvent} event 
+ *
+ * @param {InputEvent} event
  * @returns {{requestOptions: RequestOptions, url: string}} Retorna el resultado de la función `createRequestOptions`
  */
 function handleCodeFormSubmit(event) {
@@ -185,8 +200,8 @@ function handleCodeFormSubmit(event) {
 
 /**
  * @summary Este método se encarga de manejar el submit del formulario de contraseña
- * 
- * @param {InputEvent} event 
+ *
+ * @param {InputEvent} event
  * @returns {{requestOptions: RequestOptions, url: string}} Retorna el resultado de la función `createRequestOptions`
  */
 function handlePasswordFormSubmit(event) {
@@ -199,7 +214,6 @@ function handlePasswordFormSubmit(event) {
 
   return createRequestOptions(`/${code}`, "PUT", formData);
 }
-
 
 /**
  * @summary Este método se encarga de manejar el setter del proxy
