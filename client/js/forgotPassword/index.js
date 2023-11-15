@@ -12,7 +12,23 @@ const module = Global.getInstance();
  * @property {number} currentStep
  * @property {number} maxStep
  */
-let steps = { currentStep: 0, maxStep: 3 };
+let steps = {
+  currentStep: 0,
+  maxStep: 3,
+  callbacks: [
+    handleEmailFormSubmit,
+    handleCodeFormSubmit,
+    handlePasswordFormSubmit,
+  ],
+};
+/**
+ * @type {string | undefined}
+ */
+let email;
+/**
+ * @type {string | undefined}
+ */
+let code;
 
 let stepHandler = {
   set: (obj, prop, value) => handleSetter(obj, prop, value),
@@ -30,46 +46,117 @@ export default function init() {
   document
     .querySelectorAll("form.spacer_form")
     .forEach((form) => form.addEventListener("submit", handleFormSubmit));
+
+  document
+    .querySelector("#code")
+    .addEventListener(
+      "input",
+      (e) => {
+        e.target.value = e.target.value.toLocaleUpperCase();
+        document.querySelector("#code").classList.remove("error")
+      }
+    );
 }
 
 /**
  * @summary Este método se encarga de manejar el submit del formulario
- * 
- * @param {InputEvent} event 
+ *
+ * @param {InputEvent} event
  */
 function handleFormSubmit(event) {
 
-  /**
-   * @description Falta crear funciones que manejen los distintos tipos
-   * de comportamiento que tiene cada formulario y crear una funcion separada
-   * que solo haga la peticion al servidor y realice el cambio de formulario
-   */
-
   event.preventDefault();
-  const inputValue = event.target.querySelector("input[type='submit']").value;
-  toggleSubmit(inputValue, event.target.querySelector("input[type='submit']"));
-  const form = event.target;
-  const formData = new FormData(form);
-  const data = Object.fromEntries(formData);
-  const url = module.API_URL.replace("/api", "/cliente/reset-password");
-  console.log(url);
-  const requestOptions = {
-    headers: { "Content-Type": "application/json" },
-    method: "POST",
-    body: JSON.stringify(data),
-  };
 
-  module.customFetch(url, requestOptions).then(async (res) => {
+  const inputValue = event.target.querySelector("input[type='submit']").value;
+
+  toggleSubmit(inputValue, event.target.querySelector("input[type='submit']"));
+
+  let res = nextStep.callbacks[nextStep.currentStep](event);
+
+  module.customFetch(res.url, res.requestOptions).then(async (res) => {
     toggleSubmit(
       inputValue,
       event.target.querySelector("input[type='submit']")
     );
     if ([200, 201, 404].includes(res.statusCode)) {
       nextStep.currentStep++;
+    }else if(res.statusCode === 400){
+      const form = document.querySelector("form:not(.hidden)");
+      const inputs = form.querySelectorAll("input:not([type='submit'])");
+      inputs.forEach((input) => {
+        input.classList.add("error");
+        const handleInput = () => {
+          input.classList.remove("error");
+          input.removeEventListener("input", handleInput);
+        }
+        input.addEventListener("input", handleInput);
+      });
+      alert(res.description);
+    } else if(res.statusCode === 401){
+      document.querySelector("#code").classList.add("error")
     } else {
       alert("Hubo un problema con nuestro servidor. Intente más tarde");
     }
   });
+}
+
+function handleEmailFormSubmit(event) {
+  const url = module.API_URL.replace(
+    "/api",
+    `/cliente/reset-password`
+  );
+
+  const formData = new FormData(event.target);
+  email = formData.get("email");
+
+  const requestOptions = {
+    headers: { "Content-Type": "application/json" },
+    method: "POST",
+    body: JSON.stringify({email}),
+  };
+
+  return { requestOptions, url };
+}
+
+function handleCodeFormSubmit(event) {
+
+  const formData = new FormData(event.target);
+  code = formData.get("code");
+
+  if(!email && !code){
+    alert("Ocurrio un error inesperado. Intente más tarde.");
+  }
+
+  const url = module.API_URL.replace(
+    "/api",
+    `/cliente/reset-password?consultCode=${formData.get("code")}`
+  );
+
+  const requestOptions = {
+    headers: { "Content-Type": "application/json" },
+    method: "POST",
+    body: JSON.stringify({email}),
+  };
+
+  return { requestOptions, url };
+}
+
+function handlePasswordFormSubmit(event) {
+  const url = module.API_URL.replace(
+    "/api",
+    `/cliente/reset-password/${code}`
+  );
+
+  const formData = Object.fromEntries(new FormData(event.target));
+  formData.email = email;
+
+  const requestOptions = {
+    headers: { "Content-Type": "application/json" },
+    method: "PUT",
+    body: JSON.stringify(formData),
+  };
+
+  return { requestOptions, url };
 }
 
 /**
@@ -83,16 +170,12 @@ function handleFormSubmit(event) {
 function handleSetter(obj, prop, value) {
   if (value > 3 || value < 0) value = 0;
   if (value === 0) {
-    console.log("Mostrando formulario email");
     handleNextStep(".spacer_form.success", ".spacer_form.email.hidden");
   } else if (value === 1) {
-    console.log("Ir a ingresar código");
     handleNextStep(".spacer_form.email", ".spacer_form.code.hidden");
   } else if (value === 2) {
-    console.log("Ir a cambiar contraseña");
     handleNextStep(".spacer_form.code", ".spacer_form.password.hidden");
   } else if (value === 3) {
-    console.log("Ir a contraseña cambiada");
     handleNextStep(".spacer_form.password", ".spacer_form.success.hidden");
   }
   obj[prop] = value;
