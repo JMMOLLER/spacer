@@ -4,6 +4,7 @@ import com.example.spacer.spacerbackend.models.ClientModel;
 import com.example.spacer.spacerbackend.models.PasswordResetModel;
 import com.example.spacer.spacerbackend.models.ProductModel;
 import com.example.spacer.spacerbackend.services.*;
+import io.micrometer.common.util.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -49,28 +50,40 @@ public class MainController {
 
   @GetMapping("/api")
   public ResponseEntity<?> apiHome() {
-    return new ResponseEntity<>(new Response(HttpStatus.OK, HttpStatus.OK.name(), "Welcome to Spacer API on v1.3.5 🚀!"), HttpStatus.OK);
+    return new ResponseEntity<>(new Response(HttpStatus.OK, HttpStatus.OK.name(), "Welcome to Spacer API on v1.3.6 🚀!"), HttpStatus.OK);
   }
 
   @PostMapping("/cliente/reset-password")
-  private ResponseEntity<Response> createForgotPasswordRequest(@RequestBody Map<String, String> body, @RequestParam(required = false) String consultCode) {
+  private ResponseEntity<Response> createForgotPasswordRequest(@RequestBody Map<String, String> body,
+                                                               @RequestParam(required = false) String consultCode) {
     try {
-      ClientModel client = this.clientService.getClientByEmail(body.get("email"));
+      String email = body.get("email");
 
-      if (client == null) {
-        Response response = new Response(HttpStatus.UNAUTHORIZED, "El email no existe", null);
-        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+      if (StringUtils.isBlank(email)) {
+        return new Response("El email no puede estar vacío").badRequestResponse();
       }
 
-      if(consultCode != null){
+      if (!email.matches("^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$")) {
+        return new Response("El email no es válido").badRequestResponse();
+      }
+
+      ClientModel client = this.clientService.getClientByEmail(email);
+
+      if (consultCode != null && client == null) {
+        return new Response("Código no reconocido. No autorizado a cambio de contraseña").unauthorizedResponse();
+      }
+
+      if (client == null) {
+        return new Response().okResponse();
+      }
+
+      if (consultCode != null) {
         PasswordResetModel pr = this.passwordResetService.getPrByCode(consultCode.toLowerCase(), client.getId());
-        if(pr == null || !pr.getId().toUpperCase().startsWith(consultCode)){
-          return new ResponseEntity<>(
-            new Response(HttpStatus.UNAUTHORIZED, "Código no reconocido. No autorizado a cambio de contraseña", null),
-            HttpStatus.UNAUTHORIZED
-          );
-        }else {
-          return new ResponseEntity<>(new Response(HttpStatus.OK, HttpStatus.OK.name(), null), HttpStatus.OK);
+
+        if (pr == null || !pr.getId().toUpperCase().startsWith(consultCode)) {
+          return new Response("Código no reconocido. No autorizado a cambio de contraseña").unauthorizedResponse();
+        } else {
+          return new Response().okResponse();
         }
       }
 
@@ -84,11 +97,10 @@ public class MainController {
 
       this.mailSenderService.sendForgotPwd(client.getEmail(), reqId.substring(0, 5).toUpperCase());
 
-      Response response = new Response(HttpStatus.CREATED, HttpStatus.CREATED.name(), null);
-      return new ResponseEntity<>(response, HttpStatus.OK);
+      return new Response().createdResponse();
     } catch (Exception e) {
-      Response response = new Response(HttpStatus.INTERNAL_SERVER_ERROR, ExceptionUtils.getRootCause(e).getMessage(), null);
-      return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+      var message = ExceptionUtils.getRootCause(e).getMessage();
+      return new Response(message).internalServerErrorResponse();
     }
   }
 
