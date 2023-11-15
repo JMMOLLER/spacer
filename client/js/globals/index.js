@@ -185,7 +185,7 @@ class Global {
   /**
    *
    * @param {string} url
-   * @param {requestOptions} requestOptions
+   * @param {RequestOptions} requestOptions
    * @returns {Promise<API_RESPONSE>}
    */
   async customFetch(url, requestOptions) {
