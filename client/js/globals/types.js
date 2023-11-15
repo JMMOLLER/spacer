@@ -1,7 +1,7 @@
 /**
  * @typedef {Object} API_RESPONSE
  * @property {number} statusCode - El código de estado de la respuesta.
- * @property {string} message - El mensaje asociado a la respuesta.
+ * @property {string} description - El mensaje asociado a la respuesta.
  * @property {any} response - La respuesta de la API (puede ser un objeto o null).
  */
 
@@ -29,4 +29,13 @@
  * @typedef {Object} SearchParam
  * @property {string} key - La clave del parámetro.
  * @property {string} value - El valor del parámetro.
+ */
+
+/**
+ * @typedef {Object} RequestOptions
+ * @property {"GET" | "POST" | "PUT" | "DELETE"} method
+ * @property {object} headers
+ * @property {object} body
+ * @property {string} redirect
+ * @property {string} referrerPolicy
  */

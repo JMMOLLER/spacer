@@ -18,7 +18,7 @@ public class EmailTemplateService {
     Context context = new Context();
     context.setVariable("subject", subject);
     context.setVariable("title", "Recuperar contraseña");
-    context.setVariable("urlReset", urlBase + "/reset-password/" + reqId);
+    context.setVariable("urlCode", reqId);
 
     return templateEngine.process("forgot-password", context);
   }

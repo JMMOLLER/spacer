@@ -21,6 +21,9 @@ switch (true) {
   case path.includes("/pages/productos"):
     import("./productos/index.js").then((module) => module.default());
     break;
+  case path.includes("/pages/forgot-password"):
+    import("./forgotPassword/index.js").then((module) => module.default());
+    break;
   default:
     console.warn("404 - No reconocemos esta ruta.");
 }

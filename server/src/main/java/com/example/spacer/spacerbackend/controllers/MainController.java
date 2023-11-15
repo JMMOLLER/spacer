@@ -4,6 +4,7 @@ import com.example.spacer.spacerbackend.models.ClientModel;
 import com.example.spacer.spacerbackend.models.PasswordResetModel;
 import com.example.spacer.spacerbackend.models.ProductModel;
 import com.example.spacer.spacerbackend.services.*;
+import io.micrometer.common.util.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -19,6 +20,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/")
@@ -49,63 +51,108 @@ public class MainController {
 
   @GetMapping("/api")
   public ResponseEntity<?> apiHome() {
-    return new ResponseEntity<>(new Response(HttpStatus.OK, HttpStatus.OK.name(), "Welcome to Spacer API on v1.3.1 🚀!"), HttpStatus.OK);
+    return new ResponseEntity<>(new Response(HttpStatus.OK, HttpStatus.OK.name(), "Welcome to Spacer API on v1.3.7 🚀!"), HttpStatus.OK);
   }
 
   @PostMapping("/cliente/reset-password")
-  private ResponseEntity<Response> createForgotPasswordRequest(@RequestBody Map<String, String> body) {
+  private ResponseEntity<Response> createForgotPasswordRequest(@RequestBody Map<String, String> body,
+                                                               @RequestParam(required = false) String consultCode) {
     try {
+      String email = body.get("email");
 
-      ClientModel client = this.clientService.getClientByEmail(body.get("email"));
+      if (StringUtils.isBlank(email)) {
+        return new Response("El email no puede estar vacío").badRequestResponse();
+      }
+
+      if (!email.matches("^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$")) {
+        return new Response("El email no es válido").badRequestResponse();
+      }
+
+      ClientModel client = this.clientService.getClientByEmail(email);
+
+      if (consultCode != null && client == null) {
+        return new Response("Código no reconocido. No autorizado a cambio de contraseña").unauthorizedResponse();
+      }
 
       if (client == null) {
-        Response response = new Response(HttpStatus.NOT_FOUND, "El email no existe", null);
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        return new Response().okResponse();
       }
 
-      PasswordResetModel pr = this.passwordResetService.getPrByClientId(client.getId());
+      if (consultCode != null) {
+        PasswordResetModel pr = this.passwordResetService.getPrByCode(consultCode.toLowerCase(), client.getId());
 
-      if (pr != null) {
-        this.passwordResetService.deleteRequestReset(pr.getId());
+        if (pr == null || !pr.getId().toUpperCase().startsWith(consultCode)) {
+          return new Response("Código no reconocido. No autorizado a cambio de contraseña").unauthorizedResponse();
+        } else {
+          return new Response().okResponse();
+        }
       }
 
-      String reqId = this.passwordResetService.createRequestReset(client.getId());
+      CompletableFuture.runAsync(() -> {
+        try {
+          PasswordResetModel pr = this.passwordResetService.getPrByClientId(client.getId());
 
-      this.mailSenderService.sendForgotPwd(client.getEmail(), reqId);
+          if (pr != null) {
+            this.passwordResetService.deleteRequestReset(pr.getId());
+          }
 
-      Response response = new Response(HttpStatus.CREATED, HttpStatus.CREATED.name(), null);
-      return new ResponseEntity<>(response, HttpStatus.OK);
+          String reqId = this.passwordResetService.createRequestReset(client.getId());
+
+          this.mailSenderService.sendForgotPwd(client.getEmail(), reqId.substring(0, 5).toUpperCase());
+        } catch (Exception e) {
+          e.printStackTrace(); // Por temas prácticos, no se está utilizando un logger
+        }
+      }); // Se ejecuta en un hilo aparte como tarea asíncrona (tipo JavaScript <3)
+
+      return new Response().createdResponse();
     } catch (Exception e) {
-      Response response = new Response(HttpStatus.BAD_REQUEST, ExceptionUtils.getRootCause(e).getMessage(), null);
-      return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+      var message = ExceptionUtils.getRootCause(e).getMessage();
+      return new Response(message).internalServerErrorResponse();
     }
   }
 
-  @PutMapping("/cliente/reset-password/{prId}")
+  @PutMapping("/cliente/reset-password/{code}")
   @ResponseBody
-  public ResponseEntity<Response> updatePassword(@RequestBody Map<String, Object> formData, @PathVariable String prId) {
+  public ResponseEntity<Response> updatePassword(@RequestBody Map<String, String> formData, @PathVariable String code) {
     try {
 
-      if(!Objects.equals(formData.get("new-password").toString(), formData.get("confirm-password").toString())){
+      if(formData.get("new-password") == null || formData.get("confirm-password") == null){
+        Response response = new Response(HttpStatus.BAD_REQUEST, "Las contraseñas no pueden estar vacías", null);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+      }
+
+      if(formData.get("new-password").trim().length() < 8){
+        Response response = new Response(HttpStatus.BAD_REQUEST, "La contraseña debe tener al menos 8 caracteres", null);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+      }
+
+      if(!formData.get("new-password").equals(formData.get("confirm-password"))){
         Response response = new Response(HttpStatus.BAD_REQUEST, "Las contraseñas no coinciden", null);
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
       }
 
-      PasswordResetModel pr = this.passwordResetService.getPrById(prId);
+      if(formData.get("email") == null){
+        Response response = new Response(HttpStatus.BAD_REQUEST, "El email no puede estar vacío", null);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+      }
+
+      ClientModel cli = this.clientService.getClientByEmail(formData.get("email"));
+
+      PasswordResetModel pr = this.passwordResetService.getPrByCode(code.toLowerCase(), cli.getId());
 
       if(pr == null){
         return new ResponseEntity<>(new Response(HttpStatus.NOT_FOUND, "El link ha expirado", null), HttpStatus.NOT_FOUND);
       }
 
-      ClientModel client = this.clientService.updatePassword(pr.getClientId(), formData.get("new-password").toString());
-      this.passwordResetService.deleteRequestReset(prId);
+      ClientModel client = this.clientService.updatePassword(cli, formData.get("new-password"));
+      this.passwordResetService.deleteRequestReset(pr.getId());
       this.mailSenderService.sendPwdChanged(client.getEmail());
 
       Response response = new Response(HttpStatus.OK, HttpStatus.OK.name(), null);
       return new ResponseEntity<>(response, HttpStatus.OK);
     } catch (Exception e) {
-      Response response = new Response(HttpStatus.BAD_REQUEST, ExceptionUtils.getRootCause(e).getMessage(), null);
-      return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+      Response response = new Response(HttpStatus.INTERNAL_SERVER_ERROR, ExceptionUtils.getRootCause(e).getMessage(), null);
+      return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 

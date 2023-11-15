@@ -22,6 +22,12 @@
   border: 2px solid rgba(255, 255, 255, 0.1);
   color: aqua;
   text-align: center;
+  opacity: 0;
+  animation: showForm 0.5s ease-out forwards;
+}
+
+.spacer_form.close {
+  animation: hideForm 0.35s ease-out forwards !important;
 }
 
 .animation_arrow_container {
@@ -47,6 +53,8 @@
 
 .inputSubmit-group {
   position: relative;
+  display: flex;
+  justify-content: center;
 }
 
 .inputSubmit-group > input[disabled] {
@@ -79,12 +87,11 @@
 }
 
 .inputSubmit-group .loader {
-  display: inline-block;
+  display: block;
   position: absolute;
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  left: 44%;
   top: 10%;
   border-top: 3px solid #fff;
   border-right: 3px solid transparent;
@@ -141,4 +148,26 @@ span#error.hidden {
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+@keyframes showForm {
+  from {
+    transform: translateY(-10%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes hideForm {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(10%);
+    opacity: 0;
+  }
 }

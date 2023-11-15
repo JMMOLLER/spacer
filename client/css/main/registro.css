@@ -10,7 +10,7 @@
 .spacer_registro .spacer_form {
   position: relative;
   min-height: 350px;
-  width: 300px;
+  width: 450px;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -22,6 +22,7 @@
   border: 2px solid rgba(255, 255, 255, 0.1);
   color: aqua;
   text-align: center;
+  animation: showForm 0.5s ease-out forwards;
 }
 
 .spacer_registro .input-group > input:focus + label,
@@ -30,113 +31,9 @@
   font-size: 0.8rem;
   color: aqua;
 }
-/* .animation_arrow_container {
-  width: 2rem;
-  position: absolute;
-  top: 0.5rem;
-  left: 0.5rem;
-} */
 
-/* .input-group > input {
-  height: 2.7rem;
-  width: 100%;
-  border: 0;
-  padding: 0.5rem;
-  border-radius: 3px;
-}
-.input-group > input:focus {
-  outline: none;
-  border: 1px solid aqua;
-} */
-
-/* ================= SUBMIT BUTTON ================ */
-
-/* .inputSubmit-group {
-  position: relative;
-}
-
-.inputSubmit-group > input[disabled] {
-  background-color: #34d5d559 !important;
-  color: #76767696 !important;
-  cursor: not-allowed !important;
-}
-
-.inputSubmit-group > input[type="submit"] {
-  height: initial;
-  width: 100%;
-  background-color: aqua;
-  border-radius: 20px;
-  padding: 0.7rem 0;
-  border: 0;
-  cursor: pointer;
-  transition: width 0.3s ease-out;
-}
-
-.inputSubmit-group.submitted > input[type="submit"] {
-  width: 15px;
-  padding: 0.7rem;
-  margin: 0 auto;
-  box-sizing: content-box;
-  cursor: default;
-} */
-/* 
-.inputSubmit-group.submitted .loader {
-  scale: 1;
-}
-
-.loader {
-  display: inline-block;
-  position: absolute;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  left: 44%;
-  top: 10%;
-  border-top: 3px solid #fff;
-  border-right: 3px solid transparent;
-  box-sizing: border-box;
-  animation: rotation 1s linear infinite;
-  scale: 0;
-  transition: scale 0.5s ease-out;
-}
-
-@keyframes rotation {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
+@media screen and (width <= 768px) {
+  .spacer_registro .spacer_form {
+    width: 300px;
   }
 }
-
-/* ================= LABELS ================ */
-
-/* span#error {
-  color: red;
-  font-size: .8rem;
-}
-span#error.hidden {
-  display: none;
-}
-
-.input-group {
-  position: relative;
-}
-
-.input-group > label {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  padding: 0.3rem;
-  pointer-events: none;
-  transition: 0.3s ease-out;
-  color: gray;
-  transform: translateY(-50%);
-}
-
-.input-group > input:focus + label,
-.input-group > input:valid + label {
-  transform: translateY(-170%);
-  font-size: 0.8rem;
-  color: aqua;
-} */ 
