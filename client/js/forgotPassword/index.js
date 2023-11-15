@@ -240,5 +240,3 @@ function handleChangeStep(CSSSelector) {
   addAnimationClose(currentForm, false, callback, currentForm);
   currentForm.click();
 }
-
-export { nextStep };
