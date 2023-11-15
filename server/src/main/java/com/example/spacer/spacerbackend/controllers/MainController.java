@@ -49,7 +49,7 @@ public class MainController {
 
   @GetMapping("/api")
   public ResponseEntity<?> apiHome() {
-    return new ResponseEntity<>(new Response(HttpStatus.OK, HttpStatus.OK.name(), "Welcome to Spacer API on v1.3.4 🚀!"), HttpStatus.OK);
+    return new ResponseEntity<>(new Response(HttpStatus.OK, HttpStatus.OK.name(), "Welcome to Spacer API on v1.3.5 🚀!"), HttpStatus.OK);
   }
 
   @PostMapping("/cliente/reset-password")
