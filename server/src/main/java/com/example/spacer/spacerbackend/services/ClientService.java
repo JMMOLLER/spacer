@@ -73,26 +73,19 @@ public class ClientService {
     }
   }
 
-  @CacheEvict(value = "client", key = "#client.getUsername()")
-  public ClientModel updatePassword(Long userId, String newPassword){
+  @CacheEvict(value = "client", key = "#client.username")
+  public ClientModel updatePassword(ClientModel client, String newPassword){
     try {
-      Optional<ClientModel> existingClient = clientRepository.findById(userId);
-      if (existingClient.isPresent()) {
-        ClientModel client = existingClient.get();
-
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        if (newPassword.trim().length() < 6) {
-          throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La nueva contraseña debe tener al menos 6 caracteres.");
-        } else if (encoder.matches(newPassword, client.getPassword())) {
-          throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La nueva contraseña no puede ser igual a la anterior.");
-        }
-
-        client.setPassword(new BCryptPasswordEncoder().encode(newPassword));
-        clientRepository.save(client);
-        return client;
-      } else {
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El cliente no existe");
+      BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+      if (newPassword.trim().length() < 6) {
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La nueva contraseña debe tener al menos 6 caracteres.");
+      } else if (encoder.matches(newPassword, client.getPassword())) {
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La nueva contraseña no puede ser igual a la anterior.");
       }
+
+      client.setPassword(new BCryptPasswordEncoder().encode(newPassword));
+      clientRepository.save(client);
+      return client;
     } catch (Exception e) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
     }
