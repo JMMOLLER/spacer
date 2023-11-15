@@ -20,6 +20,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/")
@@ -50,7 +51,7 @@ public class MainController {
 
   @GetMapping("/api")
   public ResponseEntity<?> apiHome() {
-    return new ResponseEntity<>(new Response(HttpStatus.OK, HttpStatus.OK.name(), "Welcome to Spacer API on v1.3.6 🚀!"), HttpStatus.OK);
+    return new ResponseEntity<>(new Response(HttpStatus.OK, HttpStatus.OK.name(), "Welcome to Spacer API on v1.3.7 🚀!"), HttpStatus.OK);
   }
 
   @PostMapping("/cliente/reset-password")
@@ -87,15 +88,21 @@ public class MainController {
         }
       }
 
-      PasswordResetModel pr = this.passwordResetService.getPrByClientId(client.getId());
+      CompletableFuture.runAsync(() -> {
+        try {
+          PasswordResetModel pr = this.passwordResetService.getPrByClientId(client.getId());
 
-      if (pr != null) {
-        this.passwordResetService.deleteRequestReset(pr.getId());
-      }
+          if (pr != null) {
+            this.passwordResetService.deleteRequestReset(pr.getId());
+          }
 
-      String reqId = this.passwordResetService.createRequestReset(client.getId());
+          String reqId = this.passwordResetService.createRequestReset(client.getId());
 
-      this.mailSenderService.sendForgotPwd(client.getEmail(), reqId.substring(0, 5).toUpperCase());
+          this.mailSenderService.sendForgotPwd(client.getEmail(), reqId.substring(0, 5).toUpperCase());
+        } catch (Exception e) {
+          e.printStackTrace(); // Por temas prácticos, no se está utilizando un logger
+        }
+      }); // Se ejecuta en un hilo aparte como tarea asíncrona (tipo JavaScript <3)
 
       return new Response().createdResponse();
     } catch (Exception e) {
