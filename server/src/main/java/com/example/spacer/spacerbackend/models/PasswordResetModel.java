@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -20,5 +23,12 @@ public class PasswordResetModel implements Serializable {
   @Column(name="idcli")
   private Long clientId;
 
-  private String timestamp;
+  @Column(name="timestamp", nullable = false)
+  private Timestamp timestamp;
+
+  @PrePersist
+  public void prePersist() {
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    this.timestamp = Timestamp.valueOf(sdf.format(new Date()));
+  }
 }
