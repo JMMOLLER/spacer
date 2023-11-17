@@ -54,7 +54,7 @@ class Global {
   }
 
   /**
-   * @description Este método se encarga de verificar si el usuario tiene una cookie de sesión válida
+   * @summary Este método se encarga de verificar si el usuario tiene una cookie de sesión válida
    * 
    * @returns {string | null}
    */
@@ -69,7 +69,7 @@ class Global {
   }
 
   /**
-   * @description Este método se encarga de limpiar la cookie de sesión
+   * @summary Este método se encarga de limpiar la cookie de sesión
    */
   #cleanSessionCookie() {
     document.cookie = "SESSIONID=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
@@ -77,7 +77,7 @@ class Global {
   }
 
   /**
-   * @description Este método se encarga de verificar si el usuario tiene un token de sesión válido
+   * @summary Este método se encarga de verificar si el usuario tiene un token de sesión válido
    *
    * @returns {Promise<boolean>}
    */
@@ -103,7 +103,7 @@ class Global {
   }
 
   /**
-   * Este método se encarga de realizar las peticiones a la API
+   * @summary Este método se encarga de realizar las peticiones a la API
    *
    * @param {string} path
    * @param {object | null} body
@@ -135,8 +135,7 @@ class Global {
   }
 
   /**
-   * Este método se encarga de ecoger el tipo de contenido que se
-   * va a enviar al servidor.
+   * @summary Este método se encarga de ecoger el tipo de contenido que se va a enviar al servidor.
    *
    * @param {string} method
    * @returns
@@ -156,7 +155,7 @@ class Global {
   }
 
   /**
-   * @description Este método se encarga de obtener el nombre de usuario
+   * @summary Este método se encarga de obtener el nombre de usuario
    *
    * @returns {String}
    */
@@ -212,7 +211,7 @@ class Global {
   }
 
   /**
-   * @description Este método se encarga de obtener los productos del carrito
+   * @summary Este método se encarga de obtener los productos del carrito
    * 
    * @param {number} id 
    * @returns {Promise<boolean>}
@@ -227,7 +226,7 @@ class Global {
   }
 
   /**
-   * @description Este método se encarga de aumentar la cantidad de un producto en el carrito
+   * @summary Este método se encarga de aumentar la cantidad de un producto en el carrito
    * 
    * @param {number} id 
    * @returns {Promise<boolean>}
@@ -238,7 +237,7 @@ class Global {
   }
 
   /**
-   * @description Este método se encarga de remover un producto del carrito
+   * @summary Este método se encarga de remover un producto del carrito
    * 
    * @param {number} id
    * @returns {Promise<boolean>}
@@ -249,7 +248,7 @@ class Global {
   }
 
   /**
-   * @description Este método se encarga de obtener los productos del carrito del usuario
+   * @summary Este método se encarga de obtener los productos del carrito del usuario
    * 
    * @returns {Promise<Cart[]>}
    */
@@ -259,7 +258,7 @@ class Global {
   }
 
   /**
-   * @description Este método se encarga de realizar el login del usuario
+   * @summary Este método se encarga de realizar el login del usuario
    *
    * @param {FormData} credentials
    * @returns {Promise<boolean>}
@@ -282,12 +281,12 @@ class Global {
       return res.statusCode === 200 ? true : false;
     } catch (error) {
       console.error(error);
-      return fasle;
+      return false;
     }
   }
 
   /**
-   * @description Este método se encarga de realiazar el logout del usuario
+   * @summary Este método se encarga de realiazar el logout del usuario
    */
   logout() {
     this.#cleanSessionCookie();
