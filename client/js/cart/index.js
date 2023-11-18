@@ -27,7 +27,7 @@ const cardExpirationRegex = /^[0-9]{2}\/[0-9]{2}\/[0-9]{2}$/; // Expresión regu
 const cardCvvRegex = /^[0-9]{3}$/; // Expresión regular para validar el cvv de la tarjeta de crédito
 
 /**
- * Esta función se encarga de manejar el evento click de los botones de cantidad de productos.
+ * @summary Esta función se encarga de manejar el evento click de los botones de cantidad de productos.
  *
  * @param {InputEvent} e
  */
@@ -52,7 +52,7 @@ async function handleQuantityClick(id, e) {
 }
 
 /**
- * @description Esta función se encarga de disminuir la cantidad de un producto en el carrito
+ * @summary Esta función se encarga de disminuir la cantidad de un producto en el carrito
  * 
  * @param {number} id 
  */
@@ -66,7 +66,7 @@ function decreaseLocalCart(id) {
 }
 
 /**
- * @description Esta función se encarga de aumentar la cantidad de un producto en el carrito
+ * @summary Esta función se encarga de aumentar la cantidad de un producto en el carrito
  * 
  * @param {number} id 
  */
@@ -80,7 +80,7 @@ function encreaseLocalCart(id) {
 }
 
 /**
- * Esta función agrega una animación de la librería Lottie a un elemento
+ * @summary Esta función agrega una animación de la librería Lottie a un elemento
  *
  * @param {HTMLElement} element
  */
@@ -117,7 +117,7 @@ function addLottieDeleteAnimation(element) {
 }
 
 /**
- * Esta función se encarga de validar los campos del formulario de checkout
+ * @summary Esta función se encarga de validar los campos del formulario de checkout
  *
  * @param {Event} e
  */
@@ -169,7 +169,7 @@ function handleCheckoutSubmit(e) {
 }
 
 /**
- * Esta función se encarga de validar los campos del formulario de checkout
+ * @summary Esta función se encarga de validar los campos del formulario de checkout
  *
  * @param {Event} e
  */
@@ -189,7 +189,7 @@ function handleChangeInput(e) {
 }
 
 /**
- * Esta función se encarga de validar el número de tarjeta de crédito.
+ * @summary Esta función se encarga de validar el número de tarjeta de crédito.
  *
  * @param {String} cardNumber
  * @returns {{isValid: boolean, type: string}} response
@@ -221,7 +221,7 @@ const validateCardNumber = (cardNumber) => {
 };
 
 /**
- * Esta función se encarga de validar el nombre de la tarjeta de crédito.
+ * @summary Esta función se encarga de validar el nombre de la tarjeta de crédito.
  *
  * @param {string} cardName
  * @returns boolean
@@ -229,7 +229,7 @@ const validateCardNumber = (cardNumber) => {
 const validateCardName = (cardName) => cardNameRegex.test(cardName); // Método test() de la clase RegExp evalúa un string y devuelve true si cumple con la expresión regular
 
 /**
- * Esta función se encarga de validar la fecha de expiración de la tarjeta de crédito.
+ * @summary Esta función se encarga de validar la fecha de expiración de la tarjeta de crédito.
  *
  * @param {string} cardExpiration
  * @returns boolean
@@ -238,7 +238,7 @@ const validateCardExpiration = (cardExpiration) =>
   cardExpirationRegex.test(cardExpiration);
 
 /**
- * Esta función se encarga de validar el cvv de la tarjeta de crédito.
+ * @summary Esta función se encarga de validar el cvv de la tarjeta de crédito.
  *
  * @param {string} cardCvv
  * @returns boolean
@@ -246,7 +246,7 @@ const validateCardExpiration = (cardExpiration) =>
 const validateCardCvv = (cardCvv) => cardCvvRegex.test(cardCvv);
 
 /**
- * Esta función se encarga de establecer la clase invalid a los inputs que no sean válidos.
+ * @summary Esta función se encarga de establecer la clase invalid a los inputs que no sean válidos.
  *
  * @param {HTMLElement} input
  * @param {boolean} isValid
@@ -305,7 +305,7 @@ const handleCardExpiration = (cardExpiration) => {
 };
 
 /**
- * Esta función se encarga de validar el campo cardCvv.
+ * @summary Esta función se encarga de validar el campo cardCvv.
  *
  * @param {HTMLElement} cardCvv
  */
@@ -321,7 +321,7 @@ const handleCardCvv = (cardCvv) => {
 };
 
 /**
- * Esta función se encarga de validar el campo cardNumber.
+ * @summary Esta función se encarga de validar el campo cardNumber.
  *
  * @param {HTMLElement} cardNumber
  */
@@ -350,7 +350,7 @@ const handleCardNumber = (cardNumber) => {
 };
 
 /**
- * Esta función se encarga de validar el campo cardName.
+ * @summary Esta función se encarga de validar el campo cardName.
  *
  * @param {HTMLElement} cardName
  */
@@ -361,6 +361,7 @@ const handleCardName = (cardName) => {
 };
 
 /**
+ * @summary Esta función se encarga de manejar el evento click del botón de eliminar producto
  * 
  * @param {InputEvent} e 
  * @param {number} id 
@@ -372,12 +373,15 @@ async function handleDeleteProduct(id, e) {
     cart = cart.filter((product) => product.productId.id !== id);
     updateSubTotal();
     updateTotal();
+    const cartCant = document.querySelector("#cart_cant");
+    document.querySelector("#cart_cant").innerHTML = Number(cartCant.innerHTML) - 1;
   }else{
     alert("Ocurrió un error al eliminar el producto");
   }
 };
 
 /**
+ * @summary Esta función se encarga de crear un elemento HTML
  * 
  * @param {String} tag 
  * @param {String} className 
@@ -406,6 +410,7 @@ function createElement(tag, className, content = null, attributes = {}) {
 }
 
 /**
+ * @summary Esta función se encarga de crear el template de un producto del carrito
  * 
  * @param {number} id 
  * @param {String} imageUrl 
@@ -487,6 +492,9 @@ function createProductCardTemplate(id, imageUrl, marca, description, quantity, p
   return cardItem;
 }
 
+/**
+ * @summary Esta función se encarga de renderizar los productos del carrito
+ */
 async function renderCardItem(){
   cart = await module.getCartProducts();
   document.querySelector(".loader").classList.add("hidden");
@@ -504,6 +512,9 @@ async function renderCardItem(){
   updateTotal();
 }
 
+/**
+ * @summary Esta función se encarga de actualizar los precios finales que se muestran
+ */
 function updateTotal(){
   const envioP = parseFloat(subtotal.toFixed(2) * 0.02);
   const total = parseFloat(subtotal + envioP);
@@ -514,6 +525,9 @@ function updateTotal(){
   document.getElementById("total_confirm").innerText = `S/. ${total.toFixed(2)}`;
 }
 
+/**
+ * @summary Esta función se encarga de actualizar el subtotal
+ */
 function updateSubTotal(){
   subtotal = cart.reduce((acc, product) => acc + (product.productId.price * product.quantity), 0);
 }

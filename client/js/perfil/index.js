@@ -30,6 +30,9 @@ export default async function init() {
   
 }
 
+/**
+ * @summary Función que se encarga de controlar los inputs de los formularios
+ */
 const inputController = () => {
   const form = document.querySelectorAll("form.spacer_form");
   const inputsFormDatos = form[0].querySelectorAll(
