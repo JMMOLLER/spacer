@@ -3,23 +3,22 @@ import "./types.js"
 class Global {
   static #instance;
 
-  #API_URL;
-  #username;
-  #token;
+  #API_URL = "https://spacer-api.onrender.com/api";
+  #token = this.#checkSessionCookie();
+  /**
+   * @type {Client | null}
+   */
+  #userInfo = {};
 
   constructor() {
-    if (!Global.#instance) {
-      this.#API_URL = "https://spacer-api.onrender.com/api";
-      this.#username = "";
-      this.#token = this.#checkSessionCookie();
-      Global.#instance = this;
-      console.log("Global instance created");
-    }
+    if (!Global.#instance) Global.#instance = this;
+
+    console.log("Global instance created");
     return Global.#instance;
   }
 
   /**
-   * Obtiene la instancia única de la clase Global.
+   * @summary Obtiene la instancia única de la clase Global.
    * @returns {Global} La instancia única de la clase Global.
    */
   static getInstance() {
@@ -37,12 +36,19 @@ class Global {
     this.#API_URL = value;
   }
 
-  get username() {
-    return this.#username;
+  /**
+   * @summary Obtiene la información del usuario.
+   * @returns {Client} La información del usuario.
+   */
+  get userInfo() {
+    return this.#userInfo;
   }
 
-  set username(value) {
-    this.#username = value;
+  /**
+   * @summary Establece la información del usuario.
+   */
+  set userInfo(value) {
+    this.#userInfo = value;
   }
 
   get token() {
@@ -52,6 +58,8 @@ class Global {
   set token(value) {
     this.#token = value;
   }
+
+  /** ===========================  OTROS MÉTODOS    ================================= **/
 
   /**
    * @summary Este método se encarga de verificar si el usuario tiene una cookie de sesión válida
@@ -84,9 +92,12 @@ class Global {
   async userIsAuth() {
     if (this.#token) {
       try {
-        const res = await this.fetchAPI("/auth/info", null, "GET");
+        /**
+         * @type {API_RESPONSE}
+         */
+        const res = await this.fetchAPI("/cliente", null, "GET");
         if (res.statusCode === 200) {
-          this.#username = res.response.username;
+          this.userInfo = res.response;
           return true;
         } else {
           this.#cleanSessionCookie();
@@ -152,33 +163,6 @@ class Global {
       default:
         return null;
     }
-  }
-
-  /**
-   * @summary Este método se encarga de obtener el nombre de usuario
-   *
-   * @returns {String}
-   */
-  getUsername() {
-    return this.#username;
-  }
-
-  /**
-   * @returns {String}
-   */
-  getUserImg() {
-    return (
-      this.#API_URL.replace(/\/api/, "/cliente") + "/" + this.#username + ".jpg"
-    );
-  }
-
-  /**
-   * Este método se encarga de obtener la información del usuario
-   *
-   * @returns {Promise<API_RESPONSE>}
-   */
-  async getUserInfo() {
-    return await this.fetchAPI("/cliente", null, "GET");
   }
 
   /**

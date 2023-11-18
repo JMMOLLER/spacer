@@ -8,20 +8,26 @@ export default async function init() {
   img.onerror = handleImageError;
   module.preventRedirect();
   module.loadHeaderLottieAnimation();
-  module.handleCheckAuth();
-  inputController();
-  fillUserInfo();
-  setHandlersOnForms();
+  module.handleCheckAuth().then((res) => {
+    if (!res) {
+      window.location.href = "/pages/login.html";
+    }else{
+      inputController();
+      fillUserInfo();
+      setHandlersOnForms();
 
-  document
-    .querySelector("#menu_secciones")
-    .childNodes.forEach((node) =>
-      node.nodeName === "LI"
-        ? node.addEventListener("click", handleNavClick)
-        : null
-    );
+      document
+        .querySelector("#menu_secciones")
+        .childNodes.forEach((node) =>
+          node.nodeName === "LI"
+            ? node.addEventListener("click", handleNavClick)
+            : null
+        );
 
-  updateNavLine();
+      updateNavLine();
+    }
+  });
+  
 }
 
 const inputController = () => {
@@ -63,7 +69,7 @@ const inputController = () => {
       if (e.target.files[0]?.type.includes("image")) {
         profileImg.src = URL.createObjectURL(e.target.files[0]);
       } else {
-        profileImg.src = module.getUserImg();
+        profileImg.src = module.userInfo.urlImg;
         removeFileFromFileList(0, e.target);
       }
       inputHandlerDatos();
@@ -130,27 +136,13 @@ const fillUserInfo = async () => {
     ".content__datos--usuario > .content__datos--content"
   );
 
-  const userInfo = await getUserInfo();
+  const userInfo = module.userInfo;
 
   img_profile.src = userInfo.urlImg;
   fullName.textContent = `${userInfo.firstName} ${userInfo.lastName}`;
   email.textContent = userInfo.email;
   address.textContent = userInfo.address || "Sin dirección";
   username.textContent = userInfo.username;
-};
-
-const getUserInfo = async () => {
-  const userInfo = await module.getUserInfo();
-
-  if (userInfo.statusCode === 401) {
-    alert("Tu sesión a expirado, por favor inicia sesión nuevamente.");
-    window.location.href = "/pages/login.html";
-  } else if (userInfo.statusCode !== 200) {
-    alert(userInfo.description || "Ha ocurrido un error, intenta nuevamente.");
-    return;
-  }
-
-  return userInfo.response;
 };
 
 const filterFormData = (formData) => {
@@ -218,7 +210,7 @@ const handleFormSubmit = async (e) => {
     redirect: "follow",
   };
 
-  const updateResponse = await module.customFetch("/cliente", requestOptions);
+  const updateResponse = await module.customFetch(module.API_URL+"/cliente", requestOptions);
 
   toggleSubmit(inputSubmitValue, btnSubmit);
 
