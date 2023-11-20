@@ -4,12 +4,12 @@ import Global from "../globals/index.js";
 const module = Global.getInstance();
 let isAuth = false;
 /**
- * @description Almacena los productos
+ * @summary Almacena los productos
  * @type {Product[] | null}
  */
 let products;
 /**
- * @description Almacena los productos filtrados
+ * @summary Almacena los productos filtrados
  * @type {Product[] | null}
  * */
 let filtered;
@@ -48,7 +48,7 @@ function toggleLoadingSection() {
 }
 
 /**
- * @description Evita que se redirija a la página de la categoría
+ * @summary Evita que se redirija a la página de la categoría
  */
 function preventDefaultInNav() {
   document.querySelectorAll(".categoria-link").forEach((element) => {
@@ -68,7 +68,7 @@ function redirectHandler(e) {
 }
 
 /**
- * @description Obtiene el parámetro de búsqueda de la URL
+ * @summary Obtiene el parámetro de búsqueda de la URL
  * 
  * @returns {SearchParam[] | null} - El parámetro de búsqueda de la URL
  */
@@ -91,7 +91,7 @@ function getSearhParams(){
 }
 
 /**
- * @description Filtra los productos por categoría
+ * @summary Filtra los productos por categoría
  */
 function filterProducts(){
   cleanProductsRendered();
@@ -105,14 +105,14 @@ function filterProducts(){
 }
 
 /**
- * @description Renderiza los productos filtrados en el DOM
+ * @summary Renderiza los productos filtrados en el DOM
  */
 function renderFilteredProducts(){
   filtered?.forEach((product) => renderCardProduct(product));
 }
 
 /**
- * @description Filtra los productos por categoría
+ * @summary Filtra los productos por categoría
  * 
  * @param {SearchParam[]} searchParams
  */
@@ -128,7 +128,7 @@ function filterProductsByCategory(searchParams){
 }
 
 /**
- * @description Filtra los productos por rango de precio
+ * @summary Filtra los productos por rango de precio
  * 
  * @param {SearchParam[]} searchParams 
  */
@@ -156,35 +156,35 @@ function filterProductsByBrand(searchParams){
 }
 
 /**
- * @description Limpia los productos renderizados en el DOM
+ * @summary Limpia los productos renderizados en el DOM
  */
 function cleanProductsRendered(){
   document.querySelectorAll(".item")?.forEach((item) => item.remove());
 }
 
 /**
- * @description Agrega un listener al evento popstate del navegador
+ * @summary Agrega un listener al evento popstate del navegador
  */
 function addPopStateListener(){
   window.addEventListener("popstate", filterProducts);
 }
 
 /**
- * @description Agrega un listener al evento submit del formulario de filtro de categoría
+ * @summary Agrega un listener al evento submit del formulario de filtro de categoría
  */
 function addFilterCategoryFormListener(){
   document.querySelector("#filtro-categorias").addEventListener("submit", filterCategoryFormHandler);
 }
 
 /**
- * @description Agrega un listener al evento submit del formulario de filtro de precio
+ * @summary Agrega un listener al evento submit del formulario de filtro de precio
  */
 function addFilterPriceFormListener(){
   document.querySelector("#filtro-precio").addEventListener("submit", filterPriceFormHandler);
 }
 
 /**
- * @description Agrega un listener al evento input de los inputs de precio
+ * @summary Agrega un listener al evento input de los inputs de precio
  */
 function addEventInputChangeListener(){
   document.querySelector("#price-min").addEventListener("input", (e) => {
@@ -235,7 +235,7 @@ function filterCategoryFormHandler(e){
 }
 
 /**
- * @description Filtra los productos por precio
+ * @summary Filtra los productos por precio
  * 
  * @param {SubmitEvent} e 
  */
@@ -273,7 +273,7 @@ function filterPriceFormHandler(e){
 }
 
 /**
- * @description Renderiza un producto en el DOM
+ * @summary Renderiza un producto en el DOM
  * 
  * @param {Product} product 
  */
@@ -285,7 +285,7 @@ function renderCardProduct(product) {
 }
 
 /**
- * @description Crea un template de elemento.
+ * @summary Crea un template de elemento.
  *
  * @param {string} titulo - El título del elemento.
  * @param {string} src - La ruta de la imagen.
@@ -334,7 +334,7 @@ function createItemTemplate(titulo, src, info, precio, id, category) {
 }
 
 /**
- * @description Crea un elemento con una clase específica.
+ * @summary Crea un elemento con una clase específica.
  *
  * @param {string} tagName - El nombre de la etiqueta del elemento.
  * @param {string} className - El nombre de la clase a añadir.
@@ -347,7 +347,7 @@ function createElementWithClass(tagName, className) {
 }
 
 /**
- * @description Este método se encarga de agregar un producto al carrito
+ * @summary Este método se encarga de agregar un producto al carrito
  * 
  * @param {number} id 
  */
@@ -359,6 +359,8 @@ async function handleAddProduct(id){
     const res = await module.addProductToCart(id);
     if(res){
       console.log("Agregado al carrito producto con ID: " + id);
+      const cartCant = document.querySelector("#cart_cant").innerHTML;
+      document.querySelector("#cart_cant").innerHTML = Number(cartCant) + 1;
     } else {
       alert("No se pudo agregar el producto al carrito");
     }

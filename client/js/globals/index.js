@@ -3,23 +3,22 @@ import "./types.js"
 class Global {
   static #instance;
 
-  #API_URL;
-  #username;
-  #token;
+  #API_URL = "https://spacer-api.onrender.com/api";
+  #token = this.#checkSessionCookie();
+  /**
+   * @type {Client | null}
+   */
+  #userInfo = {};
 
   constructor() {
-    if (!Global.#instance) {
-      this.#API_URL = "https://spacer-api.onrender.com/api";
-      this.#username = "";
-      this.#token = this.#checkSessionCookie();
-      Global.#instance = this;
-      console.log("Global instance created");
-    }
+    if (!Global.#instance) Global.#instance = this;
+
+    console.log("Global instance created");
     return Global.#instance;
   }
 
   /**
-   * Obtiene la instancia única de la clase Global.
+   * @summary Obtiene la instancia única de la clase Global.
    * @returns {Global} La instancia única de la clase Global.
    */
   static getInstance() {
@@ -37,12 +36,19 @@ class Global {
     this.#API_URL = value;
   }
 
-  get username() {
-    return this.#username;
+  /**
+   * @summary Obtiene la información del usuario.
+   * @returns {Client} La información del usuario.
+   */
+  get userInfo() {
+    return this.#userInfo;
   }
 
-  set username(value) {
-    this.#username = value;
+  /**
+   * @summary Establece la información del usuario.
+   */
+  set userInfo(value) {
+    this.#userInfo = value;
   }
 
   get token() {
@@ -53,8 +59,10 @@ class Global {
     this.#token = value;
   }
 
+  /** ===========================  OTROS MÉTODOS    ================================= **/
+
   /**
-   * @description Este método se encarga de verificar si el usuario tiene una cookie de sesión válida
+   * @summary Este método se encarga de verificar si el usuario tiene una cookie de sesión válida
    * 
    * @returns {string | null}
    */
@@ -69,7 +77,7 @@ class Global {
   }
 
   /**
-   * @description Este método se encarga de limpiar la cookie de sesión
+   * @summary Este método se encarga de limpiar la cookie de sesión
    */
   #cleanSessionCookie() {
     document.cookie = "SESSIONID=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
@@ -77,16 +85,19 @@ class Global {
   }
 
   /**
-   * @description Este método se encarga de verificar si el usuario tiene un token de sesión válido
+   * @summary Este método se encarga de verificar si el usuario tiene un token de sesión válido
    *
    * @returns {Promise<boolean>}
    */
   async userIsAuth() {
     if (this.#token) {
       try {
-        const res = await this.fetchAPI("/auth/info", null, "GET");
+        /**
+         * @type {API_RESPONSE}
+         */
+        const res = await this.fetchAPI("/cliente", null, "GET");
         if (res.statusCode === 200) {
-          this.#username = res.response.username;
+          this.userInfo = res.response;
           return true;
         } else {
           this.#cleanSessionCookie();
@@ -103,7 +114,7 @@ class Global {
   }
 
   /**
-   * Este método se encarga de realizar las peticiones a la API
+   * @summary Este método se encarga de realizar las peticiones a la API
    *
    * @param {string} path
    * @param {object | null} body
@@ -135,8 +146,7 @@ class Global {
   }
 
   /**
-   * Este método se encarga de ecoger el tipo de contenido que se
-   * va a enviar al servidor.
+   * @summary Este método se encarga de ecoger el tipo de contenido que se va a enviar al servidor.
    *
    * @param {string} method
    * @returns
@@ -153,33 +163,6 @@ class Global {
       default:
         return null;
     }
-  }
-
-  /**
-   * @description Este método se encarga de obtener el nombre de usuario
-   *
-   * @returns {String}
-   */
-  getUsername() {
-    return this.#username;
-  }
-
-  /**
-   * @returns {String}
-   */
-  getUserImg() {
-    return (
-      this.#API_URL.replace(/\/api/, "/cliente") + "/" + this.#username + ".jpg"
-    );
-  }
-
-  /**
-   * Este método se encarga de obtener la información del usuario
-   *
-   * @returns {Promise<API_RESPONSE>}
-   */
-  async getUserInfo() {
-    return await this.fetchAPI("/cliente", null, "GET");
   }
 
   /**
@@ -212,7 +195,7 @@ class Global {
   }
 
   /**
-   * @description Este método se encarga de obtener los productos del carrito
+   * @summary Este método se encarga de obtener los productos del carrito
    * 
    * @param {number} id 
    * @returns {Promise<boolean>}
@@ -227,7 +210,7 @@ class Global {
   }
 
   /**
-   * @description Este método se encarga de aumentar la cantidad de un producto en el carrito
+   * @summary Este método se encarga de aumentar la cantidad de un producto en el carrito
    * 
    * @param {number} id 
    * @returns {Promise<boolean>}
@@ -238,7 +221,7 @@ class Global {
   }
 
   /**
-   * @description Este método se encarga de remover un producto del carrito
+   * @summary Este método se encarga de remover un producto del carrito
    * 
    * @param {number} id
    * @returns {Promise<boolean>}
@@ -249,7 +232,7 @@ class Global {
   }
 
   /**
-   * @description Este método se encarga de obtener los productos del carrito del usuario
+   * @summary Este método se encarga de obtener los productos del carrito del usuario
    * 
    * @returns {Promise<Cart[]>}
    */
@@ -259,7 +242,7 @@ class Global {
   }
 
   /**
-   * @description Este método se encarga de realizar el login del usuario
+   * @summary Este método se encarga de realizar el login del usuario
    *
    * @param {FormData} credentials
    * @returns {Promise<boolean>}
@@ -282,12 +265,12 @@ class Global {
       return res.statusCode === 200 ? true : false;
     } catch (error) {
       console.error(error);
-      return fasle;
+      return false;
     }
   }
 
   /**
-   * @description Este método se encarga de realiazar el logout del usuario
+   * @summary Este método se encarga de realiazar el logout del usuario
    */
   logout() {
     this.#cleanSessionCookie();

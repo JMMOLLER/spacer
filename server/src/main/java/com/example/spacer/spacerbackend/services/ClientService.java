@@ -1,6 +1,7 @@
 package com.example.spacer.spacerbackend.services;
 
 import com.example.spacer.spacerbackend.models.ClientModel;
+import com.example.spacer.spacerbackend.models.InvoiceModel;
 import com.example.spacer.spacerbackend.repositories.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -10,6 +11,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -18,10 +20,12 @@ import java.util.Optional;
 public class ClientService {
   ClientRepository clientRepository;
   CartService cartService;
+  InvoiceService invoiceService;
 
   @Autowired
-  public void ClientRepository(ClientRepository clientRepository, CartService cartService) {
+  public void ClientRepository(ClientRepository clientRepository, CartService cartService, InvoiceService invoiceService) {
     this.clientRepository = clientRepository;
+    this.invoiceService = invoiceService;
     this.cartService = cartService;
   }
 
@@ -74,7 +78,7 @@ public class ClientService {
   }
 
   @CacheEvict(value = "client", key = "#client.username")
-  public ClientModel updatePassword(ClientModel client, String newPassword){
+  public ClientModel updatePassword(ClientModel client, String newPassword) {
     try {
       BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
       if (newPassword.trim().length() < 6) {
@@ -91,7 +95,7 @@ public class ClientService {
     }
   }
 
-  private ClientModel ClientDataSetter(@NonNull ClientModel newClientData, ClientModel currentClientData){
+  private ClientModel ClientDataSetter(@NonNull ClientModel newClientData, ClientModel currentClientData) {
 
     if (newClientData.getFirstName() != null) {
       currentClientData.setFirstName(newClientData.getFirstName());
@@ -119,7 +123,7 @@ public class ClientService {
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La nueva contraseña debe tener al menos 6 caracteres.");
       } else if (!newClientData.getPassword().equals(newClientData.getNewPassword())) {
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Las contraseñas no coinciden.");
-      }else {
+      } else {
         currentClientData.setPassword(encoder.encode(newClientData.getNewPassword()));
       }
     }
@@ -193,6 +197,20 @@ public class ClientService {
           client.getId()
         );
         return true;
+      } else {
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El cliente no existe");
+      }
+    } catch (Exception e) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+    }
+  }
+
+  public InvoiceModel[] getOrders(Long clientId) {
+    try {
+      Optional<ClientModel> existingClient = clientRepository.findById(clientId);
+      if (existingClient.isPresent()) {
+        ClientModel client = existingClient.get();
+        return invoiceService.getInvoicesByClientId(client.getId());
       } else {
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El cliente no existe");
       }

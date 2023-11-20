@@ -2,7 +2,21 @@
  * @typedef {Object} API_RESPONSE
  * @property {number} statusCode - El código de estado de la respuesta.
  * @property {string} description - El mensaje asociado a la respuesta.
- * @property {any} response - La respuesta de la API (puede ser un objeto o null).
+ * @property {Client | null} response - La respuesta de la API (puede ser un objeto o null).
+ */
+
+/**
+ * @typedef {Object} Client
+ * @property {number} id - El ID del cliente.
+ * @property {string} firstName - El nombre del cliente.
+ * @property {string} lastName - El apellido del cliente.
+ * @property {string} urlImg - La URL de la imagen del cliente.
+ * @property {number} rol - El rol del cliente.
+ * @property {string} address - La dirección del cliente.
+ * @property {number} cardNumber - El número de tarjeta del cliente.
+ * @property {Cart[]} cart - El carrito del cliente.
+ * @property {string} email - El email del cliente.
+ * @property {string} username - El nombre de usuario del cliente.
  */
 
 /**

@@ -1,7 +1,7 @@
 import "../globals/types.js";
 import Global from "../globals/index.js";
 const module = Global.getInstance();
-let subtotal = 0.00;
+let subtotal = 0.0;
 /**
  * @type {Cart[] | undefined} cart
  */
@@ -10,24 +10,28 @@ let cart;
 export default function init() {
   import("../home/index.js").then((module) => {
     module.loadHeaderLottieAnimation(); // Se importa el módulo home y se llama a la función loadHeaderLottieAnimation para cargar la animación del header
-    module.handleCheckAuth().then((res) => !res ? (window.location.href = "/pages/login.html") : null); // Se importa el módulo home y se llama a la función handleCheckAuth para verificar si el usuario está autenticado
-  })
+    module
+      .handleCheckAuth()
+      .then((res) =>
+        !res ? (window.location.href = "/pages/login.html") : null
+      ); // Se importa el módulo home y se llama a la función handleCheckAuth para verificar si el usuario está autenticado
+  });
 
   const form = document.querySelector("#checkout"); // Seleccionamos el elemento con el id checkout
   form.addEventListener("submit", handleCheckoutSubmit); // Se agrega el evento submit al formulario
-  form.querySelectorAll("input").forEach(
-    (input) => input.addEventListener("input", handleChangeInput)
-  ); // Seleccionamos todos los elementos input que estén dentro del formulario y se les agrega el evento input
+  form
+    .querySelectorAll("input")
+    .forEach((input) => input.addEventListener("input", handleChangeInput)); // Seleccionamos todos los elementos input que estén dentro del formulario y se les agrega el evento input
   renderCardItem();
 }
 
 const cardNameRegex = /^[a-zA-Z ]{2,30}$/; // Expresión regular para validar el nombre de la tarjeta de crédito
 const cardNumberRegex = /^[0-9]{16}$/; // Expresión regular para validar el número de tarjeta de crédito
-const cardExpirationRegex = /^[0-9]{2}\/[0-9]{2}\/[0-9]{2}$/; // Expresión regular para validar la fecha de expiración de la tarjeta de crédito
+const cardExpirationRegex = /^[0-9]{2}\/[0-9]{2}$/; // Expresión regular para validar la fecha de expiración de la tarjeta de crédito
 const cardCvvRegex = /^[0-9]{3}$/; // Expresión regular para validar el cvv de la tarjeta de crédito
 
 /**
- * Esta función se encarga de manejar el evento click de los botones de cantidad de productos.
+ * @summary Esta función se encarga de manejar el evento click de los botones de cantidad de productos.
  *
  * @param {InputEvent} e
  */
@@ -42,7 +46,8 @@ async function handleQuantityClick(id, e) {
     await module.decreaseProductQuantity(id); // Se llama a la función decreaseProductQuantity y se le pasa el id del producto
     quantity.value--; // Se le resta 1 al valor del input
     decreaseLocalCart(id);
-  } else if ( quantity?.value < 100 && elem?.classList.contains("up")) { // Si el valor del input es menor a 100 y el elemento que disparó el evento tiene la clase up
+  } else if (quantity?.value < 100 && elem?.classList.contains("up")) {
+    // Si el valor del input es menor a 100 y el elemento que disparó el evento tiene la clase up
     await module.addProductToCart(id); // Se llama a la función increaseProductQuantity y se le pasa el id del producto
     quantity.value++; // Se le suma 1 al valor del input
     encreaseLocalCart(id);
@@ -52,9 +57,9 @@ async function handleQuantityClick(id, e) {
 }
 
 /**
- * @description Esta función se encarga de disminuir la cantidad de un producto en el carrito
- * 
- * @param {number} id 
+ * @summary Esta función se encarga de disminuir la cantidad de un producto en el carrito
+ *
+ * @param {number} id
  */
 function decreaseLocalCart(id) {
   cart = cart.map((product) => {
@@ -66,9 +71,9 @@ function decreaseLocalCart(id) {
 }
 
 /**
- * @description Esta función se encarga de aumentar la cantidad de un producto en el carrito
- * 
- * @param {number} id 
+ * @summary Esta función se encarga de aumentar la cantidad de un producto en el carrito
+ *
+ * @param {number} id
  */
 function encreaseLocalCart(id) {
   cart = cart.map((product) => {
@@ -80,7 +85,7 @@ function encreaseLocalCart(id) {
 }
 
 /**
- * Esta función agrega una animación de la librería Lottie a un elemento
+ * @summary Esta función agrega una animación de la librería Lottie a un elemento
  *
  * @param {HTMLElement} element
  */
@@ -117,7 +122,7 @@ function addLottieDeleteAnimation(element) {
 }
 
 /**
- * Esta función se encarga de validar los campos del formulario de checkout
+ * @summary Esta función se encarga de validar los campos del formulario de checkout
  *
  * @param {Event} e
  */
@@ -169,7 +174,7 @@ function handleCheckoutSubmit(e) {
 }
 
 /**
- * Esta función se encarga de validar los campos del formulario de checkout
+ * @summary Esta función se encarga de validar los campos del formulario de checkout
  *
  * @param {Event} e
  */
@@ -189,7 +194,7 @@ function handleChangeInput(e) {
 }
 
 /**
- * Esta función se encarga de validar el número de tarjeta de crédito.
+ * @summary Esta función se encarga de validar el número de tarjeta de crédito.
  *
  * @param {String} cardNumber
  * @returns {{isValid: boolean, type: string}} response
@@ -221,7 +226,7 @@ const validateCardNumber = (cardNumber) => {
 };
 
 /**
- * Esta función se encarga de validar el nombre de la tarjeta de crédito.
+ * @summary Esta función se encarga de validar el nombre de la tarjeta de crédito.
  *
  * @param {string} cardName
  * @returns boolean
@@ -229,7 +234,7 @@ const validateCardNumber = (cardNumber) => {
 const validateCardName = (cardName) => cardNameRegex.test(cardName); // Método test() de la clase RegExp evalúa un string y devuelve true si cumple con la expresión regular
 
 /**
- * Esta función se encarga de validar la fecha de expiración de la tarjeta de crédito.
+ * @summary Esta función se encarga de validar la fecha de expiración de la tarjeta de crédito.
  *
  * @param {string} cardExpiration
  * @returns boolean
@@ -238,7 +243,7 @@ const validateCardExpiration = (cardExpiration) =>
   cardExpirationRegex.test(cardExpiration);
 
 /**
- * Esta función se encarga de validar el cvv de la tarjeta de crédito.
+ * @summary Esta función se encarga de validar el cvv de la tarjeta de crédito.
  *
  * @param {string} cardCvv
  * @returns boolean
@@ -246,7 +251,7 @@ const validateCardExpiration = (cardExpiration) =>
 const validateCardCvv = (cardCvv) => cardCvvRegex.test(cardCvv);
 
 /**
- * Esta función se encarga de establecer la clase invalid a los inputs que no sean válidos.
+ * @summary Esta función se encarga de establecer la clase invalid a los inputs que no sean válidos.
  *
  * @param {HTMLElement} input
  * @param {boolean} isValid
@@ -264,9 +269,8 @@ const handleCardExpiration = (cardExpiration) => {
    * Método split() de la clase String separa una cadena de string en un array de cadenas
    * string seguún un separador especificado.
    */
-  const dia = parseInt(cardExpiration.value.split("/")[0]); // Obtenemos el día
-  const mes = parseInt(cardExpiration.value.split("/")[1]); // Obtenemos el mes
-  const year = parseInt(cardExpiration.value.split("/")[2]); // Obtenemos el año
+  const mes = parseInt(cardExpiration.value.split("/")[0]); // Obtenemos el mes
+  let year = parseInt(cardExpiration.value.split("/")[1]); // Obtenemos el año
 
   cardExpiration.value = cardExpiration.value.replace(
     /^\/+|[^0-9\/]|\/{2,}/g,
@@ -280,21 +284,17 @@ const handleCardExpiration = (cardExpiration) => {
   if (cardExpiration.value.length === 3 && cardExpiration.value[2] !== "/") {
     cardExpiration.value =
       cardExpiration.value.slice(0, 2) + "/" + cardExpiration.value.slice(2); // Si el tercer caracter no es "/" se agregará
-    return; // Se retorna para que no se ejecute el siguiente if
-  } else if (
-    cardExpiration.value.length === 6 &&
-    cardExpiration.value[5] !== "/"
-  ) {
-    cardExpiration.value =
-      cardExpiration.value.slice(0, 5) + "/" + cardExpiration.value.slice(5); // Si el sexto caracter no es "/" se agregará
-    return; // Se retorna para que no se ejecute el siguiente if
+    year = parseInt(cardExpiration.value.split("/")[1]);
+  } else if (cardExpiration.value.length === 6) {
+    cardExpiration.value = cardExpiration.value.slice(0, -1); // Si la longitud del valor es igual a 6 se elimina el último caracter
   }
 
-  if (dia > 31 || cardExpiration.value.slice(0, 2) === "00") {
-    cardExpiration.value = cardExpiration.value.slice(0, -1); // Si el día es mayor a 31 o el día es 00 se elimina el último caracter
-  } else if (mes > 12 || cardExpiration.value.slice(3, 5) === "00") {
+  if (mes > 12 || cardExpiration.value.slice(0, 2) === "00") {
     cardExpiration.value = cardExpiration.value.slice(0, -1); // Si el mes es mayor a 12 o el mes es 00 se elimina el último caracter
-  } else if (year > 99 || cardExpiration.value.slice(6) === "0") {
+  } else if (
+    (cardExpiration.value.slice(3, 4).length === 1 && year < 2) ||
+    (cardExpiration.value.slice(3, 5).length === 2 && year < 23)
+  ) {
     cardExpiration.value = cardExpiration.value.slice(0, -1); // Si el año es mayor a 99 o el año es 0 se elimina el último caracter
   }
 
@@ -305,7 +305,7 @@ const handleCardExpiration = (cardExpiration) => {
 };
 
 /**
- * Esta función se encarga de validar el campo cardCvv.
+ * @summary Esta función se encarga de validar el campo cardCvv.
  *
  * @param {HTMLElement} cardCvv
  */
@@ -321,7 +321,7 @@ const handleCardCvv = (cardCvv) => {
 };
 
 /**
- * Esta función se encarga de validar el campo cardNumber.
+ * @summary Esta función se encarga de validar el campo cardNumber.
  *
  * @param {HTMLElement} cardNumber
  */
@@ -350,7 +350,7 @@ const handleCardNumber = (cardNumber) => {
 };
 
 /**
- * Esta función se encarga de validar el campo cardName.
+ * @summary Esta función se encarga de validar el campo cardName.
  *
  * @param {HTMLElement} cardName
  */
@@ -361,33 +361,38 @@ const handleCardName = (cardName) => {
 };
 
 /**
- * 
- * @param {InputEvent} e 
- * @param {number} id 
+ * @summary Esta función se encarga de manejar el evento click del botón de eliminar producto
+ *
+ * @param {InputEvent} e
+ * @param {number} id
  */
 async function handleDeleteProduct(id, e) {
   const res = await module.removeProductFromCart(id);
-  if(res){
+  if (res) {
     document.querySelector(`div[data-id='${id}']`).remove();
     cart = cart.filter((product) => product.productId.id !== id);
     updateSubTotal();
     updateTotal();
-  }else{
+    const cartCant = document.querySelector("#cart_cant");
+    document.querySelector("#cart_cant").innerHTML =
+      Number(cartCant.innerHTML) - 1;
+  } else {
     alert("Ocurrió un error al eliminar el producto");
   }
-};
+}
 
 /**
- * 
- * @param {String} tag 
- * @param {String} className 
- * @param {String | HTMLElement} content 
- * @param {Object} attributes 
- * @returns 
+ * @summary Esta función se encarga de crear un elemento HTML
+ *
+ * @param {String} tag
+ * @param {String} className
+ * @param {String | HTMLElement} content
+ * @param {Object} attributes
+ * @returns
  */
 function createElement(tag, className, content = null, attributes = {}) {
   const element = document.createElement(tag);
-  const classes = className?.split(' ');
+  const classes = className?.split(" ");
   classes?.forEach((c) => element.classList.add(c));
 
   for (const key in attributes) {
@@ -395,7 +400,7 @@ function createElement(tag, className, content = null, attributes = {}) {
   }
 
   if (content !== null) {
-    if (typeof content === 'string') {
+    if (typeof content === "string") {
       element.textContent = content;
     } else {
       element.appendChild(content);
@@ -406,28 +411,42 @@ function createElement(tag, className, content = null, attributes = {}) {
 }
 
 /**
- * 
- * @param {number} id 
- * @param {String} imageUrl 
- * @param {String} marca 
- * @param {String} description 
- * @param {number} quantity 
- * @param {number} price 
- * @returns 
+ * @summary Esta función se encarga de crear el template de un producto del carrito
+ *
+ * @param {number} id
+ * @param {String} imageUrl
+ * @param {String} marca
+ * @param {String} description
+ * @param {number} quantity
+ * @param {number} price
+ * @returns
  */
-function createProductCardTemplate(id, imageUrl, marca, description, quantity, price) {
-  const cardItem = createElement('div', 'card_item', null, { 'data-id': id });
+function createProductCardTemplate(
+  id,
+  imageUrl,
+  marca,
+  description,
+  quantity,
+  price
+) {
+  const cardItem = createElement("div", "card_item", null, { "data-id": id });
 
-  const featuredCardContent = createElement('div', 'featured_card_content');
+  const featuredCardContent = createElement("div", "featured_card_content");
 
-  const img = createElement('img', null, null, { src: imageUrl, alt: 'imagen producto' });
-  img.addEventListener('error', (e) => e.target.src = "/assets/imgs/no-available-image.png")
+  const img = createElement("img", null, null, {
+    src: imageUrl,
+    alt: "imagen producto",
+  });
+  img.addEventListener(
+    "error",
+    (e) => (e.target.src = "/assets/imgs/no-available-image.png")
+  );
 
-  const featuredCardInfo = createElement('div', 'featured_card_info');
+  const featuredCardInfo = createElement("div", "featured_card_info");
 
-  const productName = createElement('h4', null, marca);
+  const productName = createElement("h4", null, marca);
 
-  const productDescription = createElement('p', null, description);
+  const productDescription = createElement("p", null, description);
 
   featuredCardInfo.appendChild(productName);
   featuredCardInfo.appendChild(productDescription);
@@ -435,50 +454,66 @@ function createProductCardTemplate(id, imageUrl, marca, description, quantity, p
   featuredCardContent.appendChild(img);
   featuredCardContent.appendChild(featuredCardInfo);
 
-  const contentCardQuantity = createElement('div', 'content_card_quantity');
+  const contentCardQuantity = createElement("div", "content_card_quantity");
 
-  const faDown = createElement('i', 'fa fa-back', null, null);
+  const faDown = createElement("i", "fa fa-back", null, null);
 
-  const quantityDownButton = createElement('button', 'product_quantity down', faDown, {
-    type: 'button',
-  });
-  quantityDownButton.addEventListener('click', handleQuantityClick.bind(null, id));
+  const quantityDownButton = createElement(
+    "button",
+    "product_quantity down",
+    faDown,
+    {
+      type: "button",
+    }
+  );
+  quantityDownButton.addEventListener(
+    "click",
+    handleQuantityClick.bind(null, id)
+  );
 
-  const cantidadProducto = createElement('input', null, null, {
-    type: 'number',
+  const cantidadProducto = createElement("input", null, null, {
+    type: "number",
     value: quantity,
-    name: 'cantidad',
+    name: "cantidad",
     disabled: true,
     id: `cantidad_producto--${id}`,
   });
 
-  const faUp = createElement('i', 'fa fa-next', null, null);
+  const faUp = createElement("i", "fa fa-next", null, null);
 
-  const quantityUpButton = createElement('button', 'product_quantity up', faUp, {
-    type: 'button',
-  });
-  quantityUpButton.addEventListener('click', handleQuantityClick.bind(null, id));
+  const quantityUpButton = createElement(
+    "button",
+    "product_quantity up",
+    faUp,
+    {
+      type: "button",
+    }
+  );
+  quantityUpButton.addEventListener(
+    "click",
+    handleQuantityClick.bind(null, id)
+  );
 
-  const contentDelete = createElement('div', 'content_delete');
-  const buttonDelete = createElement('button', 'delete_product', null, {
-    type: 'button',
+  const contentDelete = createElement("div", "content_delete");
+  const buttonDelete = createElement("button", "delete_product", null, {
+    type: "button",
   });
-  buttonDelete.addEventListener('click', handleDeleteProduct.bind(null, id));
+  buttonDelete.addEventListener("click", handleDeleteProduct.bind(null, id));
   contentDelete.appendChild(buttonDelete);
   addLottieDeleteAnimation(buttonDelete);
 
   contentCardQuantity.appendChild(quantityDownButton);
   contentCardQuantity.appendChild(cantidadProducto);
   contentCardQuantity.appendChild(quantityUpButton);
-  
-  const contentPrice = createElement('div', 'content_price');
-  
-  const productPrice = createElement('h3', null, `S/. ${price.toFixed(2)}`);
+
+  const contentPrice = createElement("div", "content_price");
+
+  const productPrice = createElement("h3", null, `S/. ${price.toFixed(2)}`);
 
   subtotal += price * quantity;
-  
+
   contentPrice.appendChild(productPrice);
-  
+
   cardItem.appendChild(featuredCardContent);
   cardItem.appendChild(contentCardQuantity);
   cardItem.appendChild(contentPrice);
@@ -487,7 +522,10 @@ function createProductCardTemplate(id, imageUrl, marca, description, quantity, p
   return cardItem;
 }
 
-async function renderCardItem(){
+/**
+ * @summary Esta función se encarga de renderizar los productos del carrito
+ */
+async function renderCardItem() {
   cart = await module.getCartProducts();
   document.querySelector(".loader").classList.add("hidden");
   cart.forEach((product) => {
@@ -499,21 +537,51 @@ async function renderCardItem(){
       product.quantity,
       product.productId.price
     );
-    document.querySelector('.content_items').appendChild(cardItem);
+    document.querySelector(".content_items").appendChild(cardItem);
   });
   updateTotal();
 }
 
-function updateTotal(){
+/**
+ * @summary Esta función se encarga de actualizar los precios finales que se muestran
+ */
+function updateTotal() {
   const envioP = parseFloat(subtotal.toFixed(2) * 0.02);
   const total = parseFloat(subtotal + envioP);
-  document.getElementById("quantity_indicator").innerText = document.querySelectorAll(".card_item").length;
-  document.getElementById("subtotal_price").innerText = `S/. ${subtotal.toFixed(2)}`;
+  document.getElementById("quantity_indicator").innerText =
+    document.querySelectorAll(".card_item").length;
+  document.getElementById("subtotal_price").innerText = `S/. ${subtotal.toFixed(
+    2
+  )}`;
   document.getElementById("total_envio").innerText = `S/. ${envioP.toFixed(2)}`;
   document.getElementById("total_price").innerText = `S/. ${total.toFixed(2)}`;
-  document.getElementById("total_confirm").innerText = `S/. ${total.toFixed(2)}`;
+  document.getElementById("total_confirm").innerText = `S/. ${total.toFixed(
+    2
+  )}`;
 }
 
-function updateSubTotal(){
-  subtotal = cart.reduce((acc, product) => acc + (product.productId.price * product.quantity), 0);
+/**
+ * @summary Esta función se encarga de actualizar el subtotal
+ */
+function updateSubTotal() {
+  subtotal = cart.reduce(
+    (acc, product) => acc + product.productId.price * product.quantity,
+    0
+  );
 }
+
+/**
+ * @summary Esta función se encarga de manejar la animación de compra
+ *
+ * @param {Promise<API_RESPONSE>} status
+ */
+function handlePurchaseAnimation(status) {
+  const el = document.querySelector(".purchase_anim.hidden");
+  el.classList.toggle("hidden");
+  status.then((res) => {
+    const circle = document.querySelector(".purchase_anim  > .circle-loader");
+    circle.classList.add(res.statusCode === 200 ? "success" : "failed");
+  });
+}
+
+export { handlePurchaseAnimation };

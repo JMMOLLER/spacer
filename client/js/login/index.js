@@ -22,7 +22,8 @@ export default function init() {
  */
 function addBackEventListener(el, customAnimEl) {
   const callback = () => {
-    if(window.history.length > 1) window.history.back();
+    if(window.location.href.includes("login")) window.location.href = "/";
+    else if(window.history.length > 1) window.history.back();
     else window.location.href = "/";
   };
   addAnimationClose(el, false, callback, customAnimEl);

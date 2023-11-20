@@ -51,7 +51,7 @@ public class MainController {
 
   @GetMapping("/api")
   public ResponseEntity<?> apiHome() {
-    return new ResponseEntity<>(new Response(HttpStatus.OK, HttpStatus.OK.name(), "Welcome to Spacer API on v1.3.8 🚀!"), HttpStatus.OK);
+    return new ResponseEntity<>(new Response(HttpStatus.OK, HttpStatus.OK.name(), "Welcome to Spacer API on v1.4.2 🚀!"), HttpStatus.OK);
   }
 
   @PostMapping("/cliente/reset-password")
@@ -75,7 +75,7 @@ public class MainController {
       }
 
       if (client == null) {
-        return new Response().okResponse();
+        return new Response().okResponse(); // Se retorna un 200 OK para evitar que se sepa si el email existe o no
       }
 
       if (consultCode != null) {
@@ -84,7 +84,7 @@ public class MainController {
         if (pr == null || !pr.getId().toUpperCase().startsWith(consultCode)) {
           return new Response("Código no reconocido. No autorizado a cambio de contraseña").unauthorizedResponse();
         } else {
-          return new Response().okResponse();
+          return new Response().okResponse(); // Se retorna un 200 OK para evitar que se sepa si el email existe o no
         }
       }
 
@@ -104,7 +104,7 @@ public class MainController {
         }
       }); // Se ejecuta en un hilo aparte como tarea asíncrona (tipo JavaScript <3)
 
-      return new Response().createdResponse();
+      return new Response().okResponse(); // Se retorna un 200 OK para evitar que se sepa si el email existe o no
     } catch (Exception e) {
       var message = ExceptionUtils.getRootCause(e).getMessage();
       return new Response(message).internalServerErrorResponse();
