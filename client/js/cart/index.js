@@ -569,3 +569,19 @@ function updateSubTotal() {
     0
   );
 }
+
+/**
+ * @summary Esta función se encarga de manejar la animación de compra
+ *
+ * @param {Promise<API_RESPONSE>} status
+ */
+function handlePurchaseAnimation(status) {
+  const el = document.querySelector(".purchase_anim.hidden");
+  el.classList.toggle("hidden");
+  status.then((res) => {
+    const circle = document.querySelector(".purchase_anim  > .circle-loader");
+    circle.classList.add(res.statusCode === 200 ? "success" : "failed");
+  });
+}
+
+export { handlePurchaseAnimation };
