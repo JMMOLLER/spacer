@@ -1,17 +1,19 @@
 package com.example.spacer.spacerbackend.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 
 @Getter
+@Setter
 @Entity
 @Table(name = "producto")
 public class ProductModel implements Serializable {
@@ -20,28 +22,26 @@ public class ProductModel implements Serializable {
   @Column(name = "idpro")
   private Long id;
 
-  @lombok.Setter
+  @Column(name = "marca")
   private String marca;
-  @lombok.Setter
+
   @Column(name = "despro")
   private String description;
-  @lombok.Setter
+
   @Column(name = "prepro")
   private double price;
 
-  @lombok.Setter
   @ManyToOne
   @JoinColumn(name="idcat")
   private CategoryModel categoryId;
 
-  @lombok.Setter
   @Column(name = "stock")
   private int stock;
-  @lombok.Setter
+
   @JsonIgnore
   @Column(name = "imgprod")
   private byte[] img;
-  @lombok.Setter
+
   @Column(name = "urlprod")
   private String urlImg;
 

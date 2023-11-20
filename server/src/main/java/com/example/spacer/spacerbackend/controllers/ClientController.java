@@ -177,4 +177,20 @@ public class ClientController {
     return new ResponseEntity<>(response, HttpStatus.OK);
   }
 
+  @GetMapping("/pedidos")
+  public ResponseEntity<Response> getOrders(HttpServletRequest request) {
+    try {
+      String authorizationHeader = request.getHeader("Authorization");
+      Map<String, Object> payload = TokensUtils.getPayloadFromToken(
+        authorizationHeader.replace("Bearer ", "")
+      );
+      assert payload != null;
+      Response response = new Response(HttpStatus.OK, HttpStatus.OK.name(), this.clientService.getOrders(Long.parseLong(payload.get("userId").toString())));
+      return new ResponseEntity<>(response, HttpStatus.OK);
+    } catch (Exception e) {
+      Response response = new Response(HttpStatus.BAD_REQUEST, ExceptionUtils.getRootCause(e).getMessage(), null);
+      return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+  }
+
 }
