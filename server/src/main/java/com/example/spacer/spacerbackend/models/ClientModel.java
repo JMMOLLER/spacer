@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -15,8 +16,9 @@ import java.util.List;
 import java.util.Objects;
 
 @Getter
+@Setter
 @Entity
-@JsonIgnoreProperties({"new-password"})
+@JsonIgnoreProperties({"new-password", "password"})
 @Table(name = "cliente")
 public class ClientModel implements Serializable {
 
@@ -25,45 +27,44 @@ public class ClientModel implements Serializable {
   @Column(name="idcli")
   private Long id;
 
-  @lombok.Setter
   @Column(name="nomcli")
   private String firstName;
-  @lombok.Setter
+
   @Column(name="apecli")
   private String lastName;
-  @lombok.Setter
+
   @Column(name="imgcli")
   @JsonIgnore
   private byte[] img;
 
-  @lombok.Setter
   @Transient
   private String urlImg;
 
-  @lombok.Setter
   @Column(name="rolcli")
   private Integer rol;
-  @lombok.Setter
+
   @Column(name="dircli")
   private String address;
-  @lombok.Setter
+
   @Column(name="crdcli")
   private Integer cardNumber;
 
-  @lombok.Setter
   @OneToMany(mappedBy = "clientId", cascade = CascadeType.ALL)
   @JsonManagedReference
   private List<CartModel> cart;
 
-  @lombok.Setter
   @Transient
   @JsonProperty("new-password")
   private String newPassword;
-  @lombok.Setter
+
+  @Column(name="password")
+  @JsonProperty("password")
   private String password;
-  @lombok.Setter
+
+  @Column(name="email")
   private String email;
-  @lombok.Setter
+
+  @Column(name="username")
   private String username;
   public void setId(Long id) {
     this.id = id;
