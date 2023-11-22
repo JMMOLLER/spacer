@@ -12,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -68,12 +69,15 @@ public class ClientService {
 
   @Cacheable(value = "client", key = "#username")
   public ClientModel getClientByUsername(String username) {
-    Optional<ClientModel> client = clientRepository.findOneByUsername(username);
-    if (client.isPresent()) {
-      int test = client.get().getCart().size();
-      return client.get();
-    } else {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El cliente con el username '{username}' no existe");
+    try{
+      Optional<ClientModel> client = clientRepository.findOneByUsername(username);
+      if (client.isPresent()) {
+        return client.get();
+      } else {
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El cliente con el username '"+ username +"' no existe");
+      }
+    } catch (Exception e) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
     }
   }
 
@@ -97,22 +101,22 @@ public class ClientService {
 
   private ClientModel ClientDataSetter(@NonNull ClientModel newClientData, ClientModel currentClientData) {
 
-    if (newClientData.getFirstName() != null) {
+    if (newClientData.getFirstName() != null && !newClientData.getFirstName().equals(currentClientData.getFirstName())) {
       currentClientData.setFirstName(newClientData.getFirstName());
     }
-    if (newClientData.getLastName() != null) {
+    if (newClientData.getLastName() != null && !newClientData.getLastName().equals(currentClientData.getLastName())) {
       currentClientData.setLastName(newClientData.getLastName());
     }
-    if (newClientData.getAddress() != null) {
+    if (newClientData.getAddress() != null && !newClientData.getAddress().equals(currentClientData.getAddress())) {
       currentClientData.setAddress(newClientData.getAddress());
     }
-    if (newClientData.getCardNumber() != null) {
-      currentClientData.setCardNumber(newClientData.getCardNumber());
-    }
-    if (newClientData.getEmail() != null) {
+//    if (newClientData.getCardNumber() != null && !newClientData.getCardNumber().equals(currentClientData.getCardNumber())) {
+//      currentClientData.setCardNumber(newClientData.getCardNumber());
+//    }
+    if (newClientData.getEmail() != null && !newClientData.getEmail().equals(currentClientData.getEmail())) {
       currentClientData.setEmail(newClientData.getEmail());
     }
-    if (newClientData.getImg() != null) {
+    if (newClientData.getImg() != null && !Arrays.equals(newClientData.getImg(), currentClientData.getImg())) {
       currentClientData.setImg(newClientData.getImg());
     }
     if (newClientData.getNewPassword() != null) {
@@ -222,5 +226,24 @@ public class ClientService {
   public ClientModel getClientByEmail(String email) {
     Optional<ClientModel> client = clientRepository.findOneByEmail(email);
     return client.orElse(null);
+  }
+
+  public InvoiceModel purchase(Long userId) {
+    try{
+      Optional<ClientModel> existingClient = clientRepository.findById(userId);
+      if (existingClient.isPresent()) {
+        ClientModel client = existingClient.get();
+        InvoiceModel invoice = invoiceService.createInvoice(client);
+        if(cartService.deleteCart(client) == 0) {
+          invoiceService.deleteInvoice(invoice.getId());
+          throw new Exception("No existen productos en el carrito");
+        }
+        return invoice;
+      } else {
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El cliente no existe");
+      }
+    } catch (Exception e) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+    }
   }
 }

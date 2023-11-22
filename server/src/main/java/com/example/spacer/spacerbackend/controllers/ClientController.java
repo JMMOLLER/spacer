@@ -1,7 +1,9 @@
 package com.example.spacer.spacerbackend.controllers;
 
 import com.example.spacer.spacerbackend.auth.TokensUtils;
+import com.example.spacer.spacerbackend.models.CardModel;
 import com.example.spacer.spacerbackend.models.ClientModel;
+import com.example.spacer.spacerbackend.models.InvoiceModel;
 import com.example.spacer.spacerbackend.services.ClientService;
 import com.example.spacer.spacerbackend.services.MailSenderService;
 import com.example.spacer.spacerbackend.services.Response;
@@ -69,7 +71,7 @@ public class ClientController {
       );
       assert payload != null;
       ClientModel cs = this.clientService.addToCart(formData, payload.get("username").toString());
-      Response response = new Response(HttpStatus.CREATED, HttpStatus.CREATED.name(), cs);
+      Response response = new Response(HttpStatus.CREATED, HttpStatus.CREATED.name(), cs.getCart());
       return new ResponseEntity<>(response, HttpStatus.CREATED);
     } catch (Exception e) {
       Response response = new Response(HttpStatus.BAD_REQUEST, ExceptionUtils.getRootCause(e).getMessage(), null);
@@ -175,6 +177,33 @@ public class ClientController {
   public ResponseEntity<Response> getClients() {
     Response response = new Response(HttpStatus.OK, HttpStatus.OK.name(), this.clientService.getAllClients());
     return new ResponseEntity<>(response, HttpStatus.OK);
+  }
+
+  @PostMapping("/carrito/pagar")
+  public ResponseEntity<Response> purchase(HttpServletRequest request, @RequestBody(required = false) CardModel cardInfo) {
+    try {
+      String authorizationHeader = request.getHeader("Authorization");
+      Map<String, Object> payload = TokensUtils.getPayloadFromToken(
+        authorizationHeader.replace("Bearer ", "")
+      );
+      assert payload != null;
+
+      ClientModel client = this.clientService.getClientByUsername(payload.get("username").toString());
+
+      if(cardInfo == null && client.getCardId() == null){
+        throw new Exception("La información de la tarjeta no puede ser nula");
+      } else if (cardInfo != null) {
+//        client.setCardId(cardInfo.getCardNumber());
+        this.clientService.updateClient(client, payload.get("username").toString());
+      }
+
+      InvoiceModel invoice = this.clientService.purchase(Long.parseLong(payload.get("userId").toString()));
+      Response response = new Response(HttpStatus.OK, HttpStatus.OK.name(), invoice);
+      return new ResponseEntity<>(response, HttpStatus.OK);
+    } catch (Exception e) {
+      Response response = new Response(HttpStatus.BAD_REQUEST, ExceptionUtils.getRootCause(e).getMessage(), null);
+      return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
   }
 
   @GetMapping("/pedidos")
