@@ -46,8 +46,10 @@ public class ClientModel implements Serializable {
   @Column(name="dircli")
   private String address;
 
-  @Column(name="crdcli")
-  private Integer cardNumber;
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name="idtar")
+  @JsonProperty("cardInfo")
+  private CardModel cardId;
 
   @OneToMany(mappedBy = "clientId", cascade = CascadeType.ALL)
   @JsonManagedReference
