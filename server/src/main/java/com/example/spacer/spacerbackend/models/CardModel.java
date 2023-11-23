@@ -1,24 +1,24 @@
 package com.example.spacer.spacerbackend.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @Entity
-@JsonIgnoreProperties({"cardNumber", "cvv"})
 @Table(name = "tarjetas")
-public class CardModel {
+public class CardModel implements Serializable {
 
   @Id
   @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
   @Column(name = "idtar")
   private Long id;
 
-  @JsonProperty("cardNumber")
   @Column(name = "numtar")
   private Long cardNumber;
 
@@ -26,9 +26,9 @@ public class CardModel {
   private String cardHolder;
 
   @Column(name = "vencimiento")
-  private String expirationDate;
+  private LocalDate expirationDate;
 
-  @JsonProperty("cvv")
+  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   @Column(name = "cvv")
   private Short cvv;
 

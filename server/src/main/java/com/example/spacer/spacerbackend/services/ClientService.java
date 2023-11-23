@@ -1,5 +1,7 @@
 package com.example.spacer.spacerbackend.services;
 
+import com.example.spacer.spacerbackend.models.CardModel;
+import com.example.spacer.spacerbackend.models.CartModel;
 import com.example.spacer.spacerbackend.models.ClientModel;
 import com.example.spacer.spacerbackend.models.InvoiceModel;
 import com.example.spacer.spacerbackend.repositories.ClientRepository;
@@ -22,12 +24,14 @@ public class ClientService {
   ClientRepository clientRepository;
   CartService cartService;
   InvoiceService invoiceService;
+  CardService cardService;
 
   @Autowired
-  public void ClientRepository(ClientRepository clientRepository, CartService cartService, InvoiceService invoiceService) {
+  public void ClientRepository(ClientRepository clientRepository, CartService cartService, InvoiceService invoiceService, CardService cardService) {
     this.clientRepository = clientRepository;
     this.invoiceService = invoiceService;
     this.cartService = cartService;
+    this.cardService = cardService;
   }
 
   @Cacheable(value = "clients")
@@ -110,9 +114,6 @@ public class ClientService {
     if (newClientData.getAddress() != null && !newClientData.getAddress().equals(currentClientData.getAddress())) {
       currentClientData.setAddress(newClientData.getAddress());
     }
-//    if (newClientData.getCardNumber() != null && !newClientData.getCardNumber().equals(currentClientData.getCardNumber())) {
-//      currentClientData.setCardNumber(newClientData.getCardNumber());
-//    }
     if (newClientData.getEmail() != null && !newClientData.getEmail().equals(currentClientData.getEmail())) {
       currentClientData.setEmail(newClientData.getEmail());
     }
@@ -150,7 +151,7 @@ public class ClientService {
   }
 
   @CacheEvict(value = "client", key = "#username")
-  public ClientModel addToCart(Map<String, Integer> formData, String username) {
+  public CartModel[] addToCart(Map<String, Integer> formData, String username) {
     try {
       Optional<ClientModel> existingClient = clientRepository.findOneByUsername(username);
       if (existingClient.isPresent()) {
@@ -162,7 +163,21 @@ public class ClientService {
           client.getId(),
           formData.getOrDefault("quantity", null)
         );
-        return clientRepository.save(client);
+        return this.getCart(username);
+      } else {
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El cliente no existe");
+      }
+    } catch (Exception e) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+    }
+  }
+
+  public CartModel[] getCart(String username) {
+    try {
+      Optional<ClientModel> existingClient = clientRepository.findOneByUsername(username);
+      if (existingClient.isPresent()) {
+        ClientModel client = existingClient.get();
+        return client.getCart().toArray(new CartModel[0]);
       } else {
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El cliente no existe");
       }
@@ -244,6 +259,41 @@ public class ClientService {
       }
     } catch (Exception e) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+    }
+  }
+
+  @CacheEvict(value = "client", key = "#client.username")
+  public String updateCardForClient(ClientModel client, CardModel card) {
+    try {
+      String error = validateCardModel(card);
+      if(error != null) return (error);
+
+      CardModel newCard;
+      if(client.getCardId() == null){
+        newCard = cardService.newCard(card);
+      }else{
+        card.setId(client.getCardId().getId());
+        newCard = cardService.updateCard(card);
+      }
+      client.setCardId(newCard);
+      clientRepository.save(client);
+      return null;
+    } catch (Exception e) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+    }
+  }
+
+  private String validateCardModel(CardModel card) {
+    if(card.getCardNumber() == null || (card.getCardNumber().toString().trim().length() < 13 || card.getCardNumber().toString().trim().length() > 19)) {
+      return ("El número de tarjeta no es válido");
+    } else if(card.getCardHolder() == null || card.getCardHolder().trim().length() < 3) {
+      return ("El nombre del titular no es válido");
+    } else if(card.getExpirationDate().isBefore(java.time.LocalDate.now())) {
+      return("La fecha de expiración no es válida");
+    } else if(card.getCvv() == null || card.getCvv().toString().trim().length() != 3) {
+      return("El código de seguridad no es válido");
+    } else {
+      return null;
     }
   }
 }
