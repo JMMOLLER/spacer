@@ -184,10 +184,16 @@ function handleCheckoutSubmit(e) {
 
     formData.set("expirationDate", cardExp.toISOString().slice(0, 10));
 
+    if(isRegistredCard(formData)){
+      formData.delete("cardNumber");
+      formData.delete("cardHolder");
+      formData.delete("expirationDate");
+    }
+    
     formData.forEach((value, key) => {
       console.log(`${key}: ${value}`);
     });
-    
+
     const promise = module.fetchAPI("/cliente/carrito/pagar", Object.fromEntries(formData), "POST")
 
     handlePurchaseAnimation(promise);
@@ -203,6 +209,23 @@ function handleCheckoutSubmit(e) {
       }, 3000);
     })
   }
+}
+
+/**
+ * 
+ * @param {FormData} formData 
+ */
+function isRegistredCard(formData){
+  const cardInfo = module.userInfo.cardInfo;
+  const cardNumber = Number(formData.get("cardNumber"));
+  const cardHolder = formData.get("cardHolder");
+  const expirationDate = formData.get("expirationDate");
+  const cardInfoChange = [
+    cardNumber !== cardInfo.cardNumber,
+    cardHolder !== cardInfo.cardHolder,
+    expirationDate !== cardInfo.expirationDate
+  ]
+  return cardInfoChange.every((change) => change === false);
 }
 
 /**
@@ -603,5 +626,3 @@ function handlePurchaseAnimation(status) {
     circle.classList.add(res.statusCode === 200 ? "success" : "failed");
   });
 }
-
-export { handlePurchaseAnimation };
