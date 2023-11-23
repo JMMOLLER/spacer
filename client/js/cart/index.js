@@ -1,34 +1,50 @@
 import "../globals/types.js";
 import Global from "../globals/index.js";
+import { handleCheckAuth, loadHeaderLottieAnimation } from "../home/index.js"
 const module = Global.getInstance();
+const cardNameRegex = /^[a-zA-Z ]{2,30}$/; // Expresión regular para validar el nombre de la tarjeta de crédito
+const cardNumberRegex = /^[0-9]{16}$/; // Expresión regular para validar el número de tarjeta de crédito
+const cardExpirationRegex = /^[0-9]{2}\/[0-9]{2}$/; // Expresión regular para validar la fecha de expiración de la tarjeta de crédito
+const cardCvvRegex = /^[0-9]{3}$/; // Expresión regular para validar el cvv de la tarjeta de crédito
 let subtotal = 0.0;
 /**
  * @type {Cart[] | undefined} cart
- */
+*/
 let cart;
 
 export default function init() {
-  import("../home/index.js").then((module) => {
-    module.loadHeaderLottieAnimation(); // Se importa el módulo home y se llama a la función loadHeaderLottieAnimation para cargar la animación del header
-    module
-      .handleCheckAuth()
-      .then((res) =>
-        !res ? (window.location.href = "/pages/login.html") : null
-      ); // Se importa el módulo home y se llama a la función handleCheckAuth para verificar si el usuario está autenticado
-  });
+  
+  loadHeaderLottieAnimation(); // Se importa el módulo home y se llama a la función loadHeaderLottieAnimation para cargar la animación del header
+  handleCheckAuth().then((res) => {
+      if(module.userInfo.cardInfo) autoCompleteCardInfo(module.userInfo.cardInfo);
+      return !res ? (window.location.href = "/pages/login.html") : null
+    }
+  ); // Se importa el módulo home y se llama a la función handleCheckAuth para verificar si el usuario está autenticado
 
   const form = document.querySelector("#checkout"); // Seleccionamos el elemento con el id checkout
   form.addEventListener("submit", handleCheckoutSubmit); // Se agrega el evento submit al formulario
   form
     .querySelectorAll("input")
     .forEach((input) => input.addEventListener("input", handleChangeInput)); // Seleccionamos todos los elementos input que estén dentro del formulario y se les agrega el evento input
+  
   renderCardItem();
 }
 
-const cardNameRegex = /^[a-zA-Z ]{2,30}$/; // Expresión regular para validar el nombre de la tarjeta de crédito
-const cardNumberRegex = /^[0-9]{16}$/; // Expresión regular para validar el número de tarjeta de crédito
-const cardExpirationRegex = /^[0-9]{2}\/[0-9]{2}$/; // Expresión regular para validar la fecha de expiración de la tarjeta de crédito
-const cardCvvRegex = /^[0-9]{3}$/; // Expresión regular para validar el cvv de la tarjeta de crédito
+/**
+ * @summary Esta función se encarga de autocompletar los campos del formulario de checkout
+ * 
+ * @param {CardInfo} cardInfo 
+ */
+function autoCompleteCardInfo(cardInfo){
+  const cardNumber = document.querySelector("#card_number");
+  const cardName = document.querySelector("#card_name");
+  const cardExpiration = document.querySelector("#card_expiration");
+  const cardExp = cardInfo.expirationDate.split("-").reverse().join("/").slice(3);
+
+  cardNumber.value = cardInfo.cardNumber;
+  cardName.value = cardInfo.cardHolder;
+  cardExpiration.value = cardExp.slice(0, 3) + cardExp.slice(5);
+}
 
 /**
  * @summary Esta función se encarga de manejar el evento click de los botones de cantidad de productos.
@@ -135,30 +151,28 @@ function handleCheckoutSubmit(e) {
   const stateInputs = []; // Se crea un array para guardar el estado de los inputs
 
   formData.forEach((value, key) => {
-    if (key === "card_number") {
+    if (key === "cardNumber") {
       // Si la key es card_number
       stateInputs.push({
         isValid: validateCardNumber(value).isValid, // Se agrega un objeto al array con el estado de la validación y el input
         input: target.querySelector("#card_number"), // Seleccionamos el elemento con el id card_number
       }); // Se agrega un objeto al array con el estado de la validación y el input
-    } else if (key === "card_name") {
+    } else if (key === "cardHolder") {
       stateInputs.push({
         isValid: validateCardName(value),
         input: target.querySelector("#card_name"),
       });
-    } else if (key === "card_expiration") {
+    } else if (key === "expirationDate") {
       stateInputs.push({
         isValid: validateCardExpiration(value),
         input: target.querySelector("#card_expiration"),
       });
-    } else if (key === "card_cvv") {
+    } else if (key === "cvv") {
       stateInputs.push({
         isValid: validateCardCvv(value),
         input: target.querySelector("#card_cvv"),
       });
     }
-
-    console.log(key + ": ", value);
   });
 
   if (stateInputs.some((input) => !input.isValid)) {
@@ -166,10 +180,28 @@ function handleCheckoutSubmit(e) {
       handleInputValidation(input.input, input.isValid);
     });
   } else {
-    console.log("Formulario válido");
-    /*
-     * Aquí se debería enviar el formulario al servidor.
-     */
+    const cardExp = new Date(`20${formData.get("expirationDate").split("/").reverse().join("-")}`);
+
+    formData.set("expirationDate", cardExp.toISOString().slice(0, 10));
+
+    formData.forEach((value, key) => {
+      console.log(`${key}: ${value}`);
+    });
+    
+    const promise = module.fetchAPI("/cliente/carrito/pagar", Object.fromEntries(formData), "POST")
+
+    handlePurchaseAnimation(promise);
+
+    promise.then((res) => {
+      setTimeout(() => {
+        if (res.statusCode === 200) {
+          window.location.href = "/pages/perfil.html";
+        } else {
+          alert("Ocurrió un error al realizar la compra.");
+          window.location.href = "/pages/carrito.html";
+        }
+      }, 3000);
+    })
   }
 }
 
@@ -239,8 +271,12 @@ const validateCardName = (cardName) => cardNameRegex.test(cardName); // Método 
  * @param {string} cardExpiration
  * @returns boolean
  */
-const validateCardExpiration = (cardExpiration) =>
-  cardExpirationRegex.test(cardExpiration);
+const validateCardExpiration = (cardExpiration) =>{
+  const cardExp = new Date(`20${cardExpiration.split("/").reverse().join("-")}`);
+  const currentDate = new Date();
+
+  return cardExpirationRegex.test(cardExpiration) && currentDate < cardExp;
+}
 
 /**
  * @summary Esta función se encarga de validar el cvv de la tarjeta de crédito.
@@ -413,28 +449,19 @@ function createElement(tag, className, content = null, attributes = {}) {
 /**
  * @summary Esta función se encarga de crear el template de un producto del carrito
  *
- * @param {number} id
- * @param {String} imageUrl
- * @param {String} marca
- * @param {String} description
- * @param {number} quantity
- * @param {number} price
+ * @param {Cart} param0
  * @returns
  */
-function createProductCardTemplate(
-  id,
-  imageUrl,
-  marca,
-  description,
-  quantity,
-  price
-) {
+function createProductCardTemplate({id, quantity, ...props}) {
+
+  const { urlImg, description, marca, price } = props.productId;
+
   const cardItem = createElement("div", "card_item", null, { "data-id": id });
 
   const featuredCardContent = createElement("div", "featured_card_content");
 
   const img = createElement("img", null, null, {
-    src: imageUrl,
+    src: urlImg,
     alt: "imagen producto",
   });
   img.addEventListener(
@@ -529,14 +556,7 @@ async function renderCardItem() {
   cart = await module.getCartProducts();
   document.querySelector(".loader").classList.add("hidden");
   cart.forEach((product) => {
-    const cardItem = createProductCardTemplate(
-      product.productId.id,
-      product.productId.urlImg,
-      product.productId.marca,
-      product.productId.description,
-      product.quantity,
-      product.productId.price
-    );
+    const cardItem = createProductCardTemplate(product);
     document.querySelector(".content_items").appendChild(cardItem);
   });
   updateTotal();

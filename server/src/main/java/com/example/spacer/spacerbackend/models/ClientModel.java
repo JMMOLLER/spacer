@@ -77,9 +77,4 @@ public class ClientModel implements Serializable {
     return urlBase + "/cliente/" + this.username + ".jpg";
   }
 
-  @JsonGetter("cardInfo")
-  public boolean hasCardInfo() {
-    return cardId != null;
-  }
-
 }

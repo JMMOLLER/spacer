@@ -15,7 +15,7 @@
  * @property {string} address - La dirección del cliente.
  * @property {string} email - El email del cliente.
  * @property {string} username - El nombre de usuario del cliente.
- * @property {boolean} cardInfo - El número de tarjeta del cliente.
+ * @property {CardInfo} cardInfo - El número de tarjeta del cliente.
  */
 
 /**
@@ -51,4 +51,12 @@
  * @property {object} body
  * @property {string} redirect
  * @property {string} referrerPolicy
+ */
+
+/**
+ * @typedef {Object} CardInfo
+ * @property {number} id - El ID de la tarjeta.
+ * @property {string} cardNumber - El número de la tarjeta.
+ * @property {string} cardHolder - El nombre del titular de la tarjeta.
+ * @property {string} expirationDate - La fecha de expiración de la tarjeta.
  */
