@@ -265,15 +265,19 @@ public class ClientService {
   @CacheEvict(value = "client", key = "#client.username")
   public String updateCardForClient(ClientModel client, CardModel card) {
     try {
-      String error = validateCardModel(card);
+      String error = findErrorCardModel(card);
       if(error != null) return (error);
 
       CardModel newCard;
       if(client.getCardId() == null){
         newCard = cardService.newCard(card);
       }else{
-        card.setId(client.getCardId().getId());
-        newCard = cardService.updateCard(card);
+        if(validateUpdateCardModel(card, client)) {
+          card.setId(client.getCardId().getId());
+          newCard = cardService.updateCard(card);
+        }else{
+          return null;
+        }
       }
       client.setCardId(newCard);
       clientRepository.save(client);
@@ -283,7 +287,12 @@ public class ClientService {
     }
   }
 
-  private String validateCardModel(CardModel card) {
+  private boolean validateUpdateCardModel(CardModel card, ClientModel client) {
+    if(card.getCardNumber().equals(client.getCardId().getCardNumber())) return false;
+    return !card.getCvv().equals(client.getCardId().getCvv());
+  }
+
+  private String findErrorCardModel(CardModel card) {
     if(card.getCardNumber() == null || (card.getCardNumber().toString().trim().length() < 13 || card.getCardNumber().toString().trim().length() > 19)) {
       return ("El número de tarjeta no es válido");
     } else if(card.getCardHolder() == null || card.getCardHolder().trim().length() < 3) {
