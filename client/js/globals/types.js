@@ -13,10 +13,9 @@
  * @property {string} urlImg - La URL de la imagen del cliente.
  * @property {number} rol - El rol del cliente.
  * @property {string} address - La dirección del cliente.
- * @property {number} cardNumber - El número de tarjeta del cliente.
- * @property {Cart[]} cart - El carrito del cliente.
  * @property {string} email - El email del cliente.
  * @property {string} username - El nombre de usuario del cliente.
+ * @property {boolean} cardInfo - El número de tarjeta del cliente.
  */
 
 /**
