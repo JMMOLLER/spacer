@@ -5,6 +5,7 @@ import com.example.spacer.spacerbackend.models.CartModel;
 import com.example.spacer.spacerbackend.models.ClientModel;
 import com.example.spacer.spacerbackend.models.InvoiceModel;
 import com.example.spacer.spacerbackend.repositories.ClientRepository;
+import com.example.spacer.spacerbackend.utils.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -61,13 +62,15 @@ public class ClientService {
 
           return clientRepository.save(newClientData);
         } else {
-          throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El cliente no existe");
+          throw new CustomException(HttpStatus.NOT_FOUND, "El cliente no existe");
         }
       } else {
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No se puede procesar la petición sin el username del cliente.");
+        throw new CustomException(HttpStatus.BAD_REQUEST, "No se puede procesar la petición sin el username del cliente.");
       }
-    } catch (Exception e) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+    } catch (CustomException e) {
+      throw e;
+    }  catch (Exception e) {
+      throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
     }
   }
 
@@ -78,10 +81,12 @@ public class ClientService {
       if (client.isPresent()) {
         return client.get();
       } else {
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El cliente con el username '"+ username +"' no existe");
+        throw new CustomException(HttpStatus.NOT_FOUND, "El cliente con el username '"+ username +"' no existe");
       }
-    } catch (Exception e) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+    } catch (CustomException e) {
+      throw e;
+    }  catch (Exception e) {
+      throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
     }
   }
 
@@ -90,16 +95,18 @@ public class ClientService {
     try {
       BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
       if (newPassword.trim().length() < 6) {
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La nueva contraseña debe tener al menos 6 caracteres.");
+        throw new CustomException(HttpStatus.BAD_REQUEST, "La nueva contraseña debe tener al menos 6 caracteres.");
       } else if (encoder.matches(newPassword, client.getPassword())) {
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La nueva contraseña no puede ser igual a la anterior.");
+        throw new CustomException(HttpStatus.BAD_REQUEST, "La nueva contraseña no puede ser igual a la anterior.");
+      }else{
+        client.setPassword(encoder.encode(newPassword));
+        clientRepository.save(client);
+        return client;
       }
-
-      client.setPassword(new BCryptPasswordEncoder().encode(newPassword));
-      clientRepository.save(client);
-      return client;
-    } catch (Exception e) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+    } catch (CustomException e) {
+      throw e;
+    }  catch (Exception e) {
+      throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
     }
   }
 
@@ -123,11 +130,11 @@ public class ClientService {
     if (newClientData.getNewPassword() != null) {
       BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
       if (encoder.matches(newClientData.getNewPassword(), currentClientData.getPassword())) {
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La nueva contraseña no puede ser igual a la anterior.");
+        throw new CustomException(HttpStatus.BAD_REQUEST, "La nueva contraseña no puede ser igual a la anterior.");
       } else if (newClientData.getNewPassword().trim().length() < 6) {
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La nueva contraseña debe tener al menos 6 caracteres.");
+        throw new CustomException(HttpStatus.BAD_REQUEST, "La nueva contraseña debe tener al menos 6 caracteres.");
       } else if (!newClientData.getPassword().equals(newClientData.getNewPassword())) {
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Las contraseñas no coinciden.");
+        throw new CustomException(HttpStatus.BAD_REQUEST, "Las contraseñas no coinciden.");
       } else {
         currentClientData.setPassword(encoder.encode(newClientData.getNewPassword()));
       }
@@ -138,16 +145,22 @@ public class ClientService {
 
   @CacheEvict(value = "client", key = "#client.username")
   public ClientModel deleteClient(ClientModel client) {
-    if (client.getId() != null) {
-      Optional<ClientModel> existingClient = clientRepository.findById(client.getId());
-      if (existingClient.isPresent()) {
-        clientRepository.delete(client);
-        return client;
-      } else {
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El cliente no existe");
+    try{
+      if (client.getId() != null) {
+        Optional<ClientModel> existingClient = clientRepository.findById(client.getId());
+        if (existingClient.isPresent()) {
+          clientRepository.delete(client);
+          return client;
+        } else {
+          throw new CustomException(HttpStatus.NOT_FOUND, "El cliente no existe");
+        }
       }
+      throw new CustomException(HttpStatus.BAD_REQUEST, "No se puede procesar la petición sin el id del cliente.");
+    } catch (CustomException e) {
+      throw e;
+    }  catch (Exception e) {
+      throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
     }
-    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No se puede procesar la petición sin el id del cliente.");
   }
 
   @CacheEvict(value = "client", key = "#username")
@@ -165,10 +178,12 @@ public class ClientService {
         );
         return this.getCart(username);
       } else {
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El cliente no existe");
+        throw new CustomException(HttpStatus.NOT_FOUND, "El cliente no existe");
       }
-    } catch (Exception e) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+    } catch (CustomException e) {
+      throw e;
+    }  catch (Exception e) {
+      throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
     }
   }
 
@@ -179,10 +194,12 @@ public class ClientService {
         ClientModel client = existingClient.get();
         return client.getCart().toArray(new CartModel[0]);
       } else {
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El cliente no existe");
+        throw new CustomException(HttpStatus.NOT_FOUND, "El cliente no existe");
       }
-    } catch (Exception e) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+    } catch (CustomException e) {
+      throw e;
+    }  catch (Exception e) {
+      throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
     }
   }
 
@@ -198,10 +215,12 @@ public class ClientService {
         );
         return clientRepository.save(client);
       } else {
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El cliente no existe");
+        throw new CustomException(HttpStatus.NOT_FOUND, "El cliente no existe");
       }
+    } catch (CustomException e) {
+      throw e;
     } catch (Exception e) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+      throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
     }
   }
 
@@ -217,10 +236,12 @@ public class ClientService {
         );
         return true;
       } else {
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El cliente no existe");
+        throw new CustomException(HttpStatus.NOT_FOUND, "El cliente no existe");
       }
+    } catch (CustomException e) {
+      throw e;
     } catch (Exception e) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+      throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
     }
   }
 
@@ -233,8 +254,10 @@ public class ClientService {
       } else {
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El cliente no existe");
       }
-    } catch (Exception e) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+    } catch (CustomException e) {
+      throw e;
+    }  catch (Exception e) {
+      throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
     }
   }
 
@@ -251,14 +274,16 @@ public class ClientService {
         InvoiceModel invoice = invoiceService.createInvoice(client);
         if(cartService.deleteCart(client) == 0) {
           invoiceService.deleteInvoice(invoice.getId());
-          throw new Exception("No existen productos en el carrito");
+          throw new CustomException(HttpStatus.BAD_REQUEST, "No existen productos en el carrito");
         }
         return invoice;
       } else {
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El cliente no existe");
       }
+    } catch (CustomException e) {
+      throw e;
     } catch (Exception e) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+      throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
     }
   }
 
@@ -282,8 +307,10 @@ public class ClientService {
       client.setCardId(newCard);
       clientRepository.save(client);
       return null;
-    } catch (Exception e) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+    } catch (CustomException e) {
+      throw e;
+    }  catch (Exception e) {
+      throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
     }
   }
 

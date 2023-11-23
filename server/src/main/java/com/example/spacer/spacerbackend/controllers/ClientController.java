@@ -7,6 +7,7 @@ import com.example.spacer.spacerbackend.models.InvoiceModel;
 import com.example.spacer.spacerbackend.services.ClientService;
 import com.example.spacer.spacerbackend.services.MailSenderService;
 import com.example.spacer.spacerbackend.services.Response;
+import com.example.spacer.spacerbackend.utils.CustomException;
 import com.example.spacer.spacerbackend.utils.UserCredential;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
@@ -39,9 +40,10 @@ public class ClientController {
       ClientModel cs = this.clientService.getClientByUsername(userCredential.getUsername());
 
       return new Response(HttpStatus.OK.name(), cs).okResponse();
+    } catch (CustomException e) {
+      return new Response(e.getMessage()).customResponse(e.getStatus());
     } catch (Exception e) {
-      Response response = new Response(HttpStatus.BAD_REQUEST, ExceptionUtils.getRootCause(e).getMessage(), null);
-      return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+      return new Response(ExceptionUtils.getRootCause(e).getMessage()).internalServerErrorResponse();
     }
   }
 
@@ -54,9 +56,10 @@ public class ClientController {
       mailSenderService.sendNewClient(cs.getEmail(), cs.getUsername());
 
       return new Response(HttpStatus.CREATED.name(), cs).createdResponse();
+    } catch (CustomException e) {
+      return new Response(e.getMessage()).customResponse(e.getStatus());
     } catch (Exception e) {
-      Response response = new Response(HttpStatus.BAD_REQUEST, ExceptionUtils.getRootCause(e).getMessage(), null);
-      return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+      return new Response(ExceptionUtils.getRootCause(e).getMessage()).internalServerErrorResponse();
     }
   }
 
@@ -69,9 +72,10 @@ public class ClientController {
       CartModel[] cart = this.clientService.getCart(userCredential.getUsername());
 
       return new Response(HttpStatus.OK.name(), cart).okResponse();
+    } catch (CustomException e) {
+      return new Response(e.getMessage()).customResponse(e.getStatus());
     } catch (Exception e) {
-      Response response = new Response(HttpStatus.BAD_REQUEST, ExceptionUtils.getRootCause(e).getMessage(), null);
-      return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+      return new Response(ExceptionUtils.getRootCause(e).getMessage()).internalServerErrorResponse();
     }
   }
 
@@ -84,9 +88,10 @@ public class ClientController {
       CartModel[] cart = this.clientService.addToCart(formData, userCredential.getUsername());
 
       return new Response(HttpStatus.OK.name(), cart).createdResponse();
+    } catch (CustomException e) {
+      return new Response(e.getMessage()).customResponse(e.getStatus());
     } catch (Exception e) {
-      Response response = new Response(HttpStatus.BAD_REQUEST, ExceptionUtils.getRootCause(e).getMessage(), null);
-      return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+      return new Response(ExceptionUtils.getRootCause(e).getMessage()).internalServerErrorResponse();
     }
   }
 
@@ -99,9 +104,10 @@ public class ClientController {
       ClientModel client = this.clientService.decreaseProduct(productId, userCredential.getUsername());
 
       return new Response(HttpStatus.OK.name(), client).okResponse();
+    } catch (CustomException e) {
+      return new Response(e.getMessage()).customResponse(e.getStatus());
     } catch (Exception e) {
-      Response response = new Response(HttpStatus.BAD_REQUEST, ExceptionUtils.getRootCause(e).getMessage(), null);
-      return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+      return new Response(ExceptionUtils.getRootCause(e).getMessage()).internalServerErrorResponse();
     }
   }
 
@@ -114,9 +120,10 @@ public class ClientController {
       boolean cs = this.clientService.deleteProductOnCart(productId, userCredential.getUsername());
 
       return new Response(HttpStatus.OK.name(), cs).okResponse();
+    } catch (CustomException e) {
+      return new Response(e.getMessage()).customResponse(e.getStatus());
     } catch (Exception e) {
-      Response response = new Response(HttpStatus.BAD_REQUEST, ExceptionUtils.getRootCause(e).getMessage(), null);
-      return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+      return new Response(ExceptionUtils.getRootCause(e).getMessage()).internalServerErrorResponse();
     }
   }
 
@@ -145,9 +152,10 @@ public class ClientController {
       }
 
       return new Response(HttpStatus.OK.name(), cs).okResponse();
+    } catch (CustomException e) {
+      return new Response(e.getMessage()).customResponse(e.getStatus());
     } catch (Exception e) {
-      Response response = new Response(HttpStatus.BAD_REQUEST, ExceptionUtils.getRootCause(e).getMessage(), null);
-      return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+      return new Response(ExceptionUtils.getRootCause(e).getMessage()).internalServerErrorResponse();
     }
   }
 
@@ -167,9 +175,10 @@ public class ClientController {
       ClientModel cs = this.clientService.deleteClient(cliente);
 
       return new Response(HttpStatus.OK.name(), cs).okResponse();
+    } catch (CustomException e) {
+      return new Response(e.getMessage()).customResponse(e.getStatus());
     } catch (Exception e) {
-      Response response = new Response(HttpStatus.BAD_REQUEST, ExceptionUtils.getRootCause(e).getMessage(), null);
-      return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+      return new Response(ExceptionUtils.getRootCause(e).getMessage()).internalServerErrorResponse();
     }
   }
 
@@ -178,9 +187,10 @@ public class ClientController {
     try {
       ClientModel[] clients = this.clientService.getAllClients();
       return new Response(HttpStatus.OK.name(), clients).okResponse();
+    } catch (CustomException e) {
+      return new Response(e.getMessage()).customResponse(e.getStatus());
     } catch (Exception e) {
-      Response response = new Response(HttpStatus.BAD_REQUEST, ExceptionUtils.getRootCause(e).getMessage(), null);
-      return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+      return new Response(ExceptionUtils.getRootCause(e).getMessage()).internalServerErrorResponse();
     }
   }
 
@@ -206,9 +216,10 @@ public class ClientController {
 
       InvoiceModel invoice = this.clientService.purchase(userCredential.getUserId());
       return new Response(HttpStatus.OK.name(), invoice).okResponse();
+    } catch (CustomException e) {
+      return new Response(e.getMessage()).customResponse(e.getStatus());
     } catch (Exception e) {
-      Response response = new Response(HttpStatus.INTERNAL_SERVER_ERROR, ExceptionUtils.getRootCause(e).getMessage(), null);
-      return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+      return new Response(ExceptionUtils.getRootCause(e).getMessage()).internalServerErrorResponse();
     }
   }
 
@@ -220,9 +231,10 @@ public class ClientController {
       InvoiceModel[] invoices = this.clientService.getOrders(userCredential.getUserId());
 
       return new Response(HttpStatus.OK.name(), invoices).okResponse();
+    } catch (CustomException e) {
+      return new Response(e.getMessage()).customResponse(e.getStatus());
     } catch (Exception e) {
-      Response response = new Response(HttpStatus.BAD_REQUEST, ExceptionUtils.getRootCause(e).getMessage(), null);
-      return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+      return new Response(ExceptionUtils.getRootCause(e).getMessage()).internalServerErrorResponse();
     }
   }
 
