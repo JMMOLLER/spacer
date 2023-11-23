@@ -185,19 +185,23 @@ public class ClientController {
   }
 
   @PostMapping("/carrito/pagar")
-  public ResponseEntity<Response> purchase(HttpServletRequest request, @RequestBody(required = false) CardModel cardInfo) {
+  public ResponseEntity<Response> purchase(HttpServletRequest request, @RequestBody CardModel cardInfo) {
     try {
       UserCredential userCredential = new UserCredential(request);
 
       ClientModel client = this.clientService.getClientByUsername(userCredential.getUsername());
 
       if(cardInfo == null && client.getCardId() == null){
-        return new Response(HttpStatus.PAYMENT_REQUIRED, "No existe un método de pago vinculado a esta cuenta", null).customResponse();
-      } else if (cardInfo != null) {
+        return new Response("No existe un método de pago vinculado a esta cuenta").customResponse(HttpStatus.PAYMENT_REQUIRED);
+      } else if (cardInfo != null && cardInfo.getCardNumber() != null) {
         String res = this.clientService.updateCardForClient(client, cardInfo);
         if(res != null){
-          return new Response(HttpStatus.BAD_REQUEST, res, null).customResponse();
+          return new Response(res).badRequestResponse();
         }
+      } else {
+        assert cardInfo != null;
+        boolean res = this.clientService.validateCodeCard(client.getId(), cardInfo.getCvv());
+        if(!res) return new Response("El código de seguridad de la tarjeta es incorrecto").unauthorizedResponse();
       }
 
       InvoiceModel invoice = this.clientService.purchase(userCredential.getUserId());

@@ -296,4 +296,21 @@ public class ClientService {
       return null;
     }
   }
+
+  public boolean validateCodeCard(Long clientId, Short cvv) {
+    try {
+      Optional<ClientModel> existingClient = clientRepository.findById(clientId);
+      if (existingClient.isPresent()) {
+        ClientModel client = existingClient.get();
+        if(client.getCardId() == null){
+          throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No existe un método de pago vinculado a esta cuenta");
+        }
+        return client.getCardId().getCvv().equals(cvv);
+      } else {
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El cliente no existe");
+      }
+    } catch (Exception e) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+    }
+  }
 }
