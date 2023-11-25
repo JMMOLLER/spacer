@@ -339,14 +339,16 @@ public class ClientService {
       if (existingClient.isPresent()) {
         ClientModel client = existingClient.get();
         if(client.getCardId() == null){
-          throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No existe un método de pago vinculado a esta cuenta");
+          throw new CustomException(HttpStatus.BAD_REQUEST, "No existe un método de pago vinculado a esta cuenta");
         }
         return client.getCardId().getCvv().equals(cvv);
       } else {
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El cliente no existe");
+        throw new CustomException(HttpStatus.NOT_FOUND, "El cliente no existe");
       }
+    } catch (CustomException e) {
+      throw e;
     } catch (Exception e) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+      throw new CustomException(HttpStatus.BAD_REQUEST, e.getMessage());
     }
   }
 }

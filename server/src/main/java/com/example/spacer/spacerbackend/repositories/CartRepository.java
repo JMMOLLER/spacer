@@ -25,5 +25,4 @@ public interface CartRepository extends CrudRepository<CartModel, Long> {
   @Query(value = "DELETE FROM CartModel c WHERE c.clientId.id = :clientId")
   int deleteCartFromClientId(Long clientId);
 
-  //ALTER TABLE factura AUTO_INCREMENT = 2;
 }
