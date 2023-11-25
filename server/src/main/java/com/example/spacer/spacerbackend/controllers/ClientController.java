@@ -170,11 +170,15 @@ public class ClientController {
 
   @DeleteMapping()
   @ResponseBody
-  public ResponseEntity<Response> deleteClient(@RequestBody ClientModel cliente) {
+  public ResponseEntity<Response> deleteClient(HttpServletRequest request) {
     try {
-      ClientModel cs = this.clientService.deleteClient(cliente);
+      UserCredential userInfo = new UserCredential(request);
 
-      return new Response(HttpStatus.OK.name(), cs).okResponse();
+      var client = clientService.getClientByUsername(userInfo.getUsername());
+
+      clientService.deleteClient(client);
+
+      return new Response(HttpStatus.OK.name(), client).okResponse();
     } catch (CustomException e) {
       return new Response(e.getMessage()).customResponse(e.getStatus());
     } catch (Exception e) {

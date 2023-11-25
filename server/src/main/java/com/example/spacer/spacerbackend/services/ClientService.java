@@ -144,18 +144,9 @@ public class ClientService {
   }
 
   @CacheEvict(value = "client", key = "#client.username")
-  public ClientModel deleteClient(ClientModel client) {
+  public void deleteClient(ClientModel client) {
     try{
-      if (client.getId() != null) {
-        Optional<ClientModel> existingClient = clientRepository.findById(client.getId());
-        if (existingClient.isPresent()) {
-          clientRepository.delete(client);
-          return client;
-        } else {
-          throw new CustomException(HttpStatus.NOT_FOUND, "El cliente no existe");
-        }
-      }
-      throw new CustomException(HttpStatus.BAD_REQUEST, "No se puede procesar la petición sin el id del cliente.");
+      clientRepository.delete(client);
     } catch (CustomException e) {
       throw e;
     }  catch (Exception e) {
