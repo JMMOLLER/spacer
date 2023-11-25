@@ -217,6 +217,9 @@ function handleCheckoutSubmit(e) {
  */
 function isRegistredCard(formData){
   const cardInfo = module.userInfo.cardInfo;
+
+  if(!cardInfo) return false;
+
   const cardNumber = Number(formData.get("cardNumber"));
   const cardHolder = formData.get("cardHolder");
   const expirationDate = formData.get("expirationDate");
