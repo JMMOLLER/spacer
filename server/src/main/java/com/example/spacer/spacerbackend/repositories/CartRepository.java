@@ -2,17 +2,27 @@ package com.example.spacer.spacerbackend.repositories;
 
 import java.util.List;
 import com.example.spacer.spacerbackend.models.CartModel;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.Optional;
 
 @Repository
 public interface CartRepository extends CrudRepository<CartModel, Long> {
-  @Query("SELECT c FROM CartModel c WHERE c.clientId.id = ?1 AND c.productId.id = ?2")
+  @NonNull
+  List<CartModel> findAll();
+
+  @Query("SELECT c FROM CartModel c WHERE c.clientId.id = :clientId AND c.productId.id = :productId")
   Optional<CartModel> findOneByClientIdAndProductId(Long clientId, Long productId);
 
-  List<CartModel> findAll();
+  @Transactional
+  @Modifying
+  @Query(value = "DELETE FROM CartModel c WHERE c.clientId.id = :clientId")
+  int deleteCartFromClientId(Long clientId);
+
 }

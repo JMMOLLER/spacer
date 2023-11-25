@@ -31,8 +31,9 @@ public class Response {
 
   public Response() {}
 
-  public ResponseEntity<Response> customResponse() {
-    return new ResponseEntity<>(this, HttpStatus.valueOf(this.statusCode));
+  public ResponseEntity<Response> customResponse(HttpStatus httpStatus) {
+    this.statusCode = httpStatus.value();
+    return new ResponseEntity<>(this, httpStatus);
   }
 
   public ResponseEntity<Response> badRequestResponse() {

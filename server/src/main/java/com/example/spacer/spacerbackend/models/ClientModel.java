@@ -1,9 +1,6 @@
 package com.example.spacer.spacerbackend.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
@@ -18,7 +15,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @Entity
-@JsonIgnoreProperties({"new-password", "password"})
+@JsonIgnoreProperties({"new-password", "password", "cart"})
 @Table(name = "cliente")
 public class ClientModel implements Serializable {
 
@@ -46,9 +43,12 @@ public class ClientModel implements Serializable {
   @Column(name="dircli")
   private String address;
 
-  @Column(name="crdcli")
-  private Integer cardNumber;
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name="idtar")
+  @JsonProperty("cardInfo")
+  private CardModel cardId;
 
+  @JsonProperty("cart")
   @OneToMany(mappedBy = "clientId", cascade = CascadeType.ALL)
   @JsonManagedReference
   private List<CartModel> cart;

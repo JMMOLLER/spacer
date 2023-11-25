@@ -237,8 +237,8 @@ class Global {
    * @returns {Promise<Cart[]>}
    */
   async getCartProducts() {
-    const res = await this.fetchAPI("/cliente", null, "GET");
-    return res.response.cart;
+    const res = await this.fetchAPI("/cliente/carrito", null, "GET");
+    return res.response;
   }
 
   /**

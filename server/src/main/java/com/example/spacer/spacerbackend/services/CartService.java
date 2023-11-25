@@ -1,10 +1,12 @@
 package com.example.spacer.spacerbackend.services;
 
 import com.example.spacer.spacerbackend.models.CartModel;
+import com.example.spacer.spacerbackend.models.ClientModel;
 import com.example.spacer.spacerbackend.repositories.CartRepository;
 import com.example.spacer.spacerbackend.repositories.ClientRepository;
 import com.example.spacer.spacerbackend.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,7 +18,7 @@ public class CartService {
   ProductRepository productRepository;
 
   @Autowired
-  public void CartRepository(CartRepository cartRepository, ClientRepository clientRepository, ProductRepository productRepository) {
+  public CartService(CartRepository cartRepository, ClientRepository clientRepository, ProductRepository productRepository) {
     this.cartRepository = cartRepository;
     this.clientRepository = clientRepository;
     this.productRepository = productRepository;
@@ -42,7 +44,7 @@ public class CartService {
   public void findAndUpdate(CartModel existingCart, int newQuantity) {
     int resultQ = existingCart.getQuantity() + newQuantity;
     if (resultQ < 1) {
-      this.deleteCart(existingCart.getId());
+      this.deleteCart(existingCart.getClientId());
       return;
     }
     existingCart.setQuantity(resultQ);
@@ -92,7 +94,7 @@ public class CartService {
     try {
       CartModel existingCart = this.findExisting(clientId, productId);
       if (existingCart != null) {
-        this.deleteCart(existingCart.getId());
+        this.deleteCart(existingCart.getClientId());
       }else{
         throw new Exception("El producto no existe en el carrito");
       }
@@ -101,10 +103,12 @@ public class CartService {
     }
   }
 
-  public void deleteCart(Long id) {
+  @CacheEvict(value = "client", key = "#client.username")
+  public int deleteCart(ClientModel client) {
     try {
-      cartRepository.deleteById(id);
-    } catch (Exception ignored) {
+      return cartRepository.deleteCartFromClientId(client.getId());
+    } catch (Exception e) {
+      throw new RuntimeException(e);
     }
   }
 }

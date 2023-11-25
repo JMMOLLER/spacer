@@ -99,7 +99,7 @@ const handleCheckAuth = async() => {
     document.querySelector("#carrito").href = "/pages/carrito.html";
 
     // actualiza el numero de productos que se muestra en la bolsa
-    document.querySelector("#cart_cant").innerHTML = module.userInfo?.cart.length ?? 0;
+    document.querySelector("#cart_cant").innerHTML = (await module.getCartProducts()).length ?? 0;
   }
   return userIsAuth;
 };

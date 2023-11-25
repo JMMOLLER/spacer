@@ -1,10 +1,14 @@
 package com.example.spacer.spacerbackend.controllers;
 
-import com.example.spacer.spacerbackend.auth.TokensUtils;
+import com.example.spacer.spacerbackend.models.CardModel;
+import com.example.spacer.spacerbackend.models.CartModel;
 import com.example.spacer.spacerbackend.models.ClientModel;
+import com.example.spacer.spacerbackend.models.InvoiceModel;
 import com.example.spacer.spacerbackend.services.ClientService;
 import com.example.spacer.spacerbackend.services.MailSenderService;
 import com.example.spacer.spacerbackend.services.Response;
+import com.example.spacer.spacerbackend.utils.CustomException;
+import com.example.spacer.spacerbackend.utils.UserCredential;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -31,17 +35,15 @@ public class ClientController {
   @GetMapping()
   public ResponseEntity<Response> getClientByUsername(HttpServletRequest request) {
     try {
-      String authorizationHeader = request.getHeader("Authorization");
-      Map<String, Object> payload = TokensUtils.getPayloadFromToken(
-        authorizationHeader.replace("Bearer ", "")
-      );
-      assert payload != null;
-      ClientModel cs = this.clientService.getClientByUsername(payload.get("username").toString());
-      Response response = new Response(HttpStatus.OK, HttpStatus.OK.name(), cs);
-      return new ResponseEntity<>(response, HttpStatus.OK);
+      UserCredential userCredential = new UserCredential(request);
+
+      ClientModel cs = this.clientService.getClientByUsername(userCredential.getUsername());
+
+      return new Response(HttpStatus.OK.name(), cs).okResponse();
+    } catch (CustomException e) {
+      return new Response(e.getMessage()).customResponse(e.getStatus());
     } catch (Exception e) {
-      Response response = new Response(HttpStatus.BAD_REQUEST, ExceptionUtils.getRootCause(e).getMessage(), null);
-      return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+      return new Response(ExceptionUtils.getRootCause(e).getMessage()).internalServerErrorResponse();
     }
   }
 
@@ -50,12 +52,30 @@ public class ClientController {
   public ResponseEntity<Response> createClient(@RequestBody ClientModel cliente) {
     try {
       ClientModel cs = this.clientService.newClient(cliente);
+
       mailSenderService.sendNewClient(cs.getEmail(), cs.getUsername());
-      Response response = new Response(HttpStatus.CREATED, HttpStatus.CREATED.name(), cs);
-      return new ResponseEntity<>(response, HttpStatus.CREATED);
+
+      return new Response(HttpStatus.CREATED.name(), cs).createdResponse();
+    } catch (CustomException e) {
+      return new Response(e.getMessage()).customResponse(e.getStatus());
     } catch (Exception e) {
-      Response response = new Response(HttpStatus.BAD_REQUEST, ExceptionUtils.getRootCause(e).getMessage(), null);
-      return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+      return new Response(ExceptionUtils.getRootCause(e).getMessage()).internalServerErrorResponse();
+    }
+  }
+
+  @GetMapping("/carrito")
+  @ResponseBody
+  public ResponseEntity<Response> getClientCart(HttpServletRequest request) {
+    try {
+      UserCredential userCredential = new UserCredential(request);
+
+      CartModel[] cart = this.clientService.getCart(userCredential.getUsername());
+
+      return new Response(HttpStatus.OK.name(), cart).okResponse();
+    } catch (CustomException e) {
+      return new Response(e.getMessage()).customResponse(e.getStatus());
+    } catch (Exception e) {
+      return new Response(ExceptionUtils.getRootCause(e).getMessage()).internalServerErrorResponse();
     }
   }
 
@@ -63,17 +83,15 @@ public class ClientController {
   @ResponseBody
   public ResponseEntity<Response> addToCart(HttpServletRequest request, @RequestBody Map<String, Integer> formData) {
     try {
-      String authorizationHeader = request.getHeader("Authorization");
-      Map<String, Object> payload = TokensUtils.getPayloadFromToken(
-        authorizationHeader.replace("Bearer ", "")
-      );
-      assert payload != null;
-      ClientModel cs = this.clientService.addToCart(formData, payload.get("username").toString());
-      Response response = new Response(HttpStatus.CREATED, HttpStatus.CREATED.name(), cs);
-      return new ResponseEntity<>(response, HttpStatus.CREATED);
+      UserCredential userCredential = new UserCredential(request);
+
+      CartModel[] cart = this.clientService.addToCart(formData, userCredential.getUsername());
+
+      return new Response(HttpStatus.OK.name(), cart).createdResponse();
+    } catch (CustomException e) {
+      return new Response(e.getMessage()).customResponse(e.getStatus());
     } catch (Exception e) {
-      Response response = new Response(HttpStatus.BAD_REQUEST, ExceptionUtils.getRootCause(e).getMessage(), null);
-      return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+      return new Response(ExceptionUtils.getRootCause(e).getMessage()).internalServerErrorResponse();
     }
   }
 
@@ -81,17 +99,15 @@ public class ClientController {
   @ResponseBody
   public ResponseEntity<Response> decreaseProduct(HttpServletRequest request, @PathVariable Long productId) {
     try {
-      String authorizationHeader = request.getHeader("Authorization");
-      Map<String, Object> payload = TokensUtils.getPayloadFromToken(
-        authorizationHeader.replace("Bearer ", "")
-      );
-      assert payload != null;
-      ClientModel cs = this.clientService.decreaseProduct(productId, payload.get("username").toString());
-      Response response = new Response(HttpStatus.OK, HttpStatus.OK.name(), cs);
-      return new ResponseEntity<>(response, HttpStatus.OK);
+      UserCredential userCredential = new UserCredential(request);
+
+      ClientModel client = this.clientService.decreaseProduct(productId, userCredential.getUsername());
+
+      return new Response(HttpStatus.OK.name(), client).okResponse();
+    } catch (CustomException e) {
+      return new Response(e.getMessage()).customResponse(e.getStatus());
     } catch (Exception e) {
-      Response response = new Response(HttpStatus.BAD_REQUEST, ExceptionUtils.getRootCause(e).getMessage(), null);
-      return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+      return new Response(ExceptionUtils.getRootCause(e).getMessage()).internalServerErrorResponse();
     }
   }
 
@@ -99,17 +115,15 @@ public class ClientController {
   @ResponseBody
   public ResponseEntity<Response> deleteProductOnCart(HttpServletRequest request, @PathVariable Long productId) {
     try {
-      String authorizationHeader = request.getHeader("Authorization");
-      Map<String, Object> payload = TokensUtils.getPayloadFromToken(
-        authorizationHeader.replace("Bearer ", "")
-      );
-      assert payload != null;
-      boolean cs = this.clientService.deleteProductOnCart(productId, payload.get("username").toString());
-      Response response = new Response(HttpStatus.OK, HttpStatus.OK.name(), cs);
-      return new ResponseEntity<>(response, HttpStatus.OK);
+      UserCredential userCredential = new UserCredential(request);
+
+      boolean cs = this.clientService.deleteProductOnCart(productId, userCredential.getUsername());
+
+      return new Response(HttpStatus.OK.name(), cs).okResponse();
+    } catch (CustomException e) {
+      return new Response(e.getMessage()).customResponse(e.getStatus());
     } catch (Exception e) {
-      Response response = new Response(HttpStatus.BAD_REQUEST, ExceptionUtils.getRootCause(e).getMessage(), null);
-      return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+      return new Response(ExceptionUtils.getRootCause(e).getMessage()).internalServerErrorResponse();
     }
   }
 
@@ -121,12 +135,8 @@ public class ClientController {
      @RequestParam Map<String, Object> formData
   ) {
     try {
-      String authorizationHeader = request.getHeader("Authorization");
-      Map<String, Object> payload = TokensUtils.getPayloadFromToken(
-        authorizationHeader.replace("Bearer ", "")
-      );
+      UserCredential userCredential = new UserCredential(request);
 
-      assert payload != null;
       boolean pwdChanged = formData.containsKey("new-password");
 
       ClientModel client = this.formDataToClientModel(formData);
@@ -135,17 +145,17 @@ public class ClientController {
         client.setImg(img.getBytes());
       }
 
-      ClientModel cs = this.clientService.updateClient(client, payload.get("username").toString());
+      ClientModel cs = this.clientService.updateClient(client, userCredential.getUsername());
 
       if(pwdChanged){
         mailSenderService.sendPwdChanged(cs.getEmail());
       }
 
-      Response response = new Response(HttpStatus.OK, HttpStatus.OK.name(), cs);
-      return new ResponseEntity<>(response, HttpStatus.OK);
+      return new Response(HttpStatus.OK.name(), cs).okResponse();
+    } catch (CustomException e) {
+      return new Response(e.getMessage()).customResponse(e.getStatus());
     } catch (Exception e) {
-      Response response = new Response(HttpStatus.BAD_REQUEST, ExceptionUtils.getRootCause(e).getMessage(), null);
-      return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+      return new Response(ExceptionUtils.getRootCause(e).getMessage()).internalServerErrorResponse();
     }
   }
 
@@ -163,33 +173,68 @@ public class ClientController {
   public ResponseEntity<Response> deleteClient(@RequestBody ClientModel cliente) {
     try {
       ClientModel cs = this.clientService.deleteClient(cliente);
-      Response response = new Response(HttpStatus.OK, HttpStatus.OK.name(), cs);
-      return new ResponseEntity<>(response, HttpStatus.OK);
+
+      return new Response(HttpStatus.OK.name(), cs).okResponse();
+    } catch (CustomException e) {
+      return new Response(e.getMessage()).customResponse(e.getStatus());
     } catch (Exception e) {
-      Response response = new Response(HttpStatus.BAD_REQUEST, ExceptionUtils.getRootCause(e).getMessage(), null);
-      return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+      return new Response(ExceptionUtils.getRootCause(e).getMessage()).internalServerErrorResponse();
     }
   }
 
   @GetMapping("/all")
   public ResponseEntity<Response> getClients() {
-    Response response = new Response(HttpStatus.OK, HttpStatus.OK.name(), this.clientService.getAllClients());
-    return new ResponseEntity<>(response, HttpStatus.OK);
+    try {
+      ClientModel[] clients = this.clientService.getAllClients();
+      return new Response(HttpStatus.OK.name(), clients).okResponse();
+    } catch (CustomException e) {
+      return new Response(e.getMessage()).customResponse(e.getStatus());
+    } catch (Exception e) {
+      return new Response(ExceptionUtils.getRootCause(e).getMessage()).internalServerErrorResponse();
+    }
+  }
+
+  @PostMapping("/carrito/pagar")
+  public ResponseEntity<Response> purchase(HttpServletRequest request, @RequestBody CardModel cardInfo) {
+    try {
+      UserCredential userCredential = new UserCredential(request);
+
+      ClientModel client = this.clientService.getClientByUsername(userCredential.getUsername());
+
+      if(cardInfo == null && client.getCardId() == null){
+        return new Response("No existe un método de pago vinculado a esta cuenta").customResponse(HttpStatus.PAYMENT_REQUIRED);
+      } else if (cardInfo != null && cardInfo.getCardNumber() != null) {
+        String res = this.clientService.updateCardForClient(client, cardInfo);
+        if(res != null){
+          return new Response(res).badRequestResponse();
+        }
+      } else {
+        assert cardInfo != null;
+        boolean res = this.clientService.validateCodeCard(client.getId(), cardInfo.getCvv());
+        if(!res) return new Response("El código de seguridad de la tarjeta es incorrecto").unauthorizedResponse();
+      }
+
+      InvoiceModel invoice = this.clientService.purchase(userCredential.getUserId());
+      return new Response(HttpStatus.OK.name(), invoice).okResponse();
+    } catch (CustomException e) {
+      return new Response(e.getMessage()).customResponse(e.getStatus());
+    } catch (Exception e) {
+      return new Response(ExceptionUtils.getRootCause(e).getMessage()).internalServerErrorResponse();
+    }
   }
 
   @GetMapping("/pedidos")
   public ResponseEntity<Response> getOrders(HttpServletRequest request) {
     try {
-      String authorizationHeader = request.getHeader("Authorization");
-      Map<String, Object> payload = TokensUtils.getPayloadFromToken(
-        authorizationHeader.replace("Bearer ", "")
-      );
-      assert payload != null;
-      Response response = new Response(HttpStatus.OK, HttpStatus.OK.name(), this.clientService.getOrders(Long.parseLong(payload.get("userId").toString())));
-      return new ResponseEntity<>(response, HttpStatus.OK);
+      UserCredential userCredential = new UserCredential(request);
+
+      InvoiceModel[] invoices = this.clientService.getOrders(userCredential.getUserId());
+
+      return new Response(HttpStatus.OK.name(), invoices).okResponse();
+    } catch (CustomException e) {
+      return new Response(e.getMessage()).customResponse(e.getStatus());
     } catch (Exception e) {
-      Response response = new Response(HttpStatus.BAD_REQUEST, ExceptionUtils.getRootCause(e).getMessage(), null);
-      return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+      return new Response(ExceptionUtils.getRootCause(e).getMessage()).internalServerErrorResponse();
     }
   }
 
