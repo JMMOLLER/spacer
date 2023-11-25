@@ -15,7 +15,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @Entity
-@JsonIgnoreProperties({"new-password", "password", "cart"})
+@JsonIgnoreProperties({"new-password", "cart"})
 @Table(name = "cliente")
 public class ClientModel implements Serializable {
 
@@ -58,7 +58,7 @@ public class ClientModel implements Serializable {
   private String newPassword;
 
   @Column(name="password")
-  @JsonProperty("password")
+  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   private String password;
 
   @Column(name="email")
