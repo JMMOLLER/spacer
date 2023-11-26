@@ -48,7 +48,7 @@ public class ClientService {
       client.setId(null);
     }
     client.setPassword(new BCryptPasswordEncoder().encode(client.getPassword()));
-    client.setRol(0);
+    client.setIsAdmin(false);
     return clientRepository.save(client);
   }
 

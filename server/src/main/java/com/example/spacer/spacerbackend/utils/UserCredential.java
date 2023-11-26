@@ -10,8 +10,9 @@ import java.util.Map;
 @Getter
 @Setter
 public class UserCredential {
-  private String username;
-  private Long userId;
+  private final String username;
+  private final Long userId;
+  private final Boolean rol;
 
   public UserCredential(HttpServletRequest request) {
     String authorizationHeader = request.getHeader("Authorization");
@@ -21,6 +22,6 @@ public class UserCredential {
     assert payload != null;
     this.username = payload.get("username").toString();
     this.userId = Long.valueOf(payload.get("userId").toString());
+    this.rol = Boolean.valueOf(payload.get("rol").toString());
   }
-
 }

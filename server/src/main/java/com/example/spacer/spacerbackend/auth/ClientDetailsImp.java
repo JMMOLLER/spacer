@@ -57,4 +57,8 @@ public class ClientDetailsImp implements UserDetails {
     return ClientModel.getId();
   }
 
+  public boolean getRol() {
+    return ClientModel.getIsAdmin();
+  }
+
 }
