@@ -51,21 +51,17 @@ public class ClientService {
     return clientRepository.save(client);
   }
 
-  @CacheEvict(value = "client", key = "#username")
-  public ClientModel updateClient(ClientModel client, String username) {
+  @CacheEvict(value = "client", key = "#client.username")
+  public ClientModel updateClient(ClientModel client) {
     try {
-      if (username != null) {
-        Optional<ClientModel> existingClient = clientRepository.findOneByUsername(username);
-        if (existingClient.isPresent()) {
+      Optional<ClientModel> currentClient = clientRepository.findOneByUsername(client.getUsername());
+      if (currentClient.isPresent()) {
 
-          ClientModel newClientData = ClientDataSetter(client, existingClient.get());
+        ClientModel newClientData = ClientDataSetter(client, currentClient.get());
 
-          return clientRepository.save(newClientData);
-        } else {
-          throw new CustomException(HttpStatus.NOT_FOUND, "El cliente no existe");
-        }
+        return clientRepository.save(newClientData);
       } else {
-        throw new CustomException(HttpStatus.BAD_REQUEST, "No se puede procesar la petición sin el username del cliente.");
+        throw new CustomException(HttpStatus.NOT_FOUND, "El cliente con el username '"+ client.getUsername() +"' no existe");
       }
     } catch (CustomException e) {
       throw e;
@@ -129,6 +125,11 @@ public class ClientService {
     }
     if (newClientData.getNewPassword() != null) {
       BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+      if(newClientData.getPassword() == null || newClientData.getNewPassword() == null){
+        throw new CustomException(HttpStatus.BAD_REQUEST, "Debe enviar su nueva contraseña 2 veces para validar coincidencia.");
+      }
+
       if (encoder.matches(newClientData.getNewPassword(), currentClientData.getPassword())) {
         throw new CustomException(HttpStatus.BAD_REQUEST, "La nueva contraseña no puede ser igual a la anterior.");
       } else if (newClientData.getNewPassword().trim().length() < 6) {

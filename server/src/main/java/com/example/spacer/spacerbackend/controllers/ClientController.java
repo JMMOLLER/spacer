@@ -18,7 +18,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.DataInput;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/api/cliente")
@@ -129,43 +131,45 @@ public class ClientController {
 
   @PutMapping()
   @ResponseBody
-  public ResponseEntity<Response> updateClient(
-     HttpServletRequest request,
-     @RequestPart(value = "img", required = false) MultipartFile img,
-     @RequestParam Map<String, Object> formData
-  ) {
+  public ResponseEntity<Response> updateClient( HttpServletRequest request,
+                                                @RequestPart(value = "img", required = false) MultipartFile img,
+                                                @RequestParam Map<String, Object> formDataJson) {
     try {
-      UserCredential userCredential = new UserCredential(request);
+      UserCredential userInfo = new UserCredential(request);
 
-      boolean pwdChanged = formData.containsKey("new-password");
+      ObjectMapper objectMapper = new ObjectMapper();
 
-      ClientModel client = this.formDataToClientModel(formData);
+      ClientModel client = objectMapper.convertValue(formDataJson, ClientModel.class);
+
+      if(formDataJson.containsKey("new-password")){
+        client.setNewPassword(formDataJson.get("new-password").toString());
+      }
+      client.setUsername(userInfo.getUsername());
+
+      boolean pwdChanged = client.getNewPassword() != null && !client.getNewPassword().isEmpty();
 
       if (img != null) {
         client.setImg(img.getBytes());
       }
 
-      ClientModel cs = this.clientService.updateClient(client, userCredential.getUsername());
+      ClientModel updatedClient = this.clientService.updateClient(client);
 
       if(pwdChanged){
-        mailSenderService.sendPwdChanged(cs.getEmail());
+        CompletableFuture.runAsync( () -> {
+          try {
+            mailSenderService.sendPwdChanged(updatedClient.getEmail());
+          } catch (Exception e) {
+            e.printStackTrace(); // Por temas prácticos, no se está utilizando un logger
+          }
+        });
       }
 
-      return new Response(HttpStatus.OK.name(), cs).okResponse();
+      return new Response(HttpStatus.OK.name(), updatedClient).okResponse();
     } catch (CustomException e) {
       return new Response(e.getMessage()).customResponse(e.getStatus());
     } catch (Exception e) {
       return new Response(ExceptionUtils.getRootCause(e).getMessage()).internalServerErrorResponse();
     }
-  }
-
-  private ClientModel formDataToClientModel(Map<String, Object> formData) {
-    ObjectMapper objectMapper = new ObjectMapper();
-    ClientModel client = objectMapper.convertValue(formData, ClientModel.class);
-    if(formData.containsKey("new-password")){
-      client.setNewPassword(formData.get("new-password").toString());
-    }
-    return client;
   }
 
   @DeleteMapping()
