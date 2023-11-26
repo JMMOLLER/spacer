@@ -51,7 +51,7 @@ public class MainController {
 
   @GetMapping("/api")
   public ResponseEntity<?> apiHome() {
-    return new Response(HttpStatus.OK.name(), "Welcome to Spacer API on v1.5.4 🚀!").okResponse();
+    return new Response(HttpStatus.OK.name(), "Welcome to Spacer API on v1.5.5 🚀!").okResponse();
   }
 
   @PostMapping("/cliente/reset-password")
@@ -176,11 +176,15 @@ public class MainController {
 
   @GetMapping("/producto/{urlprod}.jpg")
   public ResponseEntity<byte[]> getProductImage(@PathVariable String urlprod) {
-    ProductModel product = this.productService.getProductByUrlProd(urlprod);
+    try {
+      ProductModel product = this.productService.getProductByUrlProd(urlprod);
 
-    if (product == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+      if (product == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
-    return getImgResponseEntity(product.getImg());
+      return getImgResponseEntity(product.getImg());
+    } catch (Exception e) {
+      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   @GetMapping("/**")

@@ -8,6 +8,7 @@ import com.example.spacer.spacerbackend.repositories.ClientRepository;
 import com.example.spacer.spacerbackend.utils.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
@@ -41,7 +42,7 @@ public class ClientService {
     return clients.toArray(new ClientModel[0]);
   }
 
-  @CacheEvict(value = "clients", allEntries = true)
+  @CachePut(value = "clients", key = "#client.username")
   public ClientModel newClient(ClientModel client) {
     if (client.getId() != null) {
       client.setId(null);
@@ -51,7 +52,7 @@ public class ClientService {
     return clientRepository.save(client);
   }
 
-  @CacheEvict(value = "client", key = "#client.username")
+  @CachePut(value = "client", key = "#client.username")
   public ClientModel updateClient(ClientModel client) {
     try {
       Optional<ClientModel> currentClient = clientRepository.findOneByUsername(client.getUsername());
@@ -86,7 +87,7 @@ public class ClientService {
     }
   }
 
-  @CacheEvict(value = "client", key = "#client.username")
+  @CachePut(value = "client", key = "#client.username")
   public ClientModel updatePassword(ClientModel client, String newPassword) {
     try {
       BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
@@ -155,7 +156,7 @@ public class ClientService {
     }
   }
 
-  @CacheEvict(value = "client", key = "#username")
+  @CachePut(value = "client", key = "#username")
   public CartModel[] addToCart(Map<String, Integer> formData, String username) {
     try {
       Optional<ClientModel> existingClient = clientRepository.findOneByUsername(username);
@@ -195,7 +196,7 @@ public class ClientService {
     }
   }
 
-  @CacheEvict(value = "client", key = "#username")
+  @CachePut(value = "client", key = "#username")
   public ClientModel decreaseProduct(Long productId, String username) {
     try {
       Optional<ClientModel> existingClient = clientRepository.findOneByUsername(username);
@@ -216,7 +217,7 @@ public class ClientService {
     }
   }
 
-  @CacheEvict(value = "client", key = "#username")
+  @CachePut(value = "client", key = "#username")
   public boolean deleteProductOnCart(Long productId, String username) {
     try {
       Optional<ClientModel> existingClient = clientRepository.findOneByUsername(username);
@@ -237,6 +238,7 @@ public class ClientService {
     }
   }
 
+  @Cacheable(value = "client", key = "#clientId")
   public InvoiceModel[] getOrders(Long clientId) {
     try {
       Optional<ClientModel> existingClient = clientRepository.findById(clientId);
@@ -279,7 +281,7 @@ public class ClientService {
     }
   }
 
-  @CacheEvict(value = "client", key = "#client.username")
+  @CachePut(value = "client", key = "#client.username")
   public String updateCardForClient(ClientModel client, CardModel card) {
     try {
       String error = findErrorCardModel(card);
