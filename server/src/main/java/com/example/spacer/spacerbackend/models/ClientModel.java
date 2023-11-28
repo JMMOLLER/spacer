@@ -38,6 +38,7 @@ public class ClientModel implements Serializable {
   private String urlImg;
 
   @Column(name="rolcli")
+  @JsonProperty("isAdmin")
   private Boolean isAdmin;
 
   @Column(name="dircli")
