@@ -11,7 +11,7 @@
  * @property {string} firstName - El nombre del cliente.
  * @property {string} lastName - El apellido del cliente.
  * @property {string} urlImg - La URL de la imagen del cliente.
- * @property {number} rol - El rol del cliente.
+ * @property {boolean} isAdmin - El rol del cliente.
  * @property {string} address - La dirección del cliente.
  * @property {string} email - El email del cliente.
  * @property {string} username - El nombre de usuario del cliente.

@@ -1,30 +1,22 @@
 .contenedor {
   max-width: 1200px;
   margin: auto;
-  /* Centra verticalmente el contenido */
   padding: 20px;
-  /* Aumenta el espaciado interior para un aspecto más aireado */
   background-color: #f8f8f8;
-  /* Cambia el fondo del contenedor */
   box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
-  /* Agrega una suave sombra */
   border-radius: 10px;
-  /* Agrega bordes redondeados */
   overflow: hidden;
-  /* Oculta el contenido que desborde del contenedor */
   text-align: center;
 }
 
 .productos {
   max-width: 1500px;
-  /* Agrega una suave sombra */
   border-radius: 10px;
-  /* Agrega bordes redondeados */
   overflow: hidden;
-  /* Oculta el contenido que desborde del contenedor */
   text-align: center;
   flex-grow: 1;
   position: relative;
+  padding-bottom: 15px;
 }
 .productos.loading::before {
   content: "";
@@ -69,7 +61,6 @@
   margin-top: 30px;
   width: 100%;
   transition: transform 0.3s ease;
-  /* Añade transición para efecto de zoom */
 }
 
 .productos .contenedor-items {
