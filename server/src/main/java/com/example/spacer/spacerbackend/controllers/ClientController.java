@@ -45,7 +45,7 @@ public class ClientController {
     } catch (CustomException e) {
       return new Response(e.getMessage()).customResponse(e.getStatus());
     } catch (Exception e) {
-      return new Response(ExceptionUtils.getRootCause(e).getMessage()).internalServerErrorResponse();
+      return new Response(e.getMessage()).internalServerErrorResponse();
     }
   }
 
@@ -61,7 +61,7 @@ public class ClientController {
     } catch (CustomException e) {
       return new Response(e.getMessage()).customResponse(e.getStatus());
     } catch (Exception e) {
-      return new Response(ExceptionUtils.getRootCause(e).getMessage()).internalServerErrorResponse();
+      return new Response(e.getMessage()).internalServerErrorResponse();
     }
   }
 
@@ -77,7 +77,7 @@ public class ClientController {
     } catch (CustomException e) {
       return new Response(e.getMessage()).customResponse(e.getStatus());
     } catch (Exception e) {
-      return new Response(ExceptionUtils.getRootCause(e).getMessage()).internalServerErrorResponse();
+      return new Response(e.getMessage()).internalServerErrorResponse();
     }
   }
 
@@ -93,7 +93,7 @@ public class ClientController {
     } catch (CustomException e) {
       return new Response(e.getMessage()).customResponse(e.getStatus());
     } catch (Exception e) {
-      return new Response(ExceptionUtils.getRootCause(e).getMessage()).internalServerErrorResponse();
+      return new Response(e.getMessage()).internalServerErrorResponse();
     }
   }
 
@@ -109,7 +109,7 @@ public class ClientController {
     } catch (CustomException e) {
       return new Response(e.getMessage()).customResponse(e.getStatus());
     } catch (Exception e) {
-      return new Response(ExceptionUtils.getRootCause(e).getMessage()).internalServerErrorResponse();
+      return new Response(e.getMessage()).internalServerErrorResponse();
     }
   }
 
@@ -125,7 +125,7 @@ public class ClientController {
     } catch (CustomException e) {
       return new Response(e.getMessage()).customResponse(e.getStatus());
     } catch (Exception e) {
-      return new Response(ExceptionUtils.getRootCause(e).getMessage()).internalServerErrorResponse();
+      return new Response(e.getMessage()).internalServerErrorResponse();
     }
   }
 
@@ -168,7 +168,7 @@ public class ClientController {
     } catch (CustomException e) {
       return new Response(e.getMessage()).customResponse(e.getStatus());
     } catch (Exception e) {
-      return new Response(ExceptionUtils.getRootCause(e).getMessage()).internalServerErrorResponse();
+      return new Response(e.getMessage()).internalServerErrorResponse();
     }
   }
 
@@ -186,7 +186,7 @@ public class ClientController {
     } catch (CustomException e) {
       return new Response(e.getMessage()).customResponse(e.getStatus());
     } catch (Exception e) {
-      return new Response(ExceptionUtils.getRootCause(e).getMessage()).internalServerErrorResponse();
+      return new Response(e.getMessage()).internalServerErrorResponse();
     }
   }
 
@@ -198,7 +198,7 @@ public class ClientController {
     } catch (CustomException e) {
       return new Response(e.getMessage()).customResponse(e.getStatus());
     } catch (Exception e) {
-      return new Response(ExceptionUtils.getRootCause(e).getMessage()).internalServerErrorResponse();
+      return new Response(e.getMessage()).internalServerErrorResponse();
     }
   }
 
@@ -227,7 +227,7 @@ public class ClientController {
     } catch (CustomException e) {
       return new Response(e.getMessage()).customResponse(e.getStatus());
     } catch (Exception e) {
-      return new Response(ExceptionUtils.getRootCause(e).getMessage()).internalServerErrorResponse();
+      return new Response(e.getMessage()).internalServerErrorResponse();
     }
   }
 
@@ -242,7 +242,7 @@ public class ClientController {
     } catch (CustomException e) {
       return new Response(e.getMessage()).customResponse(e.getStatus());
     } catch (Exception e) {
-      return new Response(ExceptionUtils.getRootCause(e).getMessage()).internalServerErrorResponse();
+      return new Response(e.getMessage()).internalServerErrorResponse();
     }
   }
 
