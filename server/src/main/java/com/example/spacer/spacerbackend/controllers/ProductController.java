@@ -70,7 +70,7 @@ public class ProductController {
       newProduct.setCategoryId(this.categoryService.getCategoryById(newProduct.getCategoryId().getId()));
       newProduct.setImg(img.getBytes());
 
-      var created = this.productService.newProduct(newProduct, "getAllProducts");
+      var created = this.productService.newProduct(newProduct);
 
       return new Response(HttpStatus.CREATED.name(), created).createdResponse();
     } catch (CustomException e){

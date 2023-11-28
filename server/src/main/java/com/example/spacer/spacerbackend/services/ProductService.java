@@ -63,11 +63,13 @@ public class ProductService {
       throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, "Error interno del servidor");
     }
   }
-  @CacheEvict(value = "products", key = "#key")
-  public ProductModel newProduct(ProductModel newProduct, String key) {
+  @CachePut(value = "products", key = "#result.id")
+  public ProductModel newProduct(ProductModel newProduct) {
     try {
       validateNewProduct(newProduct);
-      return this.productRepository.save(newProduct);
+      ProductModel savedProduct = this.productRepository.save(newProduct);
+      clearGetAllProductsCache();
+      return savedProduct;
     } catch (CustomException e) {
       throw new CustomException(e.getStatus(), e.getMessage());
     } catch (Exception e) {
@@ -93,6 +95,13 @@ public class ProductService {
     }
     if(newProduct.getImg() == null || newProduct.getImg().length == 0){
       throw new CustomException(HttpStatus.BAD_REQUEST, "La imagen no puede estar vacia");
+    }
+  }
+
+  public void clearGetAllProductsCache(){
+    Cache productsCache = cacheManager.getCache("products");
+    if (productsCache != null) {
+      productsCache.evict("getAllProducts");
     }
   }
 
