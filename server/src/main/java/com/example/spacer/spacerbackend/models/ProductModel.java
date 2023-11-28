@@ -2,6 +2,7 @@ package com.example.spacer.spacerbackend.models;
 
 import com.example.spacer.spacerbackend.utils.CategoryModelDeserializer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.persistence.*;
@@ -19,6 +20,7 @@ import java.util.UUID;
 @Setter
 @Entity
 @Table(name = "producto")
+@JsonIgnoreProperties({"simpleUrlImg"})
 public class ProductModel implements Serializable {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -57,5 +59,9 @@ public class ProductModel implements Serializable {
     HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
     String urlBase = request.getRequestURL().toString().replace(request.getRequestURI(), request.getContextPath());
     return urlBase + "/producto/" + this.urlImg + ".jpg";
+  }
+
+  public String getSimpleUrlImg() {
+    return this.urlImg;
   }
 }

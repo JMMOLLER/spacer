@@ -1,6 +1,5 @@
 package com.example.spacer.spacerbackend.controllers;
 
-import com.example.spacer.spacerbackend.models.CategoryModel;
 import com.example.spacer.spacerbackend.models.ProductModel;
 import com.example.spacer.spacerbackend.services.CategoryService;
 import com.example.spacer.spacerbackend.services.ProductService;
@@ -60,9 +59,7 @@ public class ProductController {
                                                  @RequestPart(value = "img") MultipartFile img,
                                                  @RequestParam Map<String, Object> formDataJson) {
     try{
-      UserCredential credential = new UserCredential(request);
-
-      if(!credential.getRol()) throw new CustomException(HttpStatus.FORBIDDEN, "No tiene los permisos necesarios");
+      checkAuthorization(request);
 
       ObjectMapper objectMapper = new ObjectMapper();
       ProductModel newProduct = objectMapper.convertValue(formDataJson, ProductModel.class);
@@ -80,4 +77,29 @@ public class ProductController {
     }
   }
 
+  @PutMapping("/{id}")
+  public ResponseEntity<Response> updateProductsById(HttpServletRequest request, @PathVariable("id") Long id,
+                                                     @RequestPart(value = "img", required = false) MultipartFile img,
+                                                     @RequestParam Map<String, Object> formDataJson) {
+    try{
+      checkAuthorization(request);
+
+      ObjectMapper objectMapper = new ObjectMapper();
+      ProductModel editedProduct = objectMapper.convertValue(formDataJson, ProductModel.class);
+
+      editedProduct.setCategoryId(this.categoryService.getCategoryById(editedProduct.getCategoryId().getId()));
+      if(img != null) editedProduct.setImg(img.getBytes());
+
+      return new Response(HttpStatus.OK, HttpStatus.OK.name(), this.productService.updateProduct(editedProduct, id)).okResponse();
+    } catch (CustomException e){
+      return new Response(e.getMessage()).customResponse(e.getStatus());
+    } catch (Exception e){
+      return new Response(e.getMessage()).internalServerErrorResponse();
+    }
+  }
+
+  private void checkAuthorization(HttpServletRequest request) {
+    UserCredential credential = new UserCredential(request);
+    if(!credential.getRol()) throw new CustomException(HttpStatus.FORBIDDEN, "No tiene los permisos necesarios");
+  }
 }

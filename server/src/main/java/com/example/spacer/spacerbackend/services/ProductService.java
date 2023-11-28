@@ -7,7 +7,6 @@ import com.example.spacer.spacerbackend.utils.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
@@ -15,12 +14,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
 public class ProductService {
   ProductRepository productRepository;
   private CacheManager cacheManager;
+  private final String NBS = String.valueOf((char) 160);
 
   @Autowired
   public void ProductRepository(ProductRepository productRepository, CacheManager cacheManager) {
@@ -53,23 +54,69 @@ public class ProductService {
   public ProductModel getProductById(Long id) {
     try {
       Optional<ProductModel> product = this.productRepository.findById(id);
-      if (product.isEmpty()) {
-        throw new CustomException(HttpStatus.NOT_FOUND, "Producto no encontrado");
-      }
+      if (product.isEmpty()) throw new CustomException(HttpStatus.NOT_FOUND, "Producto no encontrado");
       return product.get();
     } catch (CustomException e) {
-      throw new CustomException(e.getStatus(), e.getMessage());
+      throw e;
     } catch (Exception e) {
       throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, "Error interno del servidor");
     }
   }
+
+  @CachePut(value = "products", key = "#result.id")
+  public ProductModel updateProduct(ProductModel editedProduct, Long currentProductId) {
+    try {
+      var currentProduct = this.getProductById(currentProductId);
+      updateFieldsChanged(editedProduct, currentProduct);
+      clearImgCached(currentProduct.getSimpleUrlImg());
+      clearGetAllProductsCache();
+      return this.productRepository.save(currentProduct);
+    } catch (CustomException e){
+      throw e;
+    } catch (Exception e) {
+      throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, "Error interno del servidor");
+    }
+  }
+
+  private void updateFieldsChanged(ProductModel editedProduct, ProductModel currentProduct) {
+    if (containsNoBreakSpace(editedProduct.getMarca())){
+      editedProduct.setMarca(editedProduct.getMarca().replaceAll(NBS, " "));
+    }if (containsNoBreakSpace(editedProduct.getDescription())) {
+      editedProduct.setDescription(editedProduct.getDescription().replaceAll(NBS, " "));
+    }
+
+    if (editedProduct.getMarca() != null
+      && !editedProduct.getMarca().trim().isEmpty()
+      && !editedProduct.getMarca().equals(currentProduct.getMarca())
+    ) {
+      currentProduct.setMarca(editedProduct.getMarca());
+    }
+    if (editedProduct.getDescription() != null
+      && !editedProduct.getDescription().trim().isEmpty()
+      && !editedProduct.getDescription().equals(currentProduct.getDescription())
+    ) {
+      currentProduct.setDescription(editedProduct.getDescription());
+    }
+    if (editedProduct.getPrice() != currentProduct.getPrice() && editedProduct.getPrice() >= 0.1) {
+      currentProduct.setPrice(editedProduct.getPrice());
+    }
+    if (!Objects.equals(editedProduct.getCategoryId().getId(), currentProduct.getCategoryId().getId())) {
+      currentProduct.setCategoryId(editedProduct.getCategoryId());
+    }
+    if (editedProduct.getStock() >= 0 && editedProduct.getStock() != currentProduct.getStock()) {
+      currentProduct.setStock(editedProduct.getStock());
+    }
+    if (editedProduct.getImg() != null && !Arrays.equals(editedProduct.getImg(), currentProduct.getImg())) {
+      currentProduct.setImg(editedProduct.getImg());
+    }
+  }
+
   @CachePut(value = "products", key = "#result.id")
   public ProductModel newProduct(ProductModel newProduct) {
     try {
       validateNewProduct(newProduct);
-      ProductModel savedProduct = this.productRepository.save(newProduct);
       clearGetAllProductsCache();
-      return savedProduct;
+      return this.productRepository.save(newProduct);
     } catch (CustomException e) {
       throw new CustomException(e.getStatus(), e.getMessage());
     } catch (Exception e) {
@@ -78,6 +125,12 @@ public class ProductService {
   }
 
   private void validateNewProduct(ProductModel newProduct){
+    if(containsNoBreakSpace(newProduct.getDescription())){
+      newProduct.setDescription(newProduct.getDescription().replaceAll(NBS, " "));
+    }if(containsNoBreakSpace(newProduct.getMarca())) {
+      newProduct.setMarca(newProduct.getMarca().replaceAll(NBS, " "));
+    }
+
     if(newProduct.getMarca() == null || newProduct.getMarca().isEmpty()){
       throw new CustomException(HttpStatus.BAD_REQUEST, "La marca no puede estar vacia");
     }
@@ -105,4 +158,14 @@ public class ProductService {
     }
   }
 
+  public void clearImgCached(String urlprod){
+    Cache productsCache = cacheManager.getCache("products");
+    if (productsCache != null) {
+      productsCache.evict(urlprod);
+    }
+  }
+
+  public boolean containsNoBreakSpace(String str){
+    return str.contains(NBS);
+  }
 }
