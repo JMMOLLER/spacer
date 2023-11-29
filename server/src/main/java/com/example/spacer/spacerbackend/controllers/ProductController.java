@@ -3,6 +3,7 @@ package com.example.spacer.spacerbackend.controllers;
 import com.example.spacer.spacerbackend.models.ProductModel;
 import com.example.spacer.spacerbackend.services.CategoryService;
 import com.example.spacer.spacerbackend.services.ProductService;
+import com.example.spacer.spacerbackend.utils.CheckAuthorizationUtil;
 import com.example.spacer.spacerbackend.utils.Response;
 import com.example.spacer.spacerbackend.utils.CustomException;
 import com.example.spacer.spacerbackend.utils.UserCredential;
@@ -21,11 +22,13 @@ import java.util.Map;
 public class ProductController {
   ProductService productService;
   CategoryService categoryService;
+  CheckAuthorizationUtil checkAuthorization;
 
   @Autowired
   public ProductController(ProductService productService, CategoryService categoryService) {
     this.productService = productService;
     this.categoryService = categoryService;
+    this.checkAuthorization = new CheckAuthorizationUtil();
   }
 
   @GetMapping("/all")
@@ -59,7 +62,7 @@ public class ProductController {
                                                  @RequestPart(value = "img") MultipartFile img,
                                                  @RequestParam Map<String, Object> formDataJson) {
     try{
-      checkAuthorization(request);
+      checkAuthorization.checkAdmin(request);
 
       ObjectMapper objectMapper = new ObjectMapper();
       ProductModel newProduct = objectMapper.convertValue(formDataJson, ProductModel.class);
@@ -82,7 +85,7 @@ public class ProductController {
                                                      @RequestPart(value = "img", required = false) MultipartFile img,
                                                      @RequestParam Map<String, Object> formDataJson) {
     try{
-      checkAuthorization(request);
+      checkAuthorization.checkAdmin(request);
 
       ObjectMapper objectMapper = new ObjectMapper();
       ProductModel editedProduct = objectMapper.convertValue(formDataJson, ProductModel.class);
@@ -101,7 +104,7 @@ public class ProductController {
   @DeleteMapping("/{id}")
   public ResponseEntity<Response> deleteProductById(HttpServletRequest request, @PathVariable("id") Long id){
     try{
-      checkAuthorization(request);
+      checkAuthorization.checkAdmin(request);
       this.productService.deleteProductById(id);
       return new Response(HttpStatus.OK, HttpStatus.OK.name(), null).okResponse();
     } catch (CustomException e){
@@ -111,8 +114,4 @@ public class ProductController {
     }
   }
 
-  private void checkAuthorization(HttpServletRequest request) {
-    UserCredential credential = new UserCredential(request);
-    if(!credential.getRol()) throw new CustomException(HttpStatus.FORBIDDEN, "No tiene los permisos necesarios");
-  }
 }

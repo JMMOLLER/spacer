@@ -2,7 +2,7 @@
  * @typedef {Object} API_RESPONSE
  * @property {number} statusCode - El código de estado de la respuesta.
  * @property {string} description - El mensaje asociado a la respuesta.
- * @property {Client | null} response - La respuesta de la API (puede ser un objeto o null).
+ * @property {Client | Cart | Product | Category | null} response - La respuesta de la API (puede ser un objeto o null).
  */
 
 /**
@@ -59,4 +59,10 @@
  * @property {string} cardNumber - El número de la tarjeta.
  * @property {string} cardHolder - El nombre del titular de la tarjeta.
  * @property {string} expirationDate - La fecha de expiración de la tarjeta.
+ */
+
+/**
+ * @typedef {Object} Category
+ * @property {number} id - El ID de la categoría.
+ * @property {string} name - El nombre de la categoría.
  */
