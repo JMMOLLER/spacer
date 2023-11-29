@@ -28,7 +28,7 @@ public class EmailTemplateService {
       Context context = new Context();
       context.setVariable("subject", subject);
       context.setVariable("title", "Contraseña cambiada");
-      context.setVariable("urlReset", urlBase + "/pages/perfil/");
+      context.setVariable("urlReset", urlBase + "/pages/perfil");
 
       return templateEngine.process("password-changed", context);
   }
@@ -39,7 +39,7 @@ public class EmailTemplateService {
       context.setVariable("subject", "Gracias por registrarte");
       context.setVariable("title", subject);
       context.setVariable("username", username);
-      context.setVariable("urlPerfil", urlBase + "/pages/perfil/");
+      context.setVariable("urlPerfil", urlBase + "/pages/perfil");
 
       return templateEngine.process("new-client", context);
   }

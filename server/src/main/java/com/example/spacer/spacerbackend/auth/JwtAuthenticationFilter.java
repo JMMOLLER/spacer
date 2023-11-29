@@ -1,6 +1,6 @@
 package com.example.spacer.spacerbackend.auth;
 
-import com.example.spacer.spacerbackend.services.Response;
+import com.example.spacer.spacerbackend.utils.Response;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -40,7 +40,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                           FilterChain chain, Authentication authResult) throws IOException, ServletException {
 
     ClientDetailsImp clientDetails = (ClientDetailsImp) authResult.getPrincipal();
-    String token = TokensUtils.createToken(clientDetails.getUsername(), clientDetails.getEmail(), clientDetails.getId());
+    String token = TokensUtils.createToken(clientDetails);
     Map<String, Object> payload = TokensUtils.getPayloadFromToken(token);
     JSONObject json = new JSONObject();
     json.put("token", token);

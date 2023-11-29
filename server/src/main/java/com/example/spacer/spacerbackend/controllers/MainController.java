@@ -4,6 +4,7 @@ import com.example.spacer.spacerbackend.models.ClientModel;
 import com.example.spacer.spacerbackend.models.PasswordResetModel;
 import com.example.spacer.spacerbackend.models.ProductModel;
 import com.example.spacer.spacerbackend.services.*;
+import com.example.spacer.spacerbackend.utils.Response;
 import io.micrometer.common.util.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,6 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
@@ -51,7 +51,7 @@ public class MainController {
 
   @GetMapping("/api")
   public ResponseEntity<?> apiHome() {
-    return new Response(HttpStatus.OK.name(), "Welcome to Spacer API on v1.5.2 🚀!").okResponse();
+    return new Response(HttpStatus.OK.name(), "Welcome to Spacer API on v1.6.4 🚀!").okResponse();
   }
 
   @PostMapping("/cliente/reset-password")
@@ -176,11 +176,15 @@ public class MainController {
 
   @GetMapping("/producto/{urlprod}.jpg")
   public ResponseEntity<byte[]> getProductImage(@PathVariable String urlprod) {
-    ProductModel product = this.productService.getProductByUrlProd(urlprod);
+    try {
+      ProductModel product = this.productService.getProductByUrlProd(urlprod);
 
-    if (product == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+      if (product == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
-    return getImgResponseEntity(product.getImg());
+      return getImgResponseEntity(product.getImg());
+    } catch (Exception e) {
+      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   @GetMapping("/**")

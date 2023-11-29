@@ -6,12 +6,12 @@ import com.example.spacer.spacerbackend.models.ClientModel;
 import com.example.spacer.spacerbackend.models.InvoiceModel;
 import com.example.spacer.spacerbackend.services.ClientService;
 import com.example.spacer.spacerbackend.services.MailSenderService;
-import com.example.spacer.spacerbackend.services.Response;
+import com.example.spacer.spacerbackend.utils.Response;
 import com.example.spacer.spacerbackend.utils.CustomException;
 import com.example.spacer.spacerbackend.utils.UserCredential;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
-import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/api/cliente")
@@ -43,7 +44,7 @@ public class ClientController {
     } catch (CustomException e) {
       return new Response(e.getMessage()).customResponse(e.getStatus());
     } catch (Exception e) {
-      return new Response(ExceptionUtils.getRootCause(e).getMessage()).internalServerErrorResponse();
+      return new Response(e.getMessage()).internalServerErrorResponse();
     }
   }
 
@@ -59,7 +60,7 @@ public class ClientController {
     } catch (CustomException e) {
       return new Response(e.getMessage()).customResponse(e.getStatus());
     } catch (Exception e) {
-      return new Response(ExceptionUtils.getRootCause(e).getMessage()).internalServerErrorResponse();
+      return new Response(e.getMessage()).internalServerErrorResponse();
     }
   }
 
@@ -75,7 +76,7 @@ public class ClientController {
     } catch (CustomException e) {
       return new Response(e.getMessage()).customResponse(e.getStatus());
     } catch (Exception e) {
-      return new Response(ExceptionUtils.getRootCause(e).getMessage()).internalServerErrorResponse();
+      return new Response(e.getMessage()).internalServerErrorResponse();
     }
   }
 
@@ -91,7 +92,7 @@ public class ClientController {
     } catch (CustomException e) {
       return new Response(e.getMessage()).customResponse(e.getStatus());
     } catch (Exception e) {
-      return new Response(ExceptionUtils.getRootCause(e).getMessage()).internalServerErrorResponse();
+      return new Response(e.getMessage()).internalServerErrorResponse();
     }
   }
 
@@ -107,7 +108,7 @@ public class ClientController {
     } catch (CustomException e) {
       return new Response(e.getMessage()).customResponse(e.getStatus());
     } catch (Exception e) {
-      return new Response(ExceptionUtils.getRootCause(e).getMessage()).internalServerErrorResponse();
+      return new Response(e.getMessage()).internalServerErrorResponse();
     }
   }
 
@@ -123,62 +124,68 @@ public class ClientController {
     } catch (CustomException e) {
       return new Response(e.getMessage()).customResponse(e.getStatus());
     } catch (Exception e) {
-      return new Response(ExceptionUtils.getRootCause(e).getMessage()).internalServerErrorResponse();
+      return new Response(e.getMessage()).internalServerErrorResponse();
     }
   }
 
   @PutMapping()
   @ResponseBody
-  public ResponseEntity<Response> updateClient(
-     HttpServletRequest request,
-     @RequestPart(value = "img", required = false) MultipartFile img,
-     @RequestParam Map<String, Object> formData
-  ) {
+  public ResponseEntity<Response> updateClient( HttpServletRequest request,
+                                                @RequestPart(value = "img", required = false) MultipartFile img,
+                                                @RequestParam Map<String, Object> formDataJson) {
     try {
-      UserCredential userCredential = new UserCredential(request);
+      UserCredential userInfo = new UserCredential(request);
 
-      boolean pwdChanged = formData.containsKey("new-password");
+      ObjectMapper objectMapper = new ObjectMapper();
 
-      ClientModel client = this.formDataToClientModel(formData);
+      ClientModel client = objectMapper.convertValue(formDataJson, ClientModel.class);
+
+      if(formDataJson.containsKey("new-password")){
+        client.setNewPassword(formDataJson.get("new-password").toString());
+      }
+      client.setUsername(userInfo.getUsername());
+
+      boolean pwdChanged = client.getNewPassword() != null && !client.getNewPassword().isEmpty();
 
       if (img != null) {
         client.setImg(img.getBytes());
       }
 
-      ClientModel cs = this.clientService.updateClient(client, userCredential.getUsername());
+      ClientModel updatedClient = this.clientService.updateClient(client);
 
       if(pwdChanged){
-        mailSenderService.sendPwdChanged(cs.getEmail());
+        CompletableFuture.runAsync( () -> {
+          try {
+            mailSenderService.sendPwdChanged(updatedClient.getEmail());
+          } catch (Exception e) {
+            e.printStackTrace(); // Por temas prácticos, no se está utilizando un logger
+          }
+        });
       }
 
-      return new Response(HttpStatus.OK.name(), cs).okResponse();
+      return new Response(HttpStatus.OK.name(), updatedClient).okResponse();
     } catch (CustomException e) {
       return new Response(e.getMessage()).customResponse(e.getStatus());
     } catch (Exception e) {
-      return new Response(ExceptionUtils.getRootCause(e).getMessage()).internalServerErrorResponse();
+      return new Response(e.getMessage()).internalServerErrorResponse();
     }
-  }
-
-  private ClientModel formDataToClientModel(Map<String, Object> formData) {
-    ObjectMapper objectMapper = new ObjectMapper();
-    ClientModel client = objectMapper.convertValue(formData, ClientModel.class);
-    if(formData.containsKey("new-password")){
-      client.setNewPassword(formData.get("new-password").toString());
-    }
-    return client;
   }
 
   @DeleteMapping()
   @ResponseBody
-  public ResponseEntity<Response> deleteClient(@RequestBody ClientModel cliente) {
+  public ResponseEntity<Response> deleteClient(HttpServletRequest request) {
     try {
-      ClientModel cs = this.clientService.deleteClient(cliente);
+      UserCredential userInfo = new UserCredential(request);
 
-      return new Response(HttpStatus.OK.name(), cs).okResponse();
+      var client = clientService.getClientByUsername(userInfo.getUsername());
+
+      clientService.deleteClient(client);
+
+      return new Response(HttpStatus.OK.name(), client).okResponse();
     } catch (CustomException e) {
       return new Response(e.getMessage()).customResponse(e.getStatus());
     } catch (Exception e) {
-      return new Response(ExceptionUtils.getRootCause(e).getMessage()).internalServerErrorResponse();
+      return new Response(e.getMessage()).internalServerErrorResponse();
     }
   }
 
@@ -190,7 +197,7 @@ public class ClientController {
     } catch (CustomException e) {
       return new Response(e.getMessage()).customResponse(e.getStatus());
     } catch (Exception e) {
-      return new Response(ExceptionUtils.getRootCause(e).getMessage()).internalServerErrorResponse();
+      return new Response(e.getMessage()).internalServerErrorResponse();
     }
   }
 
@@ -219,7 +226,7 @@ public class ClientController {
     } catch (CustomException e) {
       return new Response(e.getMessage()).customResponse(e.getStatus());
     } catch (Exception e) {
-      return new Response(ExceptionUtils.getRootCause(e).getMessage()).internalServerErrorResponse();
+      return new Response(e.getMessage()).internalServerErrorResponse();
     }
   }
 
@@ -234,7 +241,7 @@ public class ClientController {
     } catch (CustomException e) {
       return new Response(e.getMessage()).customResponse(e.getStatus());
     } catch (Exception e) {
-      return new Response(ExceptionUtils.getRootCause(e).getMessage()).internalServerErrorResponse();
+      return new Response(e.getMessage()).internalServerErrorResponse();
     }
   }
 

@@ -1,4 +1,4 @@
-package com.example.spacer.spacerbackend.services;
+package com.example.spacer.spacerbackend.utils;
 
 import io.micrometer.common.util.StringUtils;
 import lombok.Getter;

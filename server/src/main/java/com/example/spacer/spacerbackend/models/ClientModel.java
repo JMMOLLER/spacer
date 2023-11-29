@@ -15,8 +15,8 @@ import java.util.Objects;
 @Getter
 @Setter
 @Entity
-@JsonIgnoreProperties({"new-password", "cart"})
 @Table(name = "cliente")
+@JsonIgnoreProperties({"new-password", "cart"})
 public class ClientModel implements Serializable {
 
   @Id
@@ -38,7 +38,8 @@ public class ClientModel implements Serializable {
   private String urlImg;
 
   @Column(name="rolcli")
-  private Integer rol;
+  @JsonProperty("isAdmin")
+  private Boolean isAdmin;
 
   @Column(name="dircli")
   private String address;

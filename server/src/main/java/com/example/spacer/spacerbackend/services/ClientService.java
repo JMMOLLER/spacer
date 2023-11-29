@@ -8,6 +8,7 @@ import com.example.spacer.spacerbackend.repositories.ClientRepository;
 import com.example.spacer.spacerbackend.utils.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
@@ -41,31 +42,27 @@ public class ClientService {
     return clients.toArray(new ClientModel[0]);
   }
 
-  @CacheEvict(value = "clients", allEntries = true)
+  @CachePut(value = "clients", key = "#client.username")
   public ClientModel newClient(ClientModel client) {
     if (client.getId() != null) {
       client.setId(null);
     }
     client.setPassword(new BCryptPasswordEncoder().encode(client.getPassword()));
-    client.setRol(0);
+    client.setIsAdmin(false);
     return clientRepository.save(client);
   }
 
-  @CacheEvict(value = "client", key = "#username")
-  public ClientModel updateClient(ClientModel client, String username) {
+  @CachePut(value = "client", key = "#client.username")
+  public ClientModel updateClient(ClientModel client) {
     try {
-      if (username != null) {
-        Optional<ClientModel> existingClient = clientRepository.findOneByUsername(username);
-        if (existingClient.isPresent()) {
+      Optional<ClientModel> currentClient = clientRepository.findOneByUsername(client.getUsername());
+      if (currentClient.isPresent()) {
 
-          ClientModel newClientData = ClientDataSetter(client, existingClient.get());
+        ClientModel newClientData = ClientDataSetter(client, currentClient.get());
 
-          return clientRepository.save(newClientData);
-        } else {
-          throw new CustomException(HttpStatus.NOT_FOUND, "El cliente no existe");
-        }
+        return clientRepository.save(newClientData);
       } else {
-        throw new CustomException(HttpStatus.BAD_REQUEST, "No se puede procesar la petición sin el username del cliente.");
+        throw new CustomException(HttpStatus.NOT_FOUND, "El cliente con el username '"+ client.getUsername() +"' no existe");
       }
     } catch (CustomException e) {
       throw e;
@@ -90,7 +87,7 @@ public class ClientService {
     }
   }
 
-  @CacheEvict(value = "client", key = "#client.username")
+  @CachePut(value = "client", key = "#client.username")
   public ClientModel updatePassword(ClientModel client, String newPassword) {
     try {
       BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
@@ -129,6 +126,11 @@ public class ClientService {
     }
     if (newClientData.getNewPassword() != null) {
       BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+      if(newClientData.getPassword() == null || newClientData.getNewPassword() == null){
+        throw new CustomException(HttpStatus.BAD_REQUEST, "Debe enviar su nueva contraseña 2 veces para validar coincidencia.");
+      }
+
       if (encoder.matches(newClientData.getNewPassword(), currentClientData.getPassword())) {
         throw new CustomException(HttpStatus.BAD_REQUEST, "La nueva contraseña no puede ser igual a la anterior.");
       } else if (newClientData.getNewPassword().trim().length() < 6) {
@@ -144,18 +146,9 @@ public class ClientService {
   }
 
   @CacheEvict(value = "client", key = "#client.username")
-  public ClientModel deleteClient(ClientModel client) {
+  public void deleteClient(ClientModel client) {
     try{
-      if (client.getId() != null) {
-        Optional<ClientModel> existingClient = clientRepository.findById(client.getId());
-        if (existingClient.isPresent()) {
-          clientRepository.delete(client);
-          return client;
-        } else {
-          throw new CustomException(HttpStatus.NOT_FOUND, "El cliente no existe");
-        }
-      }
-      throw new CustomException(HttpStatus.BAD_REQUEST, "No se puede procesar la petición sin el id del cliente.");
+      clientRepository.delete(client);
     } catch (CustomException e) {
       throw e;
     }  catch (Exception e) {
@@ -163,7 +156,7 @@ public class ClientService {
     }
   }
 
-  @CacheEvict(value = "client", key = "#username")
+  @CachePut(value = "client", key = "#username")
   public CartModel[] addToCart(Map<String, Integer> formData, String username) {
     try {
       Optional<ClientModel> existingClient = clientRepository.findOneByUsername(username);
@@ -203,7 +196,7 @@ public class ClientService {
     }
   }
 
-  @CacheEvict(value = "client", key = "#username")
+  @CachePut(value = "client", key = "#username")
   public ClientModel decreaseProduct(Long productId, String username) {
     try {
       Optional<ClientModel> existingClient = clientRepository.findOneByUsername(username);
@@ -224,7 +217,7 @@ public class ClientService {
     }
   }
 
-  @CacheEvict(value = "client", key = "#username")
+  @CachePut(value = "client", key = "#username")
   public boolean deleteProductOnCart(Long productId, String username) {
     try {
       Optional<ClientModel> existingClient = clientRepository.findOneByUsername(username);
@@ -245,6 +238,7 @@ public class ClientService {
     }
   }
 
+  @Cacheable(value = "client", key = "#clientId")
   public InvoiceModel[] getOrders(Long clientId) {
     try {
       Optional<ClientModel> existingClient = clientRepository.findById(clientId);
@@ -287,7 +281,7 @@ public class ClientService {
     }
   }
 
-  @CacheEvict(value = "client", key = "#client.username")
+  @CachePut(value = "client", key = "#client.username")
   public String updateCardForClient(ClientModel client, CardModel card) {
     try {
       String error = findErrorCardModel(card);
