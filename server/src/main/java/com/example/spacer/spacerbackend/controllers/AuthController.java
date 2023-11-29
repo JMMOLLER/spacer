@@ -1,7 +1,7 @@
 package com.example.spacer.spacerbackend.controllers;
 
 import com.example.spacer.spacerbackend.auth.TokensUtils;
-import com.example.spacer.spacerbackend.services.Response;
+import com.example.spacer.spacerbackend.utils.Response;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

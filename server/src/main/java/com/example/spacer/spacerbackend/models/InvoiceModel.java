@@ -28,7 +28,7 @@ public class InvoiceModel implements Serializable {
   @Column(name = "idcli")
   private Long clientId;
 
-  @OneToMany(mappedBy = "invoiceId", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "invoiceId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @JsonManagedReference
   private List<ProductInvoiceModel> products;
 

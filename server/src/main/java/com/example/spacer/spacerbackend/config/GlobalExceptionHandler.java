@@ -1,7 +1,6 @@
 package com.example.spacer.spacerbackend.config;
 
-import com.example.spacer.spacerbackend.services.Response;
-import org.springframework.http.HttpStatus;
+import com.example.spacer.spacerbackend.utils.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -12,6 +11,11 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(MissingServletRequestPartException.class)
   public ResponseEntity<Response> handleMissingServletRequestPart(MissingServletRequestPartException ex) {
-    return new Response(HttpStatus.BAD_REQUEST.name(), null).customResponse(HttpStatus.BAD_REQUEST);
+    return new Response("Bad Request", null).badRequestResponse();
+  }
+
+  @ExceptionHandler(Exception.class)
+  public ResponseEntity<Response> handleInternalError(Exception ex) {
+    return new Response("Internal Server Error", null).internalServerErrorResponse();
   }
 }

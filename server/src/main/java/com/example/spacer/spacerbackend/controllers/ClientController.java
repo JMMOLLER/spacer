@@ -6,19 +6,18 @@ import com.example.spacer.spacerbackend.models.ClientModel;
 import com.example.spacer.spacerbackend.models.InvoiceModel;
 import com.example.spacer.spacerbackend.services.ClientService;
 import com.example.spacer.spacerbackend.services.MailSenderService;
-import com.example.spacer.spacerbackend.services.Response;
+import com.example.spacer.spacerbackend.utils.Response;
 import com.example.spacer.spacerbackend.utils.CustomException;
 import com.example.spacer.spacerbackend.utils.UserCredential;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
-import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.DataInput;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 

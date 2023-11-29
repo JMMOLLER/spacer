@@ -5,8 +5,10 @@ import com.example.spacer.spacerbackend.models.ClientModel;
 import com.example.spacer.spacerbackend.repositories.CartRepository;
 import com.example.spacer.spacerbackend.repositories.ClientRepository;
 import com.example.spacer.spacerbackend.repositories.ProductRepository;
+import com.example.spacer.spacerbackend.utils.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,45 +27,69 @@ public class CartService {
   }
 
   public CartModel[] getAllCarts() {
-    List<CartModel> carts = cartRepository.findAll();
-    return carts.toArray(new CartModel[0]);
+    try{
+      List<CartModel> carts = cartRepository.findAll();
+      return carts.toArray(new CartModel[0]);
+    } catch(CustomException e){
+      throw e;
+    } catch (Exception e) {
+      throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+    }
   }
 
   public void newCart(Long productId, Long clientId, Integer quantity) {
-    CartModel cart = new CartModel();
-    cart.setQuantity(quantity);
-    cart.setProductId(this.productRepository.findById(productId).orElse(null));
-    cart.setClientId(this.clientRepository.findById(clientId).orElse(null));
-    cartRepository.save(cart);
+    try{
+      CartModel cart = new CartModel();
+      cart.setQuantity(quantity);
+      cart.setProductId(this.productRepository.findById(productId).orElse(null));
+      cart.setClientId(this.clientRepository.findById(clientId).orElse(null));
+      cartRepository.save(cart);
+    } catch(CustomException e){
+      throw e;
+    } catch (Exception e) {
+      throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+    }
   }
 
   public CartModel findExisting(Long clientId, Long productId) {
-    return cartRepository.findOneByClientIdAndProductId(clientId, productId).orElse(null);
+    try{
+      return cartRepository.findOneByClientIdAndProductId(clientId, productId).orElse(null);
+    } catch(CustomException e){
+      throw e;
+    } catch (Exception e) {
+      throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+    }
   }
 
   public void findAndUpdate(CartModel existingCart, int newQuantity) {
-    int resultQ = existingCart.getQuantity() + newQuantity;
-    if (resultQ < 1) {
-      this.deleteCart(existingCart.getClientId());
-      return;
+    try{
+      int resultQ = existingCart.getQuantity() + newQuantity;
+      if (resultQ < 1) {
+        this.deleteCart(existingCart.getClientId());
+        return;
+      }
+      existingCart.setQuantity(resultQ);
+      cartRepository.save(existingCart);
+    } catch(CustomException e){
+      throw e;
+    } catch (Exception e) {
+      throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
     }
-    existingCart.setQuantity(resultQ);
-    cartRepository.save(existingCart);
   }
 
   public void createOrUpdate(Long productId, Long clientId, Integer quantity) {
     try {
       if(productId == null){
-        throw new Exception("El producto no existe");
+        throw new CustomException(HttpStatus.BAD_REQUEST, "El producto no existe");
       }else if(clientId == null){
-        throw new Exception("El cliente no existe");
+        throw new CustomException(HttpStatus.BAD_REQUEST, "El cliente no existe");
       }else if(quantity == null){
-        throw new Exception("La cantidad no puede ser nula");
+        throw new CustomException(HttpStatus.BAD_REQUEST, "La cantidad no puede ser nula");
       }
 
       CartModel existingCart = this.findExisting(clientId, productId);
 
-      if(quantity < 1) throw new Exception("La cantidad no puede ser menor a 1");
+      if(quantity < 1) throw new CustomException(HttpStatus.BAD_REQUEST, "La cantidad no puede ser menor a 1");
 
       if (existingCart == null) {
         this.newCart(productId, clientId, quantity);
@@ -72,8 +98,10 @@ public class CartService {
 
       this.findAndUpdate(existingCart, quantity);
 
+    } catch(CustomException e){
+      throw e;
     } catch (Exception e) {
-      throw new RuntimeException(e);
+      throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
     }
   }
 
@@ -83,10 +111,12 @@ public class CartService {
       if (existingCart != null) {
         this.findAndUpdate(existingCart, -1);
       }else{
-        throw new Exception("El producto no existe en el carrito");
+        throw new CustomException(HttpStatus.BAD_REQUEST, "El producto no existe en el carrito");
       }
+    } catch(CustomException e){
+      throw e;
     } catch (Exception e) {
-      throw new RuntimeException(e);
+      throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
     }
   }
 
@@ -96,10 +126,12 @@ public class CartService {
       if (existingCart != null) {
         this.deleteCart(existingCart.getClientId());
       }else{
-        throw new Exception("El producto no existe en el carrito");
+        throw new CustomException(HttpStatus.BAD_REQUEST, "El producto no existe en el carrito");
       }
+    } catch(CustomException e){
+      throw e;
     } catch (Exception e) {
-      throw new RuntimeException(e);
+      throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
     }
   }
 

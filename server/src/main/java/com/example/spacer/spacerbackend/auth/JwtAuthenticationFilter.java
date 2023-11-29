@@ -1,6 +1,6 @@
 package com.example.spacer.spacerbackend.auth;
 
-import com.example.spacer.spacerbackend.services.Response;
+import com.example.spacer.spacerbackend.utils.Response;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
