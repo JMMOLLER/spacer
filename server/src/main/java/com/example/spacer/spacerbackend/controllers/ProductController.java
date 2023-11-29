@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 import java.util.Map;
 
@@ -91,6 +92,19 @@ public class ProductController {
       if(img != null) editedProduct.setImg(img.getBytes());
 
       return new Response(HttpStatus.OK, HttpStatus.OK.name(), this.productService.updateProduct(editedProduct, id)).okResponse();
+    } catch (CustomException e){
+      return new Response(e.getMessage()).customResponse(e.getStatus());
+    } catch (Exception e){
+      return new Response(e.getMessage()).internalServerErrorResponse();
+    }
+  }
+
+  @DeleteMapping("/{id}")
+  public ResponseEntity<Response> deleteProductById(HttpServletRequest request, @PathVariable("id") Long id){
+    try{
+      checkAuthorization(request);
+      this.productService.deleteProductById(id);
+      return new Response(HttpStatus.OK, HttpStatus.OK.name(), null).okResponse();
     } catch (CustomException e){
       return new Response(e.getMessage()).customResponse(e.getStatus());
     } catch (Exception e){

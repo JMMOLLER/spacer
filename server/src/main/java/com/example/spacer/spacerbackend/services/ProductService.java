@@ -7,6 +7,7 @@ import com.example.spacer.spacerbackend.utils.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
@@ -167,5 +168,19 @@ public class ProductService {
 
   public boolean containsNoBreakSpace(String str){
     return str.contains(NBS);
+  }
+
+  @CacheEvict(value = "products", key = "#id")
+  public void deleteProductById(Long id) {
+    try {
+      ProductModel product = this.getProductById(id);
+      clearImgCached(product.getSimpleUrlImg());
+      clearGetAllProductsCache();
+      this.productRepository.delete(product);
+    } catch (CustomException e){
+      throw e;
+    } catch (Exception e) {
+      throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+    }
   }
 }
