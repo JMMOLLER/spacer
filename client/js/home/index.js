@@ -97,12 +97,13 @@ const handleCheckAuth = async() => {
     dropdown[1].innerText = "Cerrar sesión";
     dropdown[1].addEventListener("click", handleClickLogout);
 
-    handleIsAdmin()
-
-    document.querySelector("#carrito").href = "/pages/carrito.html";
-
-    // actualiza el numero de productos que se muestra en la bolsa
-    document.querySelector("#cart_cant").innerHTML = (await module.getCartProducts()).length ?? 0;
+    if(module.userInfo.isAdmin) {
+      handleIsAdmin();
+    }else{
+      document.querySelector("#carrito").href = "/pages/carrito.html";
+      // actualiza el numero de productos que se muestra en la bolsa
+      document.querySelector("#cart_cant").innerHTML = (await module.getCartProducts()).length ?? 0;
+    }
   }
   return userIsAuth;
 };
@@ -110,7 +111,7 @@ const handleCheckAuth = async() => {
 /**
  * @summary Verifica si el usuario es admin y si lo es, agrega el link para cambiar vista de admin o usuario
  */
-const handleIsAdmin = () => {
+const handleIsAdmin = async () => {
   const isInAdminPage = window.location.pathname.includes("admin");
   const newLink = document.createElement("a");
   newLink.innerText = isInAdminPage ? "Cambiar a Usuario" : "Cambiar a Admin.";
