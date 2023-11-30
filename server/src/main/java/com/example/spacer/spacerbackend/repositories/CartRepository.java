@@ -25,4 +25,9 @@ public interface CartRepository extends CrudRepository<CartModel, Long> {
   @Query(value = "DELETE FROM CartModel c WHERE c.clientId.id = :clientId")
   int deleteCartFromClientId(Long clientId);
 
+  @Transactional
+  @Modifying
+  @Query(value = "DELETE FROM CartModel c WHERE c.clientId.id = :clientId AND c.productId.id = :productId")
+  int deleteProductOnCartByClientId(Long clientId, Long productId);
+
 }

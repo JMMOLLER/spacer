@@ -175,11 +175,13 @@ header {
 }
 
 .container_user .content_dropdown .link {
-  padding: 0 .5rem 0 .5rem;
+  padding: 0 0.5rem 0 0.5rem;
   border-bottom: 1px #cccccca1 solid;
+  background-color: white;
+  z-index: 1;
 }
 
-.container_user  .content_dropdown  .link:hover::before {
+.container_user .content_dropdown .link:hover::before {
   content: "";
   position: absolute;
   left: 0;

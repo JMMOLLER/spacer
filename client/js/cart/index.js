@@ -478,9 +478,9 @@ function createElement(tag, className, content = null, attributes = {}) {
  * @param {Cart} param0
  * @returns
  */
-function createProductCardTemplate({id, quantity, ...props}) {
+function createProductCardTemplate({cartId, quantity, ...props}) {
 
-  const { urlImg, description, marca, price } = props.productId;
+  const { urlImg, description, marca, price, id } = props.productId;
 
   const cardItem = createElement("div", "card_item", null, { "data-id": id });
 
@@ -581,8 +581,8 @@ function createProductCardTemplate({id, quantity, ...props}) {
 async function renderCardItem() {
   cart = await module.getCartProducts();
   document.querySelector(".loader").classList.add("hidden");
-  cart.forEach((product) => {
-    const cardItem = createProductCardTemplate(product);
+  cart.forEach((cart) => {
+    const cardItem = createProductCardTemplate(cart);
     document.querySelector(".content_items").appendChild(cardItem);
   });
   updateTotal();
