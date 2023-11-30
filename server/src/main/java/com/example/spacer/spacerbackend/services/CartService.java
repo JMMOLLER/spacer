@@ -122,12 +122,8 @@ public class CartService {
 
   public void deleteProduct(Long productId, Long clientId) {
     try {
-      CartModel existingCart = this.findExisting(clientId, productId);
-      if (existingCart != null) {
-        this.deleteCart(existingCart.getClientId());
-      }else{
-        throw new CustomException(HttpStatus.BAD_REQUEST, "El producto no existe en el carrito");
-      }
+      int productDeleted = cartRepository.deleteProductOnCartByClientId(clientId, productId);
+      if (productDeleted == 0) throw new CustomException(HttpStatus.BAD_REQUEST, "El producto no existe en el carrito");
     } catch(CustomException e){
       throw e;
     } catch (Exception e) {

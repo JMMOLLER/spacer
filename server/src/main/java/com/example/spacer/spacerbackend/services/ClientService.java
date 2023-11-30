@@ -156,7 +156,7 @@ public class ClientService {
     }
   }
 
-  @CachePut(value = "client", key = "#username")
+  @CachePut(value = "cart", key = "#username")
   public CartModel[] addToCart(Map<String, Integer> formData, String username) {
     try {
       Optional<ClientModel> existingClient = clientRepository.findOneByUsername(username);
@@ -217,7 +217,6 @@ public class ClientService {
     }
   }
 
-  @CachePut(value = "client", key = "#username")
   public boolean deleteProductOnCart(Long productId, String username) {
     try {
       Optional<ClientModel> existingClient = clientRepository.findOneByUsername(username);
