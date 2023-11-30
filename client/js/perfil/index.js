@@ -253,15 +253,21 @@ const handleImageError = (e) => {
   e.target.style.filter = "blur(2px)";
 };
 
+/**
+ * @summary Función que se encarga de cambiar la sección del perfil
+ * @description Este evento se debe pasar a cada elemento del menú de secciones del perfil.
+ * 
+ * @param {Event} e 
+ */
 const handleNavClick = (e) => {
-  const main = document.querySelector(".perfil__main");
+  const main = document.querySelector(".tb__content");
   main.dataset.tab = e.target.id;
 
   updateNavLine();
 };
 
 const updateNavLine = () => {
-  const id = document.querySelector(`.perfil__main`).dataset.tab;
+  const id = document.querySelector(`.tb__content`).dataset.tab;
   const line = document.querySelector("#selected_section");
   const tab = document.querySelector(`#${id}`);
   line.style.left = `${tab.offsetLeft}px`;
@@ -270,4 +276,4 @@ const updateNavLine = () => {
 
 window.addEventListener("resize", updateNavLine);
 
-export { toggleSubmitButton as inputHandler };
+export { toggleSubmitButton as inputHandler, handleNavClick, updateNavLine };
