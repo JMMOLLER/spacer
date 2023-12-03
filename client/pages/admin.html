@@ -60,6 +60,70 @@
   <main class="admin__main tb__content" data-tab="productos">
     <section class="section_productos">
       <h1>Administración de Productos</h1>
+      <div class="productos">
+        <div class="contenedor-items" id="items-container">
+          <!-- AQUI VA LOS PRODUCTOS -->
+
+          <div class="container-loader" id="loader">
+            <span class="loader"></span>
+            <span class="text">Estamos buscando los productos...</span>
+          </div>
+
+          <form class="product-editor__form">
+            <h2>Editando producto con ID <span id="product-id">90</span></h2>
+            <div class="product-img__container">
+              <img class="product__img" src="http://localhost:8080/producto/d070a7b0460e6fc4f52c5df85b558d6b.jpg" alt="imagen producto">
+              <div class="input-file__container">
+                <label for="new-image">Cambiar imagen de perfil</label>
+                <input type="file" id="new-image" name="img" accept="image/*">
+              </div>
+            </div>
+            <section class="input-group-container">
+              <div class="input-group">
+                <input type="text" id="product-brand" name="marca" value="LG">
+                <label for="product-brand">Marca</label>
+              </div>
+              <div class="input-group">
+                <input type="number" id="product-price" name="price" value="889.9">
+                <label for="product-price">Precio</label>
+              </div>
+              <div class="input-group">
+                <input type="number" min="1" id="product-stock" name="stock" value="20">
+                <label for="product-stock">Stock</label>
+              </div>
+            </section>
+            
+            <div class="input-group-container">
+              <div class="input-group flx-g">
+                <textarea type="text" id="product-description" name="description" >Silla Gamer Technisport Reclinacion 180° y Posapies Blanco</textarea>
+                <label for="product-description">Descripción</label>
+              </div>
+
+              <div class="input-select-group">
+                <button type="button" class="select" id="product-category" name="categoryId" tabindex="1">
+                  <span id="selected-option">Seleccionar</span>
+                  <i class="fa fa-down"></i>
+                  <div class="content_dropdown" id="dropdown_options">
+                    <a class="option" data-value="0" tabindex="2">Teclados</a>
+                    <a class="option" data-value="1" tabindex="2">Monitores</a>
+                  </div>
+                </button>
+                <label for="product-category">Categoria</label>
+              </div>
+            </div>
+            
+            <div class="inputSubmit-group">
+              <input type="submit" value="Iniciar Sesión">
+              <span class="loader"></span>
+            </div>
+          </form>
+
+          <div class="hidden" id="error">
+            <img src="/assets/imgs/lost-connection.gif" alt="lost-connection">
+            <span>Parece que perdimos la conexión con el servidor...</span>
+          </div>
+        </div>
+      </div>
     </section>
     <section class="section_categorias">
       <h1>Administración de Categorias</h1>

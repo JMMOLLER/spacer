@@ -100,6 +100,9 @@ input.error~label {
   background-image: url("/assets/icons/down.svg");
   rotate: -90deg;
 }
+.fa.fa-down {
+  background-image: url("/assets/icons/down.svg");
+}
 .fa.fa-delete {
   background-image: url("/assets/icons/delete.svg");
 }
