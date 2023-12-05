@@ -168,9 +168,12 @@ span#error.hidden {
   top: -15px;
   color: aqua;
 }
-.input-select-group > .select > span {
+.input-select-group > .select > input {
   user-select: none;
   pointer-events: none;
+  width: 100px;
+  border: 0;
+  text-align: center;
 }
 
 .input-select-group > .select .content_dropdown {
@@ -212,7 +215,7 @@ span#error.hidden {
   cursor: pointer;
 }
 
-.opciones_login{
+.opciones_login {
   display: flex;
   flex-direction: column;
   gap: 10px;

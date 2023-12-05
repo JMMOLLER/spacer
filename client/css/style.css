@@ -66,10 +66,10 @@ input[type=file]::-webkit-file-upload-button { /* chromes and blink button */
   cursor: pointer; 
 }
 
-input.error {
+input.error, .select.error, textarea.error {
   border: 1px solid red !important;
 }
-input.error~label {
+input.error~label, .select.error~label, textarea.error~label {
   color: red !important;
 }
 
@@ -95,6 +95,9 @@ input.error~label {
 .fa.fa-back {
   background-image: url("/assets/icons/down.svg");
   rotate: 90deg;
+}
+.fa.fa-close {
+  background-image: url("/assets//icons/close.svg");
 }
 .fa.fa-next {
   background-image: url("/assets/icons/down.svg");

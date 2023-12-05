@@ -1,4 +1,5 @@
-#body__admin {
+#body__admin,
+#html__admin {
   overflow-x: hidden;
 }
 
@@ -6,6 +7,10 @@
   font-size: 2.5rem;
   padding-top: 0.7rem;
   text-align: center;
+}
+
+.admin__main.tb__content {
+  width: 200vw;
 }
 
 .admin__main.tb__content .productos {
@@ -18,25 +23,28 @@
   margin-top: unset;
 }
 
-
-
-
-
-
-
-
-
-
 .product-editor__form {
-  width: 700px;
-  border: 2px solid #ccc;
+  width: auto;
+  min-width: 300px;
+  box-shadow: 1px 5px 20px 0px #00000059;
+  border-radius: 20px;
+  background-color: white;
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 10px;
   padding: 1rem;
+  margin: 0 0.5rem;
+}
+.product-editor__form > h2 {
+  font-size: 1.8rem;
+  text-align: center;
 }
 .flx-g {
   flex-grow: 1;
+}
+.flx-w {
+  flex-wrap: wrap;
 }
 .product-editor__form .input-group {
   margin-top: 30px;
@@ -49,7 +57,8 @@
   justify-content: space-between;
   gap: 15px;
 }
-.product-editor__form input, .product-editor__form textarea {
+.product-editor__form input,
+.product-editor__form textarea {
   border: 1px solid #ccc;
 }
 .product-editor__form .product-img__container {
@@ -58,8 +67,10 @@
   margin: 0 auto;
 }
 .product-editor__form .product-img__container .product__img {
-  width: 300px;
-  height: 300px;
+  max-width: 300px;
+  max-height: 300px;
+  min-width: 270px;
+  width: 100%;
   border-radius: 30px;
   box-shadow: 1px 7px 13px 2px rgba(0, 0, 0, 0.2);
 }
@@ -87,20 +98,6 @@
   opacity: 0;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #modal {
   display: none;
   width: 100vw;
@@ -121,7 +118,7 @@
   align-items: center;
   justify-content: center;
 }
-#modal.visible > #modal-content {
+#modal.visible:last-child {
   animation: modalVisible 0.7s ease-in-out forwards;
 }
 
@@ -129,7 +126,7 @@
   opacity: 0;
   transition-delay: 0.5s;
 }
-#modal.close > #modal-content {
+#modal.close:last-child {
   animation: modalHidden 0.7s ease-in-out;
 }
 
@@ -143,6 +140,13 @@
   padding: 1rem;
   opacity: 0;
   transition: opacity 0.3s ease-in-out;
+}
+
+.product-editor__form #modal-close {
+  position: absolute;
+  cursor: pointer;
+  right: 0;
+  top: 0;
 }
 
 @keyframes modalVisible {
