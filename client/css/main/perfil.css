@@ -94,16 +94,17 @@ body#body_perfil, html#html_perfil {
 }
 
 .perfil__main .input-group > input:valid + label {
-  transform: translateY(-50%);
-  font-size: 0.8rem;
   color: gray;
+  font-size: 1rem;
+  transform: translateY(60%);
 }
 
 .perfil__main .input-group > input:focus + label,
 .perfil__main .input-group > input.filled + label {
-  transform: translateY(-170%);
-  font-size: 0.8rem;
+  top: -15px;
   color: aqua;
+  font-size: 0.8rem;
+  transform: translateY(-50%);
 }
 
 /* ================= SECCTION ================ */

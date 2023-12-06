@@ -13,6 +13,10 @@
   width: 200vw;
 }
 
+.admin__main.tb__content > .section_productos {
+  position: relative;
+}
+
 .admin__main.tb__content .productos {
   max-width: unset;
   flex-grow: unset;
@@ -97,6 +101,22 @@
   height: 100%;
   width: 100%;
   opacity: 0;
+}
+
+.section_productos .boton-add {
+  display: block;
+  position: absolute;
+  top: 25px;
+  right: 30px;
+  border: none;
+  background-color: #0f9fe2;
+  color: #ffffff;
+  font-style: inherit;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  z-index: 1;
+  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 #modal {
@@ -187,17 +207,29 @@
   inset: 0px;
   border-radius: 50%;
   border: 5px solid aqua;
-  animation: modal-spinner-prixClipFix 2s linear infinite ;
+  animation: modal-spinner-prixClipFix 2s linear infinite;
 }
 
 @keyframes modal-spinner-rotate {
-  100%   {transform: rotate(360deg)}
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes modal-spinner-prixClipFix {
-    0%   {clip-path:polygon(50% 50%,0 0,0 0,0 0,0 0,0 0)}
-    25%  {clip-path:polygon(50% 50%,0 0,100% 0,100% 0,100% 0,100% 0)}
-    50%  {clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,100% 100%,100% 100%)}
-    75%  {clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,0 100%,0 100%)}
-    100% {clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,0 100%,0 0)}
+  0% {
+    clip-path: polygon(50% 50%, 0 0, 0 0, 0 0, 0 0, 0 0);
+  }
+  25% {
+    clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 0, 100% 0, 100% 0);
+  }
+  50% {
+    clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 100% 100%, 100% 100%);
+  }
+  75% {
+    clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 100%);
+  }
+  100% {
+    clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 0);
+  }
 }

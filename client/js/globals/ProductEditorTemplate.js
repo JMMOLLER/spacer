@@ -66,7 +66,7 @@ export default class ProductEditorTemplate {
 
   #generateHeader(id) {
     const header = document.createElement("h2");
-    header.textContent = `Editando producto con ID ${id}`;
+    header.textContent = id ? `Editando producto con ID ${id}` : "Nuevo producto";
     return header;
   }
 
@@ -76,7 +76,7 @@ export default class ProductEditorTemplate {
 
     const image = document.createElement("img");
     image.classList.add("product__img");
-    image.src = imageUrl;
+    image.src = imageUrl ?? "/assets/imgs/no-available-image.png";
     image.alt = "imagen producto";
     image.onerror = () => image.src = "/assets/imgs/no-available-image.png";
 
@@ -161,7 +161,7 @@ export default class ProductEditorTemplate {
     const selectedOption = document.createElement("input");
     selectedOption.id = buttonId;
     selectedOption.name = "categoryId";
-    selectedOption.value = this.#product.categoryId.name ?? "Seleccionar";
+    selectedOption.value = this.#product?.categoryId?.name ?? "Seleccionar";
     selectedOption.readOnly = true;
 
     const icon = document.createElement("i");
@@ -206,7 +206,7 @@ export default class ProductEditorTemplate {
 
     const submitButton = document.createElement("input");
     submitButton.type = "submit";
-    submitButton.value = "Actualizar";
+    submitButton.value = this.#product.id ? "Actualizar" : "Crear";
 
     const loaderSpan = document.createElement("span");
     loaderSpan.classList.add("loader");
@@ -236,6 +236,7 @@ export default class ProductEditorTemplate {
 
     const form = e.target;
     const submit = form.querySelector("input[type='submit']");
+    const btnText = this.#product.id ? "Actualizar" : "Crear";
 
     const formData = new FormData(form);
 
@@ -250,7 +251,7 @@ export default class ProductEditorTemplate {
     if (!data.categoryId)
       return alert("No se ha especificado una categoría válida");
 
-    const shoudlUpdate = this.#compareProductObjects(data);
+    const shoudlUpdate = this.#product.id ? this.#compareProductObjects(data) : false;
 
     if (shoudlUpdate) {
       document.querySelector("#modal-close").click();
@@ -258,26 +259,27 @@ export default class ProductEditorTemplate {
     }
 
     console.log(data);
-    toggleSubmit("Actualizar", submit);
+    toggleSubmit(btnText, submit);
 
     const myHeaders = new Headers();
     myHeaders.append("Authorization", `Bearer ${module.token}`);
 
     const requestOptions = {
-      method: "PUT",
+      method: this.#product.id ? "PUT" : "POST",
       headers: myHeaders,
       body: formData,
       redirect: "follow",
     };
 
+    const text = this.#product.id ? `/${this.#product.id}` : "";
     const res = await module.customFetch(
-      module.API_URL + "/producto/" + this.#product.id,
+      module.API_URL + "/producto" + text,
       requestOptions
     );
 
-    toggleSubmit("Actualizar", submit);
+    toggleSubmit(btnText, submit);
 
-    if (res.statusCode !== 200) {
+    if (res.statusCode > 300) {
       return alert(res.description ?? "Error interno, inténtelo más tarde.");
     }
 
@@ -296,7 +298,7 @@ export default class ProductEditorTemplate {
     product.categoryId = this.#product.categoryId.id;
 
     const formProduct = { ...data };
-    
+
     //comprobar si img contiene un archivo
     const file = formProduct.img;
     if (file) {

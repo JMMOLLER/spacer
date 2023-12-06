@@ -47,6 +47,8 @@ export default async function () {
         : null
     );
 
+    document.querySelector("#add-product").addEventListener("click", handleClick);
+
   updateNavLine();
 
   reloadProducts();
@@ -91,8 +93,21 @@ async function reloadProducts() {
  */
 async function handleClick(e) {
   const btn = e.target;
-  const product = getProductById(btn.dataset.id);
-  product.then((product) => console.log(product));
+  /**
+   * @type {Promise<Product>}
+   */
+  let product;
+  if(btn.id === "add-product"){
+    product = {
+      id: null,
+      name: null,
+      description: null,
+      price: null,
+      stock: null,
+      image: null,
+      marca: null,
+    }
+  } else product = getProductById(btn.dataset.id);
   const form = new ProductEditorTemplate(product, observer);
   modal.open(form.getTemplate());
 }
