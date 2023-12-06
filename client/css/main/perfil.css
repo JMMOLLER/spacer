@@ -136,16 +136,17 @@ section.active {
 .table-container {
   box-shadow: 0px 0px 20px 15px rgba(0, 0, 0, 0.1);
   border-radius: 20px;
-  overflow: hidden;
+  overflow: auto;
 }
 
 .tabla {
   border-collapse: collapse;
-  width: 1200px; 
+  width: auto; 
+  min-width: 500px;
   margin: 0 auto; 
   font-size: 16px;
   border-radius: 8px;
-  overflow: hidden;
+  overflow: auto;
 }
 
 .encabezado th {
@@ -189,4 +190,9 @@ section.active {
 
 .bton:hover {
   background-color: #45a049;
+}
+
+.tbod td.id-column {
+  /* Ajusta el ancho según sea necesario */
+  width: 10px;
 }

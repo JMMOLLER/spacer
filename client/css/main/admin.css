@@ -233,3 +233,19 @@
     clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 0);
   }
 }
+
+.bt {
+  padding: 10px 20px;
+  background-color: rgb(218, 91, 75);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.bton:hover {
+  background-color: #45a049;
+}
