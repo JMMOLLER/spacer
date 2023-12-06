@@ -66,7 +66,7 @@ input[type=file]::-webkit-file-upload-button { /* chromes and blink button */
   cursor: pointer; 
 }
 
-input.error, .select.error, textarea.error {
+input.error, .select.error, textarea.error, .input-file__container.error {
   border: 1px solid red !important;
 }
 input.error~label, .select.error~label, textarea.error~label {

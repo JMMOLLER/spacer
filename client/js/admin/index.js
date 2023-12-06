@@ -36,7 +36,8 @@ const observer = new Proxy(listener, {
 });
 
 export default async function () {
-  // handleCheckAuth();
+  await validateAuth();
+
 
   document
     .querySelector("#menu_secciones")
@@ -49,6 +50,20 @@ export default async function () {
   updateNavLine();
 
   reloadProducts();
+}
+
+/**
+ * @summary Valida si el usuario esta autenticado y es administrador.
+ */
+async function validateAuth() {
+  const isLogged = await handleCheckAuth();
+  if (!isLogged) {
+    window.location.href = "/pages/login.html";
+    return;
+  }if(!module.userInfo.isAdmin){
+    window.location.href = "/";
+    return;
+  }
 }
 
 /**

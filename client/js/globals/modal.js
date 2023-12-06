@@ -50,7 +50,7 @@ export class Modal {
     if (!content) throw new Error("No se ha especificado el contenido del modal");
 
     content.then((html) => {
-      document.querySelector("#modal-loader").classList.add("hidden");
+      document.querySelector("#modal-loader").classList.toggle("hidden");
       this.#addEventCloseButton(html);
       this.#modal.appendChild(html);
     }).catch((err) => this.close());
@@ -63,7 +63,9 @@ export class Modal {
     this.#modal.classList.add("close");
     const handleClose = () => {
       this.#modal.classList.remove("visible");
-      this.#modal.innerHTML = "";
+      const lastChild = this.#modal.lastElementChild;
+      if(lastChild.tagName !== "SPAN") lastChild.remove();
+      document.querySelector("#modal-loader").classList.toggle("hidden");
       this.#modal.removeEventListener("animationend", handleClose);
     }
     this.#modal.addEventListener("animationend", handleClose);

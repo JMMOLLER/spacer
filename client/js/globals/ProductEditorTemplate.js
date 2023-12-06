@@ -23,6 +23,8 @@ export default class ProductEditorTemplate {
    */
   #observer;
 
+  #allowedExtensions = ["jpg", "jpeg", "png", "gif"];
+
   /**
    *
    * @param {Promise<Product>} productPromise
@@ -76,6 +78,7 @@ export default class ProductEditorTemplate {
     image.classList.add("product__img");
     image.src = imageUrl;
     image.alt = "imagen producto";
+    image.onerror = () => image.src = "/assets/imgs/no-available-image.png";
 
     const fileContainer = document.createElement("div");
     fileContainer.classList.add("input-file__container");
@@ -88,7 +91,7 @@ export default class ProductEditorTemplate {
     fileInput.type = "file";
     fileInput.id = "new-image";
     fileInput.name = "img";
-    fileInput.accept = "image/*";
+    fileInput.accept = this.#allowedExtensions.map(ext => `image/${ext}`).join(',');
 
     fileContainer.appendChild(label);
     fileContainer.appendChild(fileInput);
@@ -222,14 +225,14 @@ export default class ProductEditorTemplate {
   }
 
   /**
-   * 
+   *
    * @param {Array<Category>} categories
    * @param {Event} e
    */
-  #handleFormSubmit(e) {
+  async #handleFormSubmit(e) {
     e.preventDefault();
 
-    if(!this.#validateForm(e)) return;
+    if (!this.#validateForm(e)) return;
 
     const form = e.target;
     const submit = form.querySelector("input[type='submit']");
@@ -238,13 +241,18 @@ export default class ProductEditorTemplate {
 
     const data = Object.fromEntries(formData);
 
-    data.categoryId = this.#categories.find((category) => category.name === data.categoryId)?.id;
+    data.categoryId = this.#categories.find(
+      (category) => category.name === data.categoryId
+    )?.id;
 
-    if(!data.categoryId) return alert("No se ha especificado una categoría válida");
-    
+    formData.set("categoryId", data.categoryId);
+
+    if (!data.categoryId)
+      return alert("No se ha especificado una categoría válida");
+
     const shoudlUpdate = this.#compareProductObjects(data);
 
-    if(shoudlUpdate) {
+    if (shoudlUpdate) {
       document.querySelector("#modal-close").click();
       return;
     }
@@ -252,42 +260,75 @@ export default class ProductEditorTemplate {
     console.log(data);
     toggleSubmit("Actualizar", submit);
 
-    
-    setTimeout(() => {
-      toggleSubmit("Actualizar", submit);
-      document.querySelector("#modal-close").click();
-      const id = setTimeout(() => {
-        this.#observer.productUpdated = true;
-        clearTimeout(id);
-      }, 1000);
-    }, 3000)
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${module.token}`);
+
+    const requestOptions = {
+      method: "PUT",
+      headers: myHeaders,
+      body: formData,
+      redirect: "follow",
+    };
+
+    const res = await module.customFetch(
+      module.API_URL + "/producto/" + this.#product.id,
+      requestOptions
+    );
+
+    toggleSubmit("Actualizar", submit);
+
+    if (res.statusCode !== 200) {
+      return alert(res.description ?? "Error interno, inténtelo más tarde.");
+    }
+
+    document.querySelector("#modal-close").click();
+    const id = setTimeout(() => {
+      this.#observer.productUpdated = true;
+      clearTimeout(id);
+    }, 1000);
   }
 
   #compareProductObjects(data) {
-    const product = {...this.#product};
+    const product = { ...this.#product };
 
     delete product.id;
     delete product.urlImg;
     product.categoryId = this.#product.categoryId.id;
 
-    const formProduct = {...data};
-    delete formProduct.img;
+    const formProduct = { ...data };
+    
+    //comprobar si img contiene un archivo
+    const file = formProduct.img;
+    if (file) {
+      // Verificar si el archivo es una imagen
+      const fileExtension = file.name.split(".").pop().toLowerCase();
+      if (!this.#allowedExtensions.includes(fileExtension)) {
+        delete formProduct.img;
+      }else{
+        return false;
+      }
+    }
 
     const updatedProduct = Object.keys(formProduct);
     const currentProduct = Object.keys(product);
-  
+
     // Verificar si las claves son las mismas
-    if (updatedProduct.length !== currentProduct.length || !updatedProduct.every(clave => currentProduct.includes(clave))) {
+    if (
+      updatedProduct.length !== currentProduct.length ||
+      !updatedProduct.every((clave) => currentProduct.includes(clave))
+    ) {
       return false;
     }
-  
+
     // Verificar que los valores correspondientes sean iguales
-    return updatedProduct.every(clave => formProduct[clave].toString() === product[clave].toString());
+    return updatedProduct.every(
+      (clave) => formProduct[clave].toString() === product[clave].toString()
+    );
   }
 
   /**
-   * 
-   * @param {Event} e 
+   *
+   * @param {Event} e
    */
   #validateForm(e) {
     const form = e.target;
@@ -299,35 +340,48 @@ export default class ProductEditorTemplate {
     const validations = inputs.map((input) => {
       let isValid = true;
 
-      if(input.type === "submit") return isValid;
-  
+      if (input.type === "submit") return isValid;
+
       if (input.type === "text" || input.tagName.toLowerCase() === "textarea") {
         // Validar campos de texto no vacíos
         isValid = input.value.trim() !== "";
       } else if (input.type === "number") {
         // Validar campos de número
         isValid = !isNaN(parseFloat(input.value)) && isFinite(input.value);
-  
+
         if (input.name === "price") {
           // Validar el campo de precio con máximo de dos decimales
           isValid = /^\d+(\.\d{1,2})?$/.test(input.value);
-        }if(input.name === "stock"){
+        }
+        if (input.name === "stock") {
           // Validar el campo de stock con máximo de 4 dígitos enteros
           isValid = /^\d{1,4}$/.test(input.value);
         }
-      } if (input.readOnly) {
+      }else if (input.type === "file" && input.name === "img") {
+        // Validar campo de archivos (input tipo file para imágenes)
+        const file = input.files[0];
+        input = input.parentElement;
+  
+        if (file) {
+          // Verificar si el archivo es una imagen
+          const fileExtension = file.name.split(".").pop().toLowerCase();
+          isValid = this.#allowedExtensions.includes(fileExtension);
+        }
+      }
+
+      if (input.readOnly) {
         // Validar campos de solo lectura
         isValid = input.value.trim() !== "Seleccionar";
-        input = input.parentElement
+        input = input.parentElement;
       }
-  
+
       // Aplicar estilos de error si la validación falla
       if (!isValid) {
         input.classList.add("error");
       } else {
         input.classList.remove("error");
       }
-  
+
       return isValid;
     });
 
