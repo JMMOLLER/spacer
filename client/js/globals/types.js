@@ -2,7 +2,7 @@
  * @typedef {Object} API_RESPONSE
  * @property {number} statusCode - El código de estado de la respuesta.
  * @property {string} description - El mensaje asociado a la respuesta.
- * @property {Client | Cart | Product | Category | null} response - La respuesta de la API (puede ser un objeto o null).
+ * @property {Client | Cart | Product | Category | Order | null} response - La respuesta de la API (puede ser un objeto o null).
  */
 
 /**
@@ -65,6 +65,20 @@
  * @typedef {Object} Category
  * @property {number} id - El ID de la categoría.
  * @property {string} name - El nombre de la categoría.
+ */
+
+/**
+ * @typedef {Object} Order
+ * @property {number} id - El ID de la orden.
+ * @property {string} timestamp - La fecha de la orden.
+ * @property {number} total - El total de la orden.
+ * @property {ProductsOrder[]} products - Los productos de la orden.
+ */
+
+/**
+ * @typedef {Object} ProductsOrder
+ * @property {number} quantity - La cantidad del producto.
+ * @property {Product} product - El producto.
  */
 
 /**

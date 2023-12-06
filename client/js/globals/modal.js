@@ -1,9 +1,12 @@
 export class Modal {
   #modal;
+  static #instance;
 
   constructor() {
+    if (Modal.#instance) return Modal.#instance;
     this.#modal = this.#createModal();
     document.body.appendChild(this.#modal);
+    Modal.#instance = this;
   }
 
   #createModalContainer(){
@@ -29,7 +32,10 @@ export class Modal {
     // Crear el elemento span para el botón de cerrar
     const modalClose = content.querySelector("#modal-close");
 
-    if(!modalClose) throw new Error("Compruebe que se ha especificado el botón de cerrar con id 'modal-close'");
+    if(!modalClose) {
+      console.error("Compruebe que se ha especificado el botón de cerrar con id 'modal-close'");
+      return
+    }
 
     modalClose.addEventListener("click", this.close.bind(this));
     return modalClose;

@@ -182,7 +182,14 @@ async function getProductById(id) {
 }
 
 
-function createCustomElement(tagName, className, textContent) {
+/**
+ * 
+ * @param {string} tagName 
+ * @param {string} className 
+ * @param {string} textContent 
+ * @returns {HTMLElement}
+ */
+export function createCustomElement(tagName, className, textContent) {
   const elemento = document.createElement(tagName);
   if (className) {
     elemento.className = className;
