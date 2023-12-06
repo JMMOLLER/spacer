@@ -62,6 +62,19 @@ export default function init() {
     document.querySelector("#code").classList.remove("error");
   }); // Añade el evento input al input del formulario código
 
+  document.querySelector("#email").addEventListener("input", (e) => {
+    const input = e.target;
+    const value = input.value;
+    const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+    if(value.length > 0) input.classList.add("filled");
+    else input.classList.remove("filled");
+    if(regex.test(value)){
+      input.classList.remove("error");
+    }else{
+      input.classList.add("error");
+    }
+  });
+
   document
     .querySelector("form.code .animation_arrow_container")
     .addEventListener("click", (e) => {

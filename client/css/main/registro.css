@@ -27,7 +27,7 @@
 
 .spacer_registro .input-group > input:focus + label,
 .spacer_registro .input-group > input.filled + label {
-  transform: translateY(-170%);
+  top: -15px;
   font-size: 0.8rem;
   color: aqua;
 }
