@@ -56,6 +56,22 @@ export default async function () {
   updateNavLine();
 
   reloadProducts();
+
+  document.querySelector("#add-categoria").addEventListener("submit", async(e) => {
+    e.preventDefault();
+    const form = e.target;
+    const data = new FormData(form);
+    const body = Object.fromEntries(data.entries());
+    const promise = await addCategory(body);
+    const res = await modal.waitPromise(promise);
+    if (res.statusCode === 201) {
+      form.querySelector("input").value = "";
+      observer.categoryUpdated = true;
+    } else {
+      alert(res.description);
+      console.error(res);
+    }
+  });
 }
 
 /**
@@ -293,5 +309,11 @@ async function getCategories() {
 async function deleteCategory(id) {
   const res = await module.fetchAPI(`/categoria/${id}`, null, "DELETE");
   if (res.statusCode !== 200) throw new Error(res.description);
+  return res;
+}
+
+async function addCategory(body) {
+  const res = await module.fetchAPI(`/categoria`, body, "POST");
+  if (res.statusCode !== 201) throw new Error(res.description);
   return res;
 }
