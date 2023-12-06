@@ -120,11 +120,9 @@ function renderFilteredProducts(){
 function filterByText(searchParams){
   const textParam = searchParams?.find((param) => (param.key).toLowerCase() === "buscar");
   if(textParam){
-    filtered = products?.filter(
+    filtered = filtered?.filter(
       (product) => (product.description).toUpperCase().includes((textParam.value).toUpperCase())
     )
-  }else{
-    filtered = products;
   }
 }
 
