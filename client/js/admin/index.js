@@ -69,7 +69,7 @@ export default async function () {
       observer.categoryUpdated = true;
     } else {
       alert(res.description);
-      console.error(res);
+      console.error(res)
     }
   });
 }
