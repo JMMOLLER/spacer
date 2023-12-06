@@ -66,3 +66,9 @@
  * @property {number} id - El ID de la categoría.
  * @property {string} name - El nombre de la categoría.
  */
+
+/**
+ * @typedef {Object} CustomProps
+ * @property {string} textContent - El texto del botón.
+ * @property {function} controller - El controlador del evento click del botón.
+ */

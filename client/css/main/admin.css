@@ -1,8 +1,203 @@
-#body__admin {
+#body__admin,
+#html__admin {
   overflow-x: hidden;
 }
 
 .admin__main > section > h1 {
-  padding: 1rem 0;
+  font-size: 2.5rem;
+  padding-top: 0.7rem;
   text-align: center;
+}
+
+.admin__main.tb__content {
+  width: 200vw;
+}
+
+.admin__main.tb__content .productos {
+  max-width: unset;
+  flex-grow: unset;
+  padding-top: 0.7rem;
+}
+
+.admin__main.tb__content .productos .contenedor-items {
+  margin-top: unset;
+}
+
+.product-editor__form {
+  width: auto;
+  min-width: 300px;
+  box-shadow: 1px 5px 20px 0px #00000059;
+  border-radius: 20px;
+  background-color: white;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 1rem;
+  margin: 0 0.5rem;
+}
+.product-editor__form > h2 {
+  font-size: 1.8rem;
+  text-align: center;
+}
+.flx-g {
+  flex-grow: 1;
+}
+.flx-w {
+  flex-wrap: wrap;
+}
+.product-editor__form .input-group {
+  margin-top: 30px;
+}
+.product-editor__form .input-group label {
+  font-size: 1rem !important;
+}
+.product-editor__form .input-group-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+}
+.product-editor__form input,
+.product-editor__form textarea {
+  border: 1px solid #ccc;
+}
+.product-editor__form .product-img__container {
+  position: relative;
+  width: fit-content;
+  margin: 0 auto;
+}
+.product-editor__form .product-img__container .product__img {
+  max-width: 300px;
+  max-height: 300px;
+  min-width: 270px;
+  min-height: 270px;
+  width: 100%;
+  border-radius: 30px;
+  box-shadow: 1px 7px 13px 2px rgba(0, 0, 0, 0.2);
+}
+.product-editor__form .product-img__container .input-file__container {
+  position: absolute;
+  bottom: 17px;
+  height: 2.5rem;
+  width: calc(100% - 1.5rem);
+  background-color: #d7d7d773;
+  backdrop-filter: blur(40px);
+  border-radius: 15px;
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+.product-editor__form .product-img__container .input-file__container > label {
+  position: absolute;
+  white-space: nowrap;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+.product-editor__form .product-img__container .input-file__container > input {
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+}
+
+#modal {
+  display: none;
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  background: rgba(146, 153, 155, 0.08);
+  backdrop-filter: blur(1.5px);
+  -webkit-backdrop-filter: blur(1.5px);
+  z-index: 999;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+#modal.visible {
+  opacity: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#modal.visible:last-child {
+  animation: modalVisible 0.7s ease-in-out forwards;
+}
+
+#modal.close {
+  opacity: 0;
+  transition-delay: 0.5s;
+}
+#modal.close:last-child {
+  animation: modalHidden 0.7s ease-in-out;
+}
+
+#modal-content {
+  min-height: 500px;
+  max-height: 70%;
+  min-width: 300px;
+  border-radius: 20px;
+  background-color: white;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.product-editor__form #modal-close {
+  position: absolute;
+  cursor: pointer;
+  right: 0;
+  top: 0;
+}
+
+@keyframes modalVisible {
+  0% {
+    opacity: 0;
+    transform: translateY(-100px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+}
+
+@keyframes modalHidden {
+  0% {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(100px);
+  }
+}
+
+#modal-loader {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  position: relative;
+  animation: modal-spinner-rotate 1s linear infinite;
+  z-index: 1;
+}
+#modal-loader::before {
+  content: "";
+  box-sizing: border-box;
+  position: absolute;
+  inset: 0px;
+  border-radius: 50%;
+  border: 5px solid aqua;
+  animation: modal-spinner-prixClipFix 2s linear infinite ;
+}
+
+@keyframes modal-spinner-rotate {
+  100%   {transform: rotate(360deg)}
+}
+
+@keyframes modal-spinner-prixClipFix {
+    0%   {clip-path:polygon(50% 50%,0 0,0 0,0 0,0 0,0 0)}
+    25%  {clip-path:polygon(50% 50%,0 0,100% 0,100% 0,100% 0,100% 0)}
+    50%  {clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,100% 100%,100% 100%)}
+    75%  {clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,0 100%,0 100%)}
+    100% {clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,0 100%,0 0)}
 }

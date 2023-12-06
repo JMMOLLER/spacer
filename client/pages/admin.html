@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" id="html__admin">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -60,6 +60,23 @@
   <main class="admin__main tb__content" data-tab="productos">
     <section class="section_productos">
       <h1>Administración de Productos</h1>
+      <div class="productos">
+        <div class="contenedor-items" id="items-container">
+
+          <div class="container-loader" id="loader">
+            <span class="loader"></span>
+            <span class="text">Estamos buscando los productos...</span>
+          </div>
+          
+          <!-- AQUI VA LOS PRODUCTOS -->
+
+          <div class="hidden" id="error">
+            <img src="/assets/imgs/lost-connection.gif" alt="lost-connection">
+            <span>Parece que perdimos la conexión con el servidor...</span>
+          </div>
+          
+        </div>
+      </div>
     </section>
     <section class="section_categorias">
       <h1>Administración de Categorias</h1>

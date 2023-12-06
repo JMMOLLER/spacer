@@ -32,8 +32,9 @@ export default async function init() {
     toggleLoader();
     filterProducts();
   }
-
 }
+
+export { toggleLoader, toggleError, renderCardProduct, handleAddProduct }
 
 function toggleLoader() {
   document.querySelector("#loader").classList.toggle("hidden");
@@ -275,11 +276,12 @@ function filterPriceFormHandler(e){
 /**
  * @summary Renderiza un producto en el DOM
  * 
- * @param {Product} product 
+ * @param {Product} product El producto a renderizar.
+ * @param {CustomProps} customProps Las propiedades personalizadas del elemento.
  */
-function renderCardProduct(product) {
+function renderCardProduct(product, customProps) {
   const { marca, urlImg, description, price, id, categoryId } = product;
-  const template = createItemTemplate(marca, urlImg, description, price, id, categoryId.name);
+  const template = createItemTemplate(marca, urlImg, description, price, id, categoryId.name, customProps);
   const contenedorProductos = document.querySelector("#items-container");
   contenedorProductos.appendChild(template);
 }
@@ -293,9 +295,10 @@ function renderCardProduct(product) {
  * @param {number} precio - El precio del elemento.
  * @param {number} id - El ID asociado al elemento.
  * @param {string} category - La categoría del elemento.
+ * @param {CustomProps} customProps - Las propiedades personalizadas del elemento.
  * @returns {HTMLElement} - El template de elemento creado.
  */
-function createItemTemplate(titulo, src, info, precio, id, category) {
+function createItemTemplate(titulo, src, info, precio, id, category, customProps) {
   const item = createElementWithClass("div", "item");
   const cabeceraCard = createElementWithClass("div", "cabecera-card");
   const tituloItem = createElementWithClass("span", "titulo-item");
@@ -315,9 +318,13 @@ function createItemTemplate(titulo, src, info, precio, id, category) {
   tituloItem.textContent = titulo;
   infoItem.textContent = info;
   precioItem.textContent = "S/"+precio.toFixed(2);
-  botonItem.textContent = "Agregar al Carrito";
   botonItem.dataset.id = id;
-  botonItem.addEventListener("click", handleAddProduct.bind(null, id));
+  
+  botonItem.textContent = customProps==null ? "Agregar al Carrito" : customProps.textContent;
+  const controller = customProps==null ? handleAddProduct.bind(null, id) : customProps.controller;
+
+  
+  botonItem.addEventListener("click", controller);
 
   cabeceraCard.appendChild(tituloItem);
   cabeceraCard.appendChild(imgItem);

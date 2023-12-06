@@ -37,14 +37,38 @@
   left: 0.5rem;
 }
 
-.input-group > input {
+.input-group > textarea {
+  resize: vertical;
+  min-height: 50px;
+}
+
+.input-select-group > .select {
+  appearance: none;
+  background-color: white;
+  padding: 0.5rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 7px;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.input-select-group > .select > i {
+  margin: 0;
+  width: 15px;
+}
+
+.input-group > input,
+.input-group > textarea {
   height: 2.7rem;
   width: 100%;
   border: 0;
   padding: 0.5rem;
   border-radius: 3px;
 }
-.input-group > input:focus {
+
+.input-group > input:focus,
+.input-group > textarea:focus {
   outline: none;
   border: 1px solid aqua;
 }
@@ -114,7 +138,7 @@
 
 span#error {
   color: red;
-  font-size: .8rem;
+  font-size: 0.8rem;
 }
 span#error.hidden {
   display: none;
@@ -123,8 +147,14 @@ span#error.hidden {
 .input-group {
   position: relative;
 }
+.input-select-group {
+  position: relative;
+  width: fit-content;
+  margin-top: 30px;
+}
 
-.input-group > label {
+.input-group > label,
+.input-select-group > label {
   position: absolute;
   top: 50%;
   left: 0;
@@ -134,17 +164,60 @@ span#error.hidden {
   color: gray;
   transform: translateY(-50%);
 }
+.input-select-group > .select + label {
+  top: -15px;
+  color: aqua;
+}
+.input-select-group > .select > input {
+  user-select: none;
+  pointer-events: none;
+  width: 100px;
+  border: 0;
+  text-align: center;
+}
+
+.input-select-group > .select .content_dropdown {
+  display: none;
+  max-height: 200px;
+  overflow: auto;
+  flex-direction: column;
+  position: absolute;
+  width: 100%;
+  left: 0;
+  top: 100%;
+  background-color: white;
+  z-index: 1;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 7px;
+}
 
 .input-group > input:focus + label,
-.input-group > input:valid + label {
-  transform: translateY(-170%);
+.input-group > input:valid + label,
+.input-group > textarea:focus + label,
+.input-group > textarea:valid + label {
+  top: -15px;
   font-size: 0.8rem;
   color: aqua;
 }
 
+.input-select-group > .select:focus .content_dropdown {
+  display: flex !important;
+}
+.input-select-group > .select .content_dropdown .option {
+  padding: 0.5rem 1rem;
+  width: 100%;
+  text-align: center;
+  color: black;
+  text-decoration: none;
+  transition: 0.3s ease-out;
+}
+.input-select-group > .select .content_dropdown .option:hover {
+  background-color: #dfdfdf93;
+  cursor: pointer;
+}
 
-
-.opciones_login{
+.opciones_login {
   display: flex;
   flex-direction: column;
   gap: 10px;

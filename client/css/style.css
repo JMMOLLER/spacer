@@ -66,10 +66,10 @@ input[type=file]::-webkit-file-upload-button { /* chromes and blink button */
   cursor: pointer; 
 }
 
-input.error {
+input.error, .select.error, textarea.error, .input-file__container.error {
   border: 1px solid red !important;
 }
-input.error~label {
+input.error~label, .select.error~label, textarea.error~label {
   color: red !important;
 }
 
@@ -96,9 +96,15 @@ input.error~label {
   background-image: url("/assets/icons/down.svg");
   rotate: 90deg;
 }
+.fa.fa-close {
+  background-image: url("/assets//icons/close.svg");
+}
 .fa.fa-next {
   background-image: url("/assets/icons/down.svg");
   rotate: -90deg;
+}
+.fa.fa-down {
+  background-image: url("/assets/icons/down.svg");
 }
 .fa.fa-delete {
   background-image: url("/assets/icons/delete.svg");
