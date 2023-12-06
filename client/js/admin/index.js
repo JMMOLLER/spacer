@@ -1,15 +1,39 @@
+import Global from "../globals/index.js";
+import { Modal } from "../globals/modal.js";
 import { handleCheckAuth } from "../home/index.js";
 import ProductEditorTemplate from "../globals/ProductEditorTemplate.js";
-import { Modal } from "../globals/modal.js";
 import { handleNavClick, updateNavLine } from "../perfil/index.js";
 import {
   toggleLoader,
   toggleError,
   renderCardProduct,
 } from "../productos/index.js";
-import Global from "../globals/index.js";
 const module = Global.getInstance();
 const modal = new Modal();
+
+/**
+ * @summary Objeto indicador si se debe actualizar la lista de productos.
+ */
+const listener = {
+  productUpdated: false
+}
+
+/**
+ * @summary Proxy que observa los cambios en el objeto listener.
+ * @type {ProxyHandler<typeof listener>}
+ */
+const observer = new Proxy(listener, {
+  set: function (target, prop, value) {
+    target[prop] = value;
+    if (prop === "productUpdated") {
+      console.log("productUpdated");
+      document.querySelectorAll(".item").forEach((item) => item.remove());
+      toggleLoader();
+      reloadProducts();
+    }
+    return true;
+  },
+});
 
 export default async function () {
   // handleCheckAuth();
@@ -24,6 +48,13 @@ export default async function () {
 
   updateNavLine();
 
+  reloadProducts();
+}
+
+/**
+ * @summary Recarga la lista de productos.
+ */
+async function reloadProducts() {
   const products = await module.getAllProducts();
   toggleLoader();
 
@@ -33,7 +64,7 @@ export default async function () {
     products.forEach((product) => {
       renderCardProduct(product, {
         textContent: "Editar producto",
-        controller: sayHello,
+        controller: handleClick,
       });
     });
   }
@@ -43,12 +74,11 @@ export default async function () {
  *
  * @param {InputEvent} e
  */
-async function sayHello(e) {
+async function handleClick(e) {
   const btn = e.target;
-  console.log("Hello");
   const product = getProductById(btn.dataset.id);
   product.then((product) => console.log(product));
-  const form = new ProductEditorTemplate(product);
+  const form = new ProductEditorTemplate(product, observer);
   modal.open(form.getTemplate());
 }
 

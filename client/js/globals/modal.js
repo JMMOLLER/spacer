@@ -14,6 +14,12 @@ export class Modal {
     return modal;
   }
 
+  #createLoader() {
+    const loader = document.createElement("span");
+    loader.id = "modal-loader";
+    return loader;
+  }
+
   /**
    * 
    * @param {HTMLElement} content 
@@ -30,7 +36,10 @@ export class Modal {
   }
 
   #createModal() {
-    return this.#createModalContainer();
+    const template = this.#createModalContainer();
+    const loader = this.#createLoader();
+    template.appendChild(loader);
+    return template;
   }
 
   /**
@@ -41,6 +50,7 @@ export class Modal {
     if (!content) throw new Error("No se ha especificado el contenido del modal");
 
     content.then((html) => {
+      document.querySelector("#modal-loader").classList.add("hidden");
       this.#addEventCloseButton(html);
       this.#modal.appendChild(html);
     }).catch((err) => this.close());

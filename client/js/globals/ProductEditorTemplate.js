@@ -1,3 +1,4 @@
+import { toggleSubmit } from "../login/index.js";
 import Global from "./index.js";
 const module = Global.getInstance();
 
@@ -18,11 +19,17 @@ export default class ProductEditorTemplate {
   #template;
 
   /**
+   * @type {ProxyConstructor}
+   */
+  #observer;
+
+  /**
    *
    * @param {Promise<Product>} productPromise
    */
-  constructor(productPromise) {
+  constructor(productPromise, observer) {
     this.#product = productPromise;
+    this.#observer = observer;
     this.#template = this.#generateTemplate();
   }
 
@@ -151,7 +158,7 @@ export default class ProductEditorTemplate {
     const selectedOption = document.createElement("input");
     selectedOption.id = buttonId;
     selectedOption.name = "categoryId";
-    selectedOption.value = "Seleccionar";
+    selectedOption.value = this.#product.categoryId.name ?? "Seleccionar";
     selectedOption.readOnly = true;
 
     const icon = document.createElement("i");
@@ -225,6 +232,7 @@ export default class ProductEditorTemplate {
     if(!this.#validateForm(e)) return;
 
     const form = e.target;
+    const submit = form.querySelector("input[type='submit']");
 
     const formData = new FormData(form);
 
@@ -233,8 +241,48 @@ export default class ProductEditorTemplate {
     data.categoryId = this.#categories.find((category) => category.name === data.categoryId)?.id;
 
     if(!data.categoryId) return alert("No se ha especificado una categoría válida");
+    
+    const shoudlUpdate = this.#compareProductObjects(data);
+
+    if(shoudlUpdate) {
+      document.querySelector("#modal-close").click();
+      return;
+    }
 
     console.log(data);
+    toggleSubmit("Actualizar", submit);
+
+    
+    setTimeout(() => {
+      toggleSubmit("Actualizar", submit);
+      document.querySelector("#modal-close").click();
+      const id = setTimeout(() => {
+        this.#observer.productUpdated = true;
+        clearTimeout(id);
+      }, 1000);
+    }, 3000)
+  }
+
+  #compareProductObjects(data) {
+    const product = {...this.#product};
+
+    delete product.id;
+    delete product.urlImg;
+    product.categoryId = this.#product.categoryId.id;
+
+    const formProduct = {...data};
+    delete formProduct.img;
+
+    const updatedProduct = Object.keys(formProduct);
+    const currentProduct = Object.keys(product);
+  
+    // Verificar si las claves son las mismas
+    if (updatedProduct.length !== currentProduct.length || !updatedProduct.every(clave => currentProduct.includes(clave))) {
+      return false;
+    }
+  
+    // Verificar que los valores correspondientes sean iguales
+    return updatedProduct.every(clave => formProduct[clave].toString() === product[clave].toString());
   }
 
   /**

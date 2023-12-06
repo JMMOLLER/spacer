@@ -178,6 +178,8 @@ span#error.hidden {
 
 .input-select-group > .select .content_dropdown {
   display: none;
+  max-height: 200px;
+  overflow: auto;
   flex-direction: column;
   position: absolute;
   width: 100%;
