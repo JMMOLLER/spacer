@@ -90,8 +90,8 @@ public class ProductController {
       ObjectMapper objectMapper = new ObjectMapper();
       ProductModel editedProduct = objectMapper.convertValue(formDataJson, ProductModel.class);
 
-      editedProduct.setCategoryId(this.categoryService.getCategoryById(editedProduct.getCategoryId().getId()));
-      if(img != null) editedProduct.setImg(img.getBytes());
+      if(editedProduct.getCategoryId() != null) editedProduct.setCategoryId(this.categoryService.getCategoryById(editedProduct.getCategoryId().getId()));
+      if(img != null && this.productService.isImage(img)) editedProduct.setImg(img.getBytes());
 
       return new Response(HttpStatus.OK, HttpStatus.OK.name(), this.productService.updateProduct(editedProduct, id)).okResponse();
     } catch (CustomException e){

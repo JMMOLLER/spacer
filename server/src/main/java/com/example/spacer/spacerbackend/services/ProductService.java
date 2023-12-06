@@ -4,6 +4,8 @@ import com.example.spacer.spacerbackend.models.ProductModel;
 import com.example.spacer.spacerbackend.repositories.ProductRepository;
 
 import com.example.spacer.spacerbackend.utils.CustomException;
+import lombok.NonNull;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
@@ -12,6 +14,7 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
 import java.util.List;
@@ -80,9 +83,9 @@ public class ProductService {
   }
 
   private void updateFieldsChanged(ProductModel editedProduct, ProductModel currentProduct) {
-    if (containsNoBreakSpace(editedProduct.getMarca())){
+    if (editedProduct.getMarca() != null && containsNoBreakSpace(editedProduct.getMarca())){
       editedProduct.setMarca(editedProduct.getMarca().replaceAll(NBS, " "));
-    }if (containsNoBreakSpace(editedProduct.getDescription())) {
+    }if (editedProduct.getDescription() != null && containsNoBreakSpace(editedProduct.getDescription())) {
       editedProduct.setDescription(editedProduct.getDescription().replaceAll(NBS, " "));
     }
 
@@ -101,10 +104,10 @@ public class ProductService {
     if (editedProduct.getPrice() != currentProduct.getPrice() && editedProduct.getPrice() >= 0.1) {
       currentProduct.setPrice(editedProduct.getPrice());
     }
-    if (!Objects.equals(editedProduct.getCategoryId().getId(), currentProduct.getCategoryId().getId())) {
+    if (editedProduct.getCategoryId() != null && !Objects.equals(editedProduct.getCategoryId().getId(), currentProduct.getCategoryId().getId())) {
       currentProduct.setCategoryId(editedProduct.getCategoryId());
     }
-    if (editedProduct.getStock() >= 0 && editedProduct.getStock() != currentProduct.getStock()) {
+    if (editedProduct.getStock() > 0 && editedProduct.getStock() != currentProduct.getStock()) {
       currentProduct.setStock(editedProduct.getStock());
     }
     if (editedProduct.getImg() != null && !Arrays.equals(editedProduct.getImg(), currentProduct.getImg())) {
@@ -166,8 +169,24 @@ public class ProductService {
     }
   }
 
-  public boolean containsNoBreakSpace(String str){
+  public boolean containsNoBreakSpace(@NonNull String str){
     return str.contains(NBS);
+  }
+
+  public boolean isImage(MultipartFile file) {
+    // Lista de extensiones de archivos permitidos
+    String[] ALLOWED_IMAGE_EXTENSIONS = {"jpg", "jpeg", "png", "gif", "bmp", "webp"};
+    // Obtener la extensión del archivo
+    String fileExtension = FilenameUtils.getExtension(file.getOriginalFilename());
+
+    // Verificar si la extensión está en la lista de extensiones permitidas
+    for (String allowedExtension : ALLOWED_IMAGE_EXTENSIONS) {
+      if (allowedExtension.equalsIgnoreCase(fileExtension)) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   @CacheEvict(value = "products", key = "#id")
