@@ -72,6 +72,8 @@ export default async function () {
       console.error(res)
     }
   });
+
+  document.querySelector("#add-product").addEventListener("click", handleClick);
 }
 
 /**
