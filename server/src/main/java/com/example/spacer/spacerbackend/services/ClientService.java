@@ -237,10 +237,10 @@ public class ClientService {
     }
   }
 
-  @Cacheable(value = "client", key = "#clientId")
-  public InvoiceModel[] getOrders(Long clientId) {
+  @Cacheable(value = "order", key = "#username")
+  public InvoiceModel[] getOrders(String username) {
     try {
-      Optional<ClientModel> existingClient = clientRepository.findById(clientId);
+      Optional<ClientModel> existingClient = clientRepository.findOneByUsername(username);
       if (existingClient.isPresent()) {
         ClientModel client = existingClient.get();
         return invoiceService.getInvoicesByClientId(client.getId());
@@ -259,9 +259,10 @@ public class ClientService {
     return client.orElse(null);
   }
 
-  public InvoiceModel purchase(Long userId) {
+  @CacheEvict(value = "order", key = "#username")
+  public InvoiceModel purchase(String username) {
     try{
-      Optional<ClientModel> existingClient = clientRepository.findById(userId);
+      Optional<ClientModel> existingClient = clientRepository.findOneByUsername(username);
       if (existingClient.isPresent()) {
         ClientModel client = existingClient.get();
         InvoiceModel invoice = invoiceService.createInvoice(client);

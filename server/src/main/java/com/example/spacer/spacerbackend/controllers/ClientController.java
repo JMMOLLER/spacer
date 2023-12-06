@@ -221,7 +221,7 @@ public class ClientController {
         if(!res) return new Response("El código de seguridad de la tarjeta es incorrecto").unauthorizedResponse();
       }
 
-      InvoiceModel invoice = this.clientService.purchase(userCredential.getUserId());
+      InvoiceModel invoice = this.clientService.purchase(userCredential.getUsername());
       return new Response(HttpStatus.OK.name(), invoice).okResponse();
     } catch (CustomException e) {
       return new Response(e.getMessage()).customResponse(e.getStatus());
@@ -235,7 +235,7 @@ public class ClientController {
     try {
       UserCredential userCredential = new UserCredential(request);
 
-      InvoiceModel[] invoices = this.clientService.getOrders(userCredential.getUserId());
+      InvoiceModel[] invoices = this.clientService.getOrders(userCredential.getUsername());
 
       return new Response(HttpStatus.OK.name(), invoices).okResponse();
     } catch (CustomException e) {
