@@ -201,6 +201,11 @@ span#error.hidden {
   color: aqua;
 }
 
+.input-group > input.filled + label {
+  top: -15px;
+  font-size: 0.8rem;
+}
+
 .input-select-group > .select:focus .content_dropdown {
   display: flex !important;
 }
