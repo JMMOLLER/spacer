@@ -131,7 +131,16 @@
 }
 
 .productos .contenedor-items .item {
+  position: relative;
   margin: 0;
+}
+
+.productos .contenedor-items .item span.fa.fa-close {
+  position: absolute;
+  top: -10px;
+  z-index: 1;
+  right: -10px;
+  filter: brightness(0.2);
 }
 
 /* Estilo de imagen dentro de los ítems */

@@ -84,6 +84,14 @@ async function reloadProducts() {
         controller: handleClick,
       });
     });
+
+    document.querySelectorAll(".item").forEach((item) => {
+      const span = document.createElement("span");
+      span.classList.add("fa");
+      span.classList.add("fa-close");
+      span.addEventListener("click", handleDeleteProduct);
+      item.appendChild(span);
+    });
   }
 }
 
@@ -110,6 +118,33 @@ async function handleClick(e) {
   } else product = getProductById(btn.dataset.id);
   const form = new ProductEditorTemplate(product, observer);
   modal.open(form.getTemplate());
+}
+
+/**
+ * 
+ * @param {Event} e 
+ */
+async function handleDeleteProduct(e) {
+  const parent = e.target.parentElement;
+  const btn = parent.querySelector("button");
+  const id = btn.dataset.id;
+
+  
+  const confirm = window.confirm("¿Está seguro que desea eliminar el producto?");
+  if(!confirm) return;
+  
+  let promise = module.fetchAPI(`/producto/${id}`, null, "DELETE");
+  /**
+   * @type {API_RESPONSE}
+   */
+  const res = await modal.waitPromise(promise);
+
+  if (res.statusCode === 200) {
+    observer.productUpdated = true;
+  } else {
+    alert(res.description);
+    console.error(res);
+  }
 }
 
 /**

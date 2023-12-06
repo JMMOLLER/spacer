@@ -50,13 +50,31 @@ export class Modal {
     if (!content) throw new Error("No se ha especificado el contenido del modal");
 
     content.then((html) => {
-      document.querySelector("#modal-loader").classList.toggle("hidden");
+      document.querySelector("#modal-loader").classList.add("hidden");
       this.#addEventCloseButton(html);
       this.#modal.appendChild(html);
     }).catch((err) => this.close());
 
     this.#modal.classList.remove("close");
     this.#modal.classList.add("visible");
+    document.querySelector("#modal-loader").classList.remove("hidden");
+  }
+
+  /**
+   * 
+   * @param {Promise} promise La promesa a esperar
+   * @returns {Promise}
+   */
+  async waitPromise(promise) {
+    if(!promise) throw new Error("No se ha especificado la promesa a esperar");
+
+    this.#modal.classList.remove("close");
+    this.#modal.classList.add("visible");
+    document.querySelector("#modal-loader").classList.remove("hidden");
+    await promise;
+    this.close();
+
+    return promise;
   }
 
   close() {
@@ -65,7 +83,7 @@ export class Modal {
       this.#modal.classList.remove("visible");
       const lastChild = this.#modal.lastElementChild;
       if(lastChild.tagName !== "SPAN") lastChild.remove();
-      document.querySelector("#modal-loader").classList.toggle("hidden");
+      document.querySelector("#modal-loader").classList.add("hidden");
       this.#modal.removeEventListener("animationend", handleClose);
     }
     this.#modal.addEventListener("animationend", handleClose);
