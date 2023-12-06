@@ -15,7 +15,8 @@ const modal = new Modal();
  * @summary Objeto indicador si se debe actualizar la lista de productos.
  */
 const listener = {
-  productUpdated: false
+  productUpdated: false,
+  categoryUpdated: false,
 }
 
 /**
@@ -30,6 +31,9 @@ const observer = new Proxy(listener, {
       document.querySelectorAll(".item").forEach((item) => item.remove());
       toggleLoader();
       reloadProducts();
+    } else if (prop === "categoryUpdated") {
+      console.log("categoryUpdated");
+      reloadCategories()
     }
     return true;
   },
@@ -47,7 +51,7 @@ export default async function () {
         : null
     );
 
-    document.querySelector("#add-product").addEventListener("click", handleClick);
+    reloadCategories()
 
   updateNavLine();
 
@@ -93,6 +97,20 @@ async function reloadProducts() {
       item.appendChild(span);
     });
   }
+}
+
+async function reloadCategories() {
+  const categories = await getCategories();
+
+  if (!categories) {
+    alert("No se han podido cargar las categorías");
+  } else {
+    const container = document.querySelector(".section_categorias .tbl_categorias");
+    container.innerHTML = "";
+    const table = await addTable(categories);
+    container.appendChild(table);
+  }
+
 }
 
 /**
@@ -161,4 +179,112 @@ async function getProductById(id) {
     alert(err.message);
     console.error(err);
   }
+}
+
+
+function createCustomElement(tagName, className, textContent) {
+  const elemento = document.createElement(tagName);
+  if (className) {
+    elemento.className = className;
+  }
+  if (textContent) {
+    elemento.textContent = textContent;
+  }
+  return elemento;
+}
+
+function createTableHeader() {
+  const trEncabezado = createCustomElement("tr", "tr");
+
+  trEncabezado.appendChild(createCustomElement("th", null, "ID"));
+  trEncabezado.appendChild(createCustomElement("th", null, "Nombre"));
+  trEncabezado.appendChild(createCustomElement("th", null, "Eliminar"));
+
+  const thead = createCustomElement("thead", "encabezado");
+  thead.appendChild(trEncabezado);
+
+  return thead;
+}
+
+/**
+ * 
+ * @param {Category} category La categoría
+ * @returns {HTMLTableSectionElement}
+ */
+function createTableBody(category) {
+  const trCuerpo = createCustomElement("tr", "tr");
+
+  trCuerpo.appendChild(createCustomElement("td", "id-column", `#${category.id}`));
+  trCuerpo.appendChild(createCustomElement("td", null, category.name));
+
+  const tdEliminar = createCustomElement("td");
+  tdEliminar.appendChild(createDeleteBtn(category.id));
+
+  trCuerpo.appendChild(tdEliminar);
+
+  const tbody = createCustomElement("tbody", "tbod");
+  tbody.appendChild(trCuerpo);
+
+  return tbody;
+}
+
+/**
+ * 
+ * @param {number} id 
+ * @returns 
+ */
+function createDeleteBtn(id) {
+  const botonEliminar = createCustomElement("button", "bt", "Eliminar");
+  botonEliminar.addEventListener("click", async() => {
+    const confirm = window.confirm("¿Está seguro que desea eliminar la categoría?");
+    if(!confirm) return;
+    let res = deleteCategory(id)
+    res = await modal.waitPromise(res);
+    if (res.statusCode === 200) {
+      observer.categoryUpdated = true;
+    } else {
+      alert(res.description);
+      console.error(res);
+    }
+  });
+  return botonEliminar;
+}
+
+/**
+ * 
+ * @param {Category[]} categories 
+ * @returns 
+ */
+async function addTable(categories) {
+  const divContainer = createCustomElement("div", "table-container");
+  const tabla = createCustomElement("table", "tabla");
+
+  tabla.appendChild(createTableHeader());
+  const elements = categories.map(createTableBody);
+  elements.forEach((element) => tabla.appendChild(element));
+
+  divContainer.appendChild(tabla);
+
+  return divContainer;
+}
+
+/**
+ * 
+ * @returns {Promise<Category[]>}
+ */
+async function getCategories() {
+  const res = await module.fetchAPI("/categoria/all", null, "GET");
+  if (res.statusCode !== 200) throw new Error(res.description);
+  return res.response;
+}
+
+/**
+ * 
+ * @param {number} id El `id` de la categoría
+ * @returns 
+ */
+async function deleteCategory(id) {
+  const res = await module.fetchAPI(`/categoria/${id}`, null, "DELETE");
+  if (res.statusCode !== 200) throw new Error(res.description);
+  return res;
 }

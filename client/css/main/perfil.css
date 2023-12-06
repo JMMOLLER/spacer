@@ -127,7 +127,7 @@ section.active {
 
 
 
-.historial_pedidos {
+.historial_pedidos, .tbl_categorias {
   display: flex;
   justify-content: center;
   margin-top: 40px;
@@ -193,6 +193,5 @@ section.active {
 }
 
 .tbod td.id-column {
-  /* Ajusta el ancho según sea necesario */
   width: 10px;
 }
