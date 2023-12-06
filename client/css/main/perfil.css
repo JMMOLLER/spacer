@@ -1,4 +1,5 @@
-body#body_perfil, html#html_perfil {
+body#body_perfil,
+html#html_perfil {
   overflow-x: hidden;
 }
 
@@ -94,16 +95,17 @@ body#body_perfil, html#html_perfil {
 }
 
 .perfil__main .input-group > input:valid + label {
-  transform: translateY(-50%);
-  font-size: 0.8rem;
   color: gray;
+  font-size: 1rem;
+  transform: translateY(60%);
 }
 
 .perfil__main .input-group > input:focus + label,
 .perfil__main .input-group > input.filled + label {
-  transform: translateY(-170%);
-  font-size: 0.8rem;
+  top: -15px;
   color: aqua;
+  font-size: 0.8rem;
+  transform: translateY(-50%);
 }
 
 /* ================= SECCTION ================ */
@@ -122,11 +124,8 @@ section.active {
   transition: all 0.3s ease-in-out;
 }
 
-
-
-
-
-.historial_pedidos {
+.historial_pedidos,
+.tbl_categorias {
   display: flex;
   justify-content: center;
   margin-top: 40px;
@@ -138,11 +137,24 @@ section.active {
   overflow: auto;
 }
 
+#modal .table-container {
+  max-height: 230px;
+}
+
+.table-container #modal-close {
+  position: absolute;
+  right: 50%;
+  top: 35%;
+  margin: 0;
+  background-color: white;
+  border-radius: 50%;
+}
+
 .tabla {
   border-collapse: collapse;
-  width: auto; 
+  width: auto;
   min-width: 500px;
-  margin: 0 auto; 
+  margin: 0 auto;
   font-size: 16px;
   border-radius: 8px;
   overflow: auto;
@@ -177,7 +189,7 @@ section.active {
 
 .bton {
   padding: 10px 20px;
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
   border: none;
   border-radius: 4px;
@@ -192,6 +204,5 @@ section.active {
 }
 
 .tbod td.id-column {
-  /* Ajusta el ancho según sea necesario */
   width: 10px;
 }

@@ -1,9 +1,12 @@
 export class Modal {
   #modal;
+  static #instance;
 
   constructor() {
+    if (Modal.#instance) return Modal.#instance;
     this.#modal = this.#createModal();
     document.body.appendChild(this.#modal);
+    Modal.#instance = this;
   }
 
   #createModalContainer(){
@@ -29,7 +32,10 @@ export class Modal {
     // Crear el elemento span para el botón de cerrar
     const modalClose = content.querySelector("#modal-close");
 
-    if(!modalClose) throw new Error("Compruebe que se ha especificado el botón de cerrar con id 'modal-close'");
+    if(!modalClose) {
+      console.error("Compruebe que se ha especificado el botón de cerrar con id 'modal-close'");
+      return
+    }
 
     modalClose.addEventListener("click", this.close.bind(this));
     return modalClose;
@@ -50,13 +56,31 @@ export class Modal {
     if (!content) throw new Error("No se ha especificado el contenido del modal");
 
     content.then((html) => {
-      document.querySelector("#modal-loader").classList.toggle("hidden");
+      document.querySelector("#modal-loader").classList.add("hidden");
       this.#addEventCloseButton(html);
       this.#modal.appendChild(html);
     }).catch((err) => this.close());
 
     this.#modal.classList.remove("close");
     this.#modal.classList.add("visible");
+    document.querySelector("#modal-loader").classList.remove("hidden");
+  }
+
+  /**
+   * 
+   * @param {Promise} promise La promesa a esperar
+   * @returns {Promise}
+   */
+  async waitPromise(promise) {
+    if(!promise) throw new Error("No se ha especificado la promesa a esperar");
+
+    this.#modal.classList.remove("close");
+    this.#modal.classList.add("visible");
+    document.querySelector("#modal-loader").classList.remove("hidden");
+    await promise;
+    this.close();
+
+    return promise;
   }
 
   close() {
@@ -65,7 +89,7 @@ export class Modal {
       this.#modal.classList.remove("visible");
       const lastChild = this.#modal.lastElementChild;
       if(lastChild.tagName !== "SPAN") lastChild.remove();
-      document.querySelector("#modal-loader").classList.toggle("hidden");
+      document.querySelector("#modal-loader").classList.add("hidden");
       this.#modal.removeEventListener("animationend", handleClose);
     }
     this.#modal.addEventListener("animationend", handleClose);

@@ -1,6 +1,9 @@
 import { inputValidator } from "../utils/index.js";
+import { createCustomElement } from "../admin/index.js";
+import { Modal } from "../globals/modal.js";
 import Global from "../globals/index.js";
 const module = Global.getInstance();
+const modal = new Modal();
 
 export default async function init() {
   const module = await import("../home/index.js");
@@ -8,7 +11,7 @@ export default async function init() {
   img.onerror = handleImageError;
   module.preventRedirect();
   module.loadHeaderLottieAnimation();
-  module.handleCheckAuth().then((res) => {
+  module.handleCheckAuth().then(async(res) => {
     if (!res) {
       window.location.href = "/pages/login.html";
     }else{
@@ -24,7 +27,10 @@ export default async function init() {
             : null
         );
 
-      updateNavLine();
+        updateNavLine();
+        
+        const orders = await getCLientOrders();
+        document.querySelector(".historial_pedidos").appendChild(createTable(orders));
     }
   });
   
@@ -273,6 +279,139 @@ const updateNavLine = () => {
   line.style.left = `${tab.offsetLeft}px`;
   line.style.width = `${tab.offsetWidth}px`;
 };
+
+/**
+ * 
+ * @returns {Promise<Order[]>}
+ */
+async function getCLientOrders() {
+  const res = await module.fetchAPI("/cliente/pedidos", null, "GET");
+  return res.response;
+}
+
+/**
+ * 
+ * @param {Order[]} OrderInfo
+ * @returns {HTMLTableSectionElement}
+ */
+function createTable(OrderInfo) {
+  const divContainer = createCustomElement("div", "table-container");
+  const tabla = createCustomElement("table", "tabla");
+
+  tabla.appendChild(createTableHeader());
+  const elements = OrderInfo.map(creteTableBody);
+  elements.forEach((element) => tabla.appendChild(element));
+
+  divContainer.appendChild(tabla);
+
+  return divContainer;
+}
+
+function createTableDetails(OrderInfo) {
+  const divContainer = createCustomElement("div", "table-container");
+  const tabla = createCustomElement("table", "tabla");
+
+  const btnClose = document.createElement("span");
+  btnClose.className = "fa fa-close";
+  btnClose.id = "modal-close";
+  divContainer.appendChild(btnClose);
+
+  tabla.appendChild(createTableDatilsHeader());
+  tabla.appendChild(creteTableDetailsBody(OrderInfo));
+
+  divContainer.appendChild(tabla);
+
+  return divContainer;
+}
+
+function createTableHeader() {
+  const trEncabezado = createCustomElement("tr", "tr");
+
+  trEncabezado.appendChild(createCustomElement("th", null, "Order ID"));
+  trEncabezado.appendChild(createCustomElement("th", null, "Fecha"));
+  trEncabezado.appendChild(createCustomElement("th", null, "Monto Total"));
+  trEncabezado.appendChild(createCustomElement("th", null, "Productos"));
+  trEncabezado.appendChild(createCustomElement("th", null, "Estado"));
+  trEncabezado.appendChild(createCustomElement("th", null, "Detalles"));
+
+  const thead = createCustomElement("thead", "encabezado");
+  thead.appendChild(trEncabezado);
+
+  return thead;
+}
+
+function createTableDatilsHeader() {
+  const trEncabezado = createCustomElement("tr", "tr");
+
+  trEncabezado.appendChild(createCustomElement("th", null, "Producto"));
+  trEncabezado.appendChild(createCustomElement("th", null, "Cantidad"));
+  trEncabezado.appendChild(createCustomElement("th", null, "Precio Unitario"));
+  trEncabezado.appendChild(createCustomElement("th", null, "Precio Total"));
+
+  const thead = createCustomElement("thead", "encabezado");
+  thead.appendChild(trEncabezado);
+
+  return thead;
+}
+
+/**
+ * 
+ * @param {Order} OrderInfo 
+ * @returns 
+ */
+function creteTableDetailsBody(OrderInfo) {
+  const tbody = createCustomElement("tbody", "tbod");
+
+  OrderInfo.products.forEach((products) => {
+
+    const trCuerpo = createCustomElement("tr", "tr");
+
+    trCuerpo.appendChild(createCustomElement("td", null, products.product.marca));
+    trCuerpo.appendChild(createCustomElement("td", null, products.quantity));
+    trCuerpo.appendChild(createCustomElement("td", null, `S/.${products.product.price}`));
+    trCuerpo.appendChild(createCustomElement("td", null, `S/.${products.product.price * products.quantity}`));
+
+    tbody.appendChild(trCuerpo);
+  });
+
+  return tbody;
+}
+
+/**
+ * 
+ * @param {Order} OrderInfo
+ * @returns {HTMLTableSectionElement}
+ */
+function creteTableBody(OrderInfo) {
+  const trCuerpo = createCustomElement("tr", "tr");
+
+  const fecha = new Date(OrderInfo.timestamp).toLocaleDateString('es-ES', { month: 'short', day: 'numeric', year: 'numeric' });
+
+  trCuerpo.appendChild(createCustomElement("td", null, `#${OrderInfo.id}`));
+  trCuerpo.appendChild(createCustomElement("td", null, fecha));
+  trCuerpo.appendChild(createCustomElement("td", null, `S/.${OrderInfo.total}`));
+  trCuerpo.appendChild(createCustomElement("td", null, OrderInfo.products.length));
+  trCuerpo.appendChild(createCustomElement("td", null, "Completado"));
+
+  const tdDetalles = document.createElement("td");
+
+  const botonDetalles = createCustomElement("button", "bton", "Ver Detalles");
+  botonDetalles.addEventListener("click", () => {
+    modal.open(new Promise((resolve, reject) => {
+      resolve(createTableDetails(OrderInfo));
+    }));
+  });
+
+  tdDetalles.appendChild(botonDetalles);
+
+  trCuerpo.appendChild(tdDetalles);
+
+  const tbody = createCustomElement("tbody", "tbod");
+  tbody.appendChild(trCuerpo);
+
+  return tbody;
+}
+
 
 window.addEventListener("resize", updateNavLine);
 

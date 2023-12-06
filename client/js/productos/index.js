@@ -84,7 +84,7 @@ function getSearhParams(){
   search.forEach(
     (param) => params.push({
       key: decodeURIComponent(param.split("=")[0]),
-      value: decodeURIComponent(param.split("=")[1])
+      value: decodeURIComponent(param.split("=")[1].replace(/\+/g, " "))
     })
   );
 
@@ -101,6 +101,7 @@ function filterProducts(){
   filterProductsByCategory(searchParams); // Este método debe ser el primero en ejecutarse
   filterProductsByPriceRange(searchParams);
   filterProductsByBrand(searchParams);
+  filterByText(searchParams);
 
   renderFilteredProducts();
 }
@@ -110,6 +111,21 @@ function filterProducts(){
  */
 function renderFilteredProducts(){
   filtered?.forEach((product) => renderCardProduct(product));
+}
+
+/**
+ * 
+ * @param {SearchParam[]} searchParams 
+ */
+function filterByText(searchParams){
+  const textParam = searchParams?.find((param) => (param.key).toLowerCase() === "buscar");
+  if(textParam){
+    filtered = products?.filter(
+      (product) => (product.description).toUpperCase().includes((textParam.value).toUpperCase())
+    )
+  }else{
+    filtered = products;
+  }
 }
 
 /**

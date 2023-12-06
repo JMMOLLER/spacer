@@ -98,6 +98,9 @@ input.error~label, .select.error~label, textarea.error~label {
 }
 .fa.fa-close {
   background-image: url("/assets//icons/close.svg");
+  &:hover {
+    cursor: pointer;
+  }
 }
 .fa.fa-next {
   background-image: url("/assets/icons/down.svg");
